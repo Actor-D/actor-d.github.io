@@ -36,20 +36,13 @@
 
 直接打开 `index.html` 即可预览，也可以在本目录启动任意静态文件服务器。
 
+## 线上访问
+
+站点已部署在 GitHub Pages：**https://actor-d.github.io/**（主页），`/project.html`（项目案例），`/research.html`（研究论文）。
+
 ## 发布到 GitHub Pages
 
-1. 在 GitHub 新建一个公开仓库，例如 `myweb`。
-2. 在本文件夹运行：
+仓库名称即为 `actor-d.github.io`，Pages 会自动使用 `main` 分支根目录构建。若更换账号或仓库名：
 
-```powershell
-git add .
-git commit -m "Create bilingual personal website"
-git remote add origin https://github.com/你的用户名/myweb.git
-git push -u origin main
-```
-
-3. 打开仓库的 **Settings → Pages**。
-4. 在 **Build and deployment** 中选择 **Deploy from a branch**，分支选择 `main` 和 `/ (root)`，然后保存。
-5. 稍等片刻，通过 `https://你的用户名.github.io/myweb/` 访问网站。
-
-如果仓库名称是 `你的用户名.github.io`，主页地址就是 `https://你的用户名.github.io/`。
+1. 确保仓库公开，并在 **Settings → Pages → Build and deployment** 中选择 **Deploy from a branch**、分支 `main`、目录 `/ (root)`。
+2. 稍等 1–2 分钟，通过 `https://你的用户名.github.io/`（用户站点仓库名）或 `https://你的用户名.github.io/仓库名/`（普通仓库）访问。
