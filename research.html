@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Actor.D 的毕业论文展示页——基于强化学习的优惠券公平发放策略（Fair-DQN）：摘要、核心发现、模型与实验结果。"
+    />
+    <meta name="theme-color" content="#f6f2ea" />
+    <title>研究论文 · Actor.D</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="theme-editorial.css" />
+    <link rel="stylesheet" href="research.css" />
+    <script src="script.js" defer></script>
+    <script src="research.js" defer></script>
+  </head>
+  <body data-page="research">
+    <div class="scroll-progress" aria-hidden="true"><i></i></div>
+    <div class="page-atmosphere" aria-hidden="true">
+      <span class="atmosphere-grid"></span>
+      <span class="atmosphere-glow glow-one"></span>
+      <span class="atmosphere-glow glow-two"></span>
+      <span class="atmosphere-noise"></span>
+      <canvas id="droplet-canvas" class="atmosphere-droplets" aria-hidden="true"></canvas>
+    </div>
+    <a class="skip-link" href="#main" data-i18n="accessibility.skip">跳到主要内容</a>
+
+    <header class="site-header">
+      <a class="brand" href="index.html#home" data-i18n-aria-label="accessibility.home">
+        <span class="brand-mark">A</span>
+        <span>Actor.D</span>
+      </a>
+
+      <div class="header-tools">
+        <div class="language-switcher" role="group" data-i18n-aria-label="accessibility.language">
+          <button type="button" data-lang="zh" aria-pressed="true">中</button>
+          <span aria-hidden="true">/</span>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+
+        <button
+          class="menu-button"
+          type="button"
+          data-i18n-aria-label="accessibility.menuOpen"
+          aria-expanded="false"
+          aria-controls="site-nav"
+        >
+          <span></span><span></span>
+        </button>
+
+        <nav id="site-nav" class="site-nav" data-i18n-aria-label="accessibility.navigation">
+          <a href="index.html#about" data-i18n="nav.about">关于我</a>
+          <a href="index.html#projects" data-i18n="nav.projects">项目案例</a>
+          <a href="#research" data-i18n="nav.research">研究论文</a>
+          <a href="index.html#journey" data-i18n="nav.journey">学习经历</a>
+          <a href="index.html#contact" data-i18n="nav.contact">联系我</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="research" class="research section-shell">
+        <div class="section-heading reveal">
+          <p class="eyebrow">RESEARCH · THESIS</p>
+          <h2 data-i18n="research.title">研究论文</h2>
+        </div>
+
+        <article class="paper-hero reveal ripple-host">
+          <div class="paper-hero-main">
+            <p class="project-kicker" data-i18n="research.kicker">本科毕业论文 · 强化学习 × 算法公平</p>
+            <h3 class="paper-title" data-i18n="research.paperTitle">基于强化学习的优惠券公平发放策略</h3>
+            <p class="paper-title-en" lang="en" data-i18n="research.paperTitleEn">Fair-DQN · Fairness-aware coupon allocation via deep reinforcement learning</p>
+            <div class="paper-meta">
+              <span data-i18n="research.metaAuthor">作者：董炎源（Actor.D）</span>
+              <span data-i18n="research.metaAdvisor">指导教师：张伟</span>
+              <span data-i18n="research.metaSchool">浙江大学管理学院 · 信息管理与信息系统</span>
+              <span data-i18n="research.metaPeriod">2022 级 · 2026.05</span>
+            </div>
+            <div class="tech-stack paper-keywords" data-i18n-aria-label="accessibility.techStack">
+              <span>Fair-DQN</span>
+              <span>Double DQN</span>
+              <span>MDP</span>
+              <span>Action Masking</span>
+              <span>算法公平</span>
+              <span>结果公平</span>
+              <span>结构性正则化</span>
+              <span>去身份化决策</span>
+            </div>
+          </div>
+          <div class="paper-stats">
+            <div><strong>2,782,179</strong><span data-i18n="research.statsTransactions">清洗后交易记录</span></div>
+            <div><strong>159,266</strong><span data-i18n="research.statsCoupons">优惠券记录 · 核销率 26.47%</span></div>
+            <div><strong>3,203,049</strong><span data-i18n="research.statsInventory">门店库存记录</span></div>
+            <div><strong>85</strong><span data-i18n="research.statsDays">天真实运营数据（2024.04–07）</span></div>
+            <div><strong>31,854</strong><span data-i18n="research.statsSamples">测试集样本</span></div>
+            <div><strong>7</strong><span data-i18n="research.statsPolicies">种策略横向对比</span></div>
+          </div>
+        </article>
+
+        <div class="abstract-grid">
+          <article class="abstract-card reveal">
+            <p class="eyebrow" data-i18n="research.abstractZhTitle">中文摘要</p>
+            <p class="abstract-text" id="abstract-zh-text" data-i18n="research.abstractZh">算法化的资源分配在追求效率最优时，往往因敏感属性与回报响应之间的内生相关性而系统性偏向高响应群体，使群体间回报差距被结构性放大。本文从分配正义理论出发，区分分配公平与结果公平两种范式，并明确选择结果公平作为本文的规范性立场——当群体响应率存在固有差异时，输入侧的等额发放因“同额不同效”反而扩大产出端不公平，故公平问题应被转化为可优化的目标函数设计问题。在此基础上提出 Fair-DQN 框架，将基于群体长期价值分布的不均度惩罚项作为结构性正则化嵌入 Double DQN 训练目标，并辅以动作掩码与熵正则稳定离线策略学习；理论上证明该惩罚项的梯度对群体均值具有双向校准性质，其作用机理是对 Q 值沿敏感属性维度分布形态的重塑，而非对参数范数的约束。本文基于某大型零售平台 2024 年 4 月至 7 月共 85 天的真实运营数据，将优惠券发放建模为含库存调节项的马尔可夫决策过程，并通过多随机种子重复、匹配样本无偏估计与七策略横向对比加以稳健性验证。Fair-DQN 将群体间长期价值差距压缩约 99%，整体收益反而提升约 11%；公平惩罚强度的敏感性曲线呈现明显的“L 型”拐点结构，表明绝大部分公平改善仅需极低效率代价即可获得，证伪了“公平必以效率为代价”的线性权衡直觉，识别出具有管理含义的“低代价公平”区间。机制层面揭示出“价值判断校准—动作偏好转移—特征依赖重组”的三级传导路径：公平约束自 Q 值的内部估计层逐级外传，最终使决策依据从会员等级等敏感代理变量转向库存与历史交互等情境性状态特征，在决策层实现可度量的去身份化。本文的核心理论贡献在于揭示，重新设定优化目标相较于精细调整算法结构在治理算法不公平问题上更具根本性——当公平被恰当形式化并嵌入目标函数时，效率与公平不再呈现零和关系，而可在结构性正则化作用下相互成就；这一发现为序贯决策情境下的算法责任化设计提供了一份来自管理科学与工程视角的可复现实证证据。</p>
+            <button class="abstract-toggle" type="button" aria-expanded="false" aria-controls="abstract-zh-text" data-i18n="research.expandAbstract">展开全文</button>
+            <p class="keyword-note"><b data-i18n="research.keywordsLabelZh">关键词</b><span data-i18n="research.keywordsZh">深度强化学习；优惠券发放策略；算法公平性；结果公平；结构性正则化；去身份化决策</span></p>
+          </article>
+          <article class="abstract-card abstract-en reveal">
+            <p class="eyebrow" data-i18n="research.abstractEnTitle">Abstract</p>
+            <p class="abstract-text" id="abstract-en-text" data-i18n="research.abstractEn">Algorithmic resource allocation that optimizes solely for efficiency tends to favor high-response groups whenever sensitive attributes are endogenously correlated with reward responsiveness, structurally amplifying inter-group return disparities and giving rise to a fundamental tension between algorithmic efficiency and group fairness in sequential decision settings. Grounded in distributive justice theory, this paper distinguishes input-side from outcome-side fairness and explicitly adopts the latter as its normative stance: when intrinsic group-level differences in response rates are present, equalizing inputs compounds into outcome-side inequity, so fairness must be reframed as a computable problem of objective-function design. We accordingly propose Fair-DQN, a deep reinforcement-learning framework that embeds an inter-group long-run-value disparity penalty as a structural regularizer into the Double DQN objective, complemented by action masking and entropy regularization for offline stability; the penalty’s gradient is shown to exhibit a bilateral calibration property around the group mean, so that its mechanism reshapes value distributions along the sensitive attribute rather than constraining parameter norms. Using 85 days of operational data (April–July 2024) from a major retail platform, we formulate coupon distribution as a finite-horizon Markov decision process with an inventory-adjusted reward and validate the framework through multi-seed replication, matched-sample unbiased estimation, and a seven-policy comparative benchmark. Fair-DQN compresses the inter-group long-run-value gap by approximately 99% while raising aggregate return by approximately 11% over the historical policy—satisfying a Kaldor–Hicks improvement and falsifying the prevailing linear-trade-off intuition; the sensitivity curve with respect to fairness-penalty strength exhibits a pronounced L-shaped knee, indicating that the bulk of fairness gains can be secured at near-zero efficiency cost and identifying a managerially actionable “low-cost fairness” regime. Mechanism analysis uncovers a three-tier transmission pathway—value calibration → action-preference shift → feature-dependence restructuring—through which the fairness constraint propagates outward from internal value estimates, ultimately reorienting the decision basis from sensitive proxy attributes such as membership tier toward context-dependent state features such as inventory level and historical interaction, yielding a measurable degree of de-identification. The central theoretical contribution is that redesigning the objective is more consequential than refining the architecture in addressing algorithmic unfairness: when fairness is properly formalized and embedded into the objective, efficiency and fairness cease to be zero-sum and can become mutually reinforcing through structural regularization—offering reproducible empirical evidence, from a management science and engineering perspective, for the principled design of accountable algorithms in sequential decision contexts.</p>
+            <button class="abstract-toggle" type="button" aria-expanded="false" aria-controls="abstract-en-text" data-i18n="research.expandAbstract">Read more</button>
+            <p class="keyword-note"><b data-i18n="research.keywordsLabelEn">Keywords</b><span data-i18n="research.keywordsEn">Deep Reinforcement Learning; Coupon Allocation; Algorithmic Fairness; Outcome Fairness; Structural Regularization; De-identified Decision-Making</span></p>
+          </article>
+        </div>
+
+        <div class="finding-block">
+          <div class="flow-heading reveal">
+            <p class="eyebrow" data-i18n="research.findingsEyebrow">核心发现</p>
+            <h3 data-i18n="research.findingsTitle">公平与效率，可以正和</h3>
+          </div>
+          <div class="finding-grid">
+            <article class="finding-card reveal ripple-host">
+              <strong class="finding-value"><span class="counter" data-count="99.3" data-decimals="1">0</span><span class="suffix">%</span></strong>
+              <h4 data-i18n="research.finding1Label">群体间长期价值差距降幅</h4>
+              <p data-i18n="research.finding1Note">Q-Disparity：7.96 → 0.057</p>
+            </article>
+            <article class="finding-card reveal ripple-host">
+              <strong class="finding-value"><span class="counter" data-count="10.7" data-decimals="1" data-prefix="+">0</span><span class="suffix">%</span></strong>
+              <h4 data-i18n="research.finding2Label">整体期望收益提升</h4>
+              <p data-i18n="research.finding2Note">Weighted E[R]：191.60 → 212.07</p>
+            </article>
+            <article class="finding-card reveal ripple-host">
+              <strong class="finding-value"><span class="counter" data-count="2.5" data-decimals="1">0</span><span class="suffix">×</span></strong>
+              <h4 data-i18n="research.finding3Label">200 元券投放占比提升</h4>
+              <p data-i18n="research.finding3Note">10.4% → 26.0%，定向唤醒沉睡用户</p>
+            </article>
+            <article class="finding-card reveal ripple-host">
+              <strong class="finding-value"><span class="counter" data-count="0.002" data-decimals="3">0</span></strong>
+              <h4 data-i18n="research.finding4Label">五次独立运行标准差</h4>
+              <p data-i18n="research.finding4Note">结果跨随机种子高度稳健</p>
+            </article>
+            <article class="finding-card reveal ripple-host">
+              <strong class="finding-value"><span class="counter" data-count="88.1" data-decimals="1">0</span><span class="suffix">%</span></strong>
+              <h4 data-i18n="research.finding5Label">λ=0.005 时公平改善幅度</h4>
+              <p data-i18n="research.finding5Note">回报代价仅 2.6% —— L 型「低成本公平」区间</p>
+            </article>
+            <article class="finding-card reveal ripple-host">
+              <strong class="finding-value"><span class="counter" data-count="7" data-decimals="0">0</span></strong>
+              <h4 data-i18n="research.finding6Label">种策略横向对比</h4>
+              <p data-i18n="research.finding6Note">Fair-DQN 总回报 675.5 万居首</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="contribution-block">
+          <div class="flow-heading reveal">
+            <p class="eyebrow" data-i18n="research.contributionsEyebrow">三大贡献</p>
+            <h3 data-i18n="research.contributionsTitle">从模型到机制，再到治理</h3>
+          </div>
+          <div class="contribution-grid">
+            <article class="contribution-card reveal ripple-host">
+              <span class="challenge-index">01</span>
+              <small>MODEL · FRAMEWORK</small>
+              <h4 data-i18n="research.contribution1Title">模型：公平强化学习框架</h4>
+              <p data-i18n="research.contribution1Body">构建含 17 维状态、6 级动作与库存调节奖励的 MDP，将群体间长期回报差距以惩罚项嵌入 Double DQN 训练目标，辅以 Action Masking 与熵正则化；梯度推导揭示其本质是「结构性正则化」——约束价值分布形态而非参数范数。</p>
+            </article>
+            <article class="contribution-card reveal ripple-host">
+              <span class="challenge-index">02</span>
+              <small>EVIDENCE · MECHANISM</small>
+              <h4 data-i18n="research.contribution2Title">实证：低成本公平与三级传导</h4>
+              <p data-i18n="research.contribution2Body">发现「L 型」低成本公平区间与卡尔多-希克斯改进：公平约束不是削峰填谷，而是做大蛋糕；凝练出「价值判断校准—动作偏好转移—特征依赖重组」的三级传导机制。</p>
+            </article>
+            <article class="contribution-card reveal ripple-host">
+              <span class="challenge-index">03</span>
+              <small>GOVERNANCE · INSIGHT</small>
+              <h4 data-i18n="research.contribution3Title">管理：从算法发明到目标设计</h4>
+              <p data-i18n="research.contribution3Body">决策者应把关注点从「发明新算法」转向「选择正确的优化目标」：一旦明确「什么是公平」，公平就从价值宣言变为可计算、可优化、可审计的目标函数设计问题。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="pipeline">
+          <div class="flow-heading reveal">
+            <p class="eyebrow" data-i18n="research.pipelineEyebrow">研究流程</p>
+            <h3 data-i18n="research.pipelineTitle">从数据现象到可检验的优化问题</h3>
+          </div>
+          <div class="flow-track flow-track-paper">
+            <article class="reveal">
+              <span class="flow-icon">01</span>
+              <small>PROBLEM</small>
+              <h4 data-i18n="research.step1Title">问题定义</h4>
+              <p data-i18n="research.step1Body">「同额不同效」悖论：等额发放反而随时间放大群体差距，公平必须被重新定义为可追踪、可约束的优化目标。</p>
+            </article>
+            <i aria-hidden="true"></i>
+            <article class="reveal">
+              <span class="flow-icon">02</span>
+              <small>MDP</small>
+              <h4 data-i18n="research.step2Title">MDP 建模</h4>
+              <p data-i18n="research.step2Body">17 维状态空间、6 级动作空间（0/5/10/25/40/200 元）与含库存调节项的奖励函数。</p>
+            </article>
+            <i aria-hidden="true"></i>
+            <article class="reveal">
+              <span class="flow-icon">03</span>
+              <small>TRAINING</small>
+              <h4 data-i18n="research.step3Title">Fair-DQN 训练</h4>
+              <p data-i18n="research.step3Body">Double DQN + Disparity 惩罚 + Action Masking + 熵正则化，离线训练，5 个独立种子。</p>
+            </article>
+            <i aria-hidden="true"></i>
+            <article class="reveal">
+              <span class="flow-icon">04</span>
+              <small>EVALUATION</small>
+              <h4 data-i18n="research.step4Title">实验评估</h4>
+              <p data-i18n="research.step4Body">核心/辅助/诊断三层指标体系，匹配样本无偏估计，7 策略对比与 λ 敏感性分析。</p>
+            </article>
+            <i aria-hidden="true"></i>
+            <article class="reveal">
+              <span class="flow-icon">05</span>
+              <small>MECHANISM</small>
+              <h4 data-i18n="research.step5Title">机制解释</h4>
+              <p data-i18n="research.step5Body">特征重要性、动作画像、Q 值分析与决策转移矩阵，凝练「三级传导」机制模型。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="model-block">
+          <div class="flow-heading reveal">
+            <p class="eyebrow" data-i18n="research.modelEyebrow">模型架构</p>
+            <h3 data-i18n="research.modelTitle">Fair-DQN 一图速览</h3>
+          </div>
+          <div class="model-diagram reveal">
+            <div class="model-box">
+              <small>INPUT · 17-DIM</small>
+              <h4 data-i18n="research.modelStateTitle">状态空间 · 17 维</h4>
+              <p data-i18n="research.modelStateList">用户静态特征 ×4 · 行为特征 ×5 · 优惠券特征 ×3 · 环境约束 ×5</p>
+            </div>
+            <div class="model-link" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="model-box model-core">
+              <small>Fair-DQN · DOUBLE DQN</small>
+              <h4 data-i18n="research.modelNetTitle">Q 网络 · 三层全连接</h4>
+              <p data-i18n="research.modelNetList">LayerNorm + ReLU + Dropout · 软更新目标网络 · Action Masking · Disparity 惩罚 + 熵正则</p>
+            </div>
+            <div class="model-link" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="model-box">
+              <small>OUTPUT · 6 ACTIONS</small>
+              <h4 data-i18n="research.modelActionTitle">动作空间 · 6 级</h4>
+              <p data-i18n="research.modelActionList">不发券 0 元 · 5 元 · 10 元 · 25 元 · 40 元 · 200 元</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="transmission">
+          <div class="flow-heading reveal">
+            <p class="eyebrow" data-i18n="research.transmissionEyebrow">机制发现</p>
+            <h3 data-i18n="research.transmissionTitle">「三级传导」统一机制模型</h3>
+          </div>
+          <div class="flow-track flow-track-transmission">
+            <article class="reveal">
+              <span class="flow-icon">01</span>
+              <small>VALUE</small>
+              <h4 data-i18n="research.transmission1Title">价值判断校准</h4>
+              <p data-i18n="research.transmission1Body">公平约束重塑 Q 值分布：G₁ 平均价值 22.40 → 14.91，G₂ 由 12.05 → 14.02，群体差距从 10.35 缩至 0.89。</p>
+            </article>
+            <i aria-hidden="true"></i>
+            <article class="reveal">
+              <span class="flow-icon">02</span>
+              <small>ACTION</small>
+              <h4 data-i18n="research.transmission2Title">动作偏好转移</h4>
+              <p data-i18n="research.transmission2Body">200 元券占比 10.4% → 26.0%，集中投向低活跃、低核销用户；「不发券」被系统性重构为差异化补偿投入。</p>
+            </article>
+            <i aria-hidden="true"></i>
+            <article class="reveal">
+              <span class="flow-icon">03</span>
+              <small>FEATURE</small>
+              <h4 data-i18n="research.transmission3Title">特征依赖重组</h4>
+              <p data-i18n="research.transmission3Body">决策依据从「会员等级」等身份标签转向「历史领券次数、平均库存」等情境特征——在决策层实现可度量的去身份化。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="figures">
+          <div class="flow-heading reveal">
+            <p class="eyebrow" data-i18n="research.figuresEyebrow">论文图表</p>
+            <h3 data-i18n="research.figuresTitle">关键图表与证据</h3>
+            <p class="flow-note" data-i18n="research.figuresHint">点击任意图表可放大查看</p>
+          </div>
+          <div class="figure-grid">
+            <figure class="paper-figure reveal" tabindex="0" role="button" data-figure>
+              <img src="assets/paper/fig2-1-eda.png" alt="图 2.1 数据探索性分析 / Fig 2.1 Exploratory data analysis" loading="lazy" />
+              <figcaption data-i18n="research.fig21">图 2.1 数据探索性分析：券状态、面额分布与 G₁/G₂ 核销率对比</figcaption>
+            </figure>
+            <figure class="paper-figure reveal" tabindex="0" role="button" data-figure>
+              <img src="assets/paper/fig3-1-architecture.png" alt="图 3.1 Fair-DQN 网络架构 / Fig 3.1 Network architecture" loading="lazy" />
+              <figcaption data-i18n="research.fig31">图 3.1 Fair-DQN 网络架构</figcaption>
+            </figure>
+            <figure class="paper-figure reveal" tabindex="0" role="button" data-figure>
+              <img src="assets/paper/fig4-1-training-curves.png" alt="图 4.1 训练过程 / Fig 4.1 Training curves" loading="lazy" />
+              <figcaption data-i18n="research.fig41">图 4.1 训练过程：TD 损失与 Fairness Disparity</figcaption>
+            </figure>
+            <figure class="paper-figure reveal" tabindex="0" role="button" data-figure>
+              <img src="assets/paper/fig4-2-main-results.png" alt="图 4.2 测试集评估 / Fig 4.2 Test-set evaluation" loading="lazy" />
+              <figcaption data-i18n="research.fig42">图 4.2 测试集评估：动作分布与回报-公平散点</figcaption>
+            </figure>
+            <figure class="paper-figure reveal" tabindex="0" role="button" data-figure>
+              <img src="assets/paper/fig4-4-seven-strategies.png" alt="图 4.4 七策略综合对比 / Fig 4.4 Seven-policy comparison" loading="lazy" />
+              <figcaption data-i18n="research.fig44">图 4.4 七策略综合对比</figcaption>
+            </figure>
+            <figure class="paper-figure reveal" tabindex="0" role="button" data-figure>
+              <img src="assets/paper/fig4-6-sensitivity.png" alt="图 4.6 敏感性分析 / Fig 4.6 Sensitivity analysis" loading="lazy" />
+              <figcaption data-i18n="research.fig46">图 4.6 敏感性分析：L 型曲线</figcaption>
+            </figure>
+            <figure class="paper-figure reveal" tabindex="0" role="button" data-figure>
+              <img src="assets/paper/fig5-1-grad-importance.png" alt="图 5.1 特征重要性 / Fig 5.1 Feature importance" loading="lazy" />
+              <figcaption data-i18n="research.fig51">图 5.1 梯度法特征重要性：Fair-DQN vs Baseline</figcaption>
+            </figure>
+            <figure class="paper-figure reveal" tabindex="0" role="button" data-figure>
+              <img src="assets/paper/fig5-8-transition-matrix.png" alt="图 5.8 决策转移矩阵 / Fig 5.8 Decision transition matrices" loading="lazy" />
+              <figcaption data-i18n="research.fig58">图 5.8 决策转移矩阵：Historical → Fair-DQN / Baseline</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="strategy-block">
+          <div class="flow-heading reveal">
+            <p class="eyebrow" data-i18n="research.tableEyebrow">实验结果</p>
+            <h3 data-i18n="research.tableTitle">七策略横向对比</h3>
+          </div>
+          <div class="table-scroll reveal">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th data-i18n="research.thPolicy">策略</th>
+                  <th data-i18n="research.thWeightedER">Weighted E[R]</th>
+                  <th data-i18n="research.thTotalReturn">总回报</th>
+                  <th data-i18n="research.thTotalCost">总成本</th>
+                  <th data-i18n="research.thQDisp">Q-Disp</th>
+                  <th data-i18n="research.thRefQDisp">Ref Q-Disp</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="is-winner">
+                  <th data-i18n="research.policyFairDQN">Fair-DQN（本文）</th>
+                  <td><strong>212.07</strong></td><td>6,755,333</td><td>2,079,120</td><td>0.0572</td><td>0.0915</td>
+                </tr>
+                <tr>
+                  <th data-i18n="research.policyBaseline">Baseline（纯收益 DQN）</th>
+                  <td>191.60</td><td>6,103,090</td><td>1,235,935</td><td>7.9624</td><td>0.1373</td>
+                </tr>
+                <tr>
+                  <th data-i18n="research.policyHistorical">Historical（历史策略）</th>
+                  <td>44.44</td><td>1,415,460</td><td>463,725</td><td>N/A</td><td>0.2655</td>
+                </tr>
+                <tr>
+                  <th data-i18n="research.policyRandom">Random（随机策略）</th>
+                  <td>169.98</td><td>5,414,418</td><td>1,476,350</td><td>N/A</td><td>0.2624</td>
+                </tr>
+                <tr>
+                  <th data-i18n="research.policyBlind25">Blind（统一 25 元）</th>
+                  <td>203.33</td><td>6,476,958</td><td>796,350</td><td>N/A</td><td>0.1565</td>
+                </tr>
+                <tr>
+                  <th data-i18n="research.policyBlind5">Blind（统一 5 元）</th>
+                  <td>126.86</td><td>4,041,096</td><td>159,270</td><td>N/A</td><td>0.4241</td>
+                </tr>
+                <tr>
+                  <th data-i18n="research.policyBlind10">Blind（统一 10 元）</th>
+                  <td>124.94</td><td>3,979,743</td><td>318,540</td><td>N/A</td><td>0.4157</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note" data-i18n="research.noteQDisp">注：Q-Disp 仅对参与训练的 Fair-DQN 与 Baseline 可评定；其余策略以 Fair-DQN 网络作为裁判计算 Ref Q-Disp。完整数据见论文表 4.2。</p>
+        </div>
+
+        <div class="paper-accordion">
+          <div class="flow-heading reveal">
+            <p class="eyebrow" data-i18n="research.limitsEyebrow">局限与展望</p>
+            <h3 data-i18n="research.limitsTitle">六项局限，六个方向</h3>
+          </div>
+          <div class="accordion-list reveal">
+            <details open>
+              <summary><span class="accordion-index">L1</span><h4 data-i18n="research.limit1Title">单一平台与时间窗口</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.limit1Body">结论基于单一连锁超市 85 天数据，跨业态、跨周期的外部效度有待检验。</p>
+            </details>
+            <details>
+              <summary><span class="accordion-index">L2</span><h4 data-i18n="research.limit2Title">二元分组较粗糙</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.limit2Body">公平性仅基于会员等级二分，组内结构差异未被刻画。</p>
+            </details>
+            <details>
+              <summary><span class="accordion-index">L3</span><h4 data-i18n="research.limit3Title">离线评估固有偏差</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.limit3Body">历史数据已被原有策略塑形，结果应视为「指示性证据」，需线上 A/B 或模拟环境逼近无偏结论。</p>
+            </details>
+            <details>
+              <summary><span class="accordion-index">L4</span><h4 data-i18n="research.limit4Title">网络结构简洁</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.limit4Body">两层全连接 Q 网络，可探索 CQL、Dueling DQN 等更富表达力的结构。</p>
+            </details>
+            <details>
+              <summary><span class="accordion-index">L5</span><h4 data-i18n="research.limit5Title">群体均值公平度量</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.limit5Body">仅约束组间均值，个体公平与组内分布约束是自然延伸。</p>
+            </details>
+            <details>
+              <summary><span class="accordion-index">L6</span><h4 data-i18n="research.limit6Title">机制链为推断性解释</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.limit6Body">「三级传导」基于推断而非严格因果识别，未来可设计受控消融实验强化因果证据。</p>
+            </details>
+          </div>
+          <div class="accordion-list accordion-future reveal">
+            <details>
+              <summary><span class="accordion-index">F1</span><h4 data-i18n="research.future1Title">跨业态、跨周期复现</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.future1Body">在服装、3C、生鲜等业态与促销季/常规期对照下重做敏感性分析，检验 L 型曲线的稳定性。</p>
+            </details>
+            <details>
+              <summary><span class="accordion-index">F2</span><h4 data-i18n="research.future2Title">细粒度公平划分</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.future2Body">从会员二分扩展到金卡/银卡、注册渠道、地理位置等多层次群体定义，寻找公平的「最优颗粒度」。</p>
+            </details>
+            <details>
+              <summary><span class="accordion-index">F3</span><h4 data-i18n="research.future3Title">线上决策性证据</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.future3Body">以 A/B 测试为主线，辅以 LLM 模拟环境，完成「离线—模拟—线上」三类证据的层层逼近。</p>
+            </details>
+            <details>
+              <summary><span class="accordion-index">F4</span><h4 data-i18n="research.future4Title">更强的算法骨架</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.future4Body">把 Disparity 惩罚移植到 CQL 与 Dueling DQN，或将 Q 值标量估计推广为分布估计。</p>
+            </details>
+            <details>
+              <summary><span class="accordion-index">F5</span><h4 data-i18n="research.future5Title">混合公平度量</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.future5Body">引入个体公平与组内分布约束，让公平在群体间、个体间、组内形态上都被度量。</p>
+            </details>
+            <details>
+              <summary><span class="accordion-index">F6</span><h4 data-i18n="research.future6Title">准因果机制验证</h4><i aria-hidden="true"></i></summary>
+              <p data-i18n="research.future6Body">用「逐级断链」式受控消融与反事实归因，把三级传导从相关性证据推进为准因果命题。</p>
+            </details>
+          </div>
+        </div>
+
+        <blockquote class="paper-quote reveal">
+          <p data-i18n="research.quote">重新设定优化目标，比精细调整算法结构更具根本性——当公平被恰当形式化并嵌入目标函数时，效率与公平不再零和。</p>
+          <footer data-i18n="research.quoteSource">—— 论文 7.2 未来展望</footer>
+        </blockquote>
+
+        <nav class="page-nav" data-i18n-aria-label="accessibility.navigation">
+          <a href="index.html"><span aria-hidden="true">←</span> <span data-i18n="common.backHome">回到主页</span></a>
+          <a class="nav-next" href="project.html"><span data-i18n="common.nextProject">继续阅读：项目案例</span> <span aria-hidden="true">→</span></a>
+        </nav>
+      </section>
+
+      <div class="figure-lightbox" id="figure-lightbox" hidden role="dialog" aria-modal="true" data-i18n-aria-label="accessibility.lightboxLabel">
+        <button class="lightbox-close" type="button" data-i18n-aria-label="accessibility.lightboxClose">×</button>
+        <figure><img src="" alt="" /><figcaption></figcaption></figure>
+      </div>
+    </main>
+
+    <footer class="site-footer section-shell">
+      <p>© <span id="current-year">2026</span> Actor.D</p>
+      <p class="education-signature">ZJU · CUHK</p>
+      <a href="#main" data-i18n="footer.backToTop">回到顶部 ↑</a>
+    </footer>
+  </body>
+</html>
