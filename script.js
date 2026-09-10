@@ -50,7 +50,8 @@ const translations = {
       title: "关于我",
       lead: "以数据理解问题，用分析支持更好的商业决策。",
       body:
-        "我毕业于浙江大学信息管理与信息系统专业，目前就读于香港中文大学商业分析理学硕士项目。这段跨越信息系统与商业分析的学习经历，让我持续关注如何连接数据、技术与真实的商业问题。",
+        "我是董炎源（Actor.D），毕业于浙江大学信息管理与信息系统专业，目前就读于香港中文大学商业分析理学硕士项目。这段跨越信息系统与商业分析的学习经历，让我持续关注如何连接数据、技术与真实的商业问题。",
+      techLabel: "技术栈",
       factFoundation: "本科基础",
       factCurrent: "当前项目",
       factInterest: "关注领域",
@@ -161,6 +162,25 @@ const translations = {
       apiOrder: "创建并计算配送订单",
       apiOrderDetail: "获取用户订单详情",
       apiUpload: "上传订单凭证图片",
+    },
+    moreProjects: {
+      title: "更多项目",
+      hackathonType: "数据竞赛 · 联合国大数据黑客松",
+      hackathonTitle: "骑手配送系统研究",
+      hackathonBody:
+        "基于 75 份问卷与实地调研，发现平台算法将平均配送时间压缩 9.4%，致骑手违规率上升 23%；提出改进贪心智能调度算法，模拟验证配送效率提升 15%。",
+      petType: "深度学习 · 计算机视觉",
+      petTitle: "跨风格猫狗图像识别",
+      petBody:
+        "采集清洗 27,000 张跨风格图像，构建 CNN 分类模型，测试集准确率 94.32%；用 CAM 可视化验证动漫数据使纹理敏感度提升 3.2%。",
+      biliType: "NLP · 文本挖掘",
+      biliTitle: "弹幕情感与主题挖掘",
+      biliBody:
+        "爬取 B 站社科视频弹幕，用 Jieba + SnowNLP 做情感分析、LDA 做主题建模；专业术语占比 38.7%，构建「术语密度-情感极性」评估模型。",
+      bikeType: "机器学习 · 需求预测",
+      bikeTitle: "共享单车需求预测",
+      bikeBody:
+        "20,000+ 条租赁记录，对比 MLP 与 XGBoost 等 6 种模型，RMSLE 0.29（较基线提升 15%），识别高峰与天气对需求的非线性影响。",
     },
     research: {
       title: "研究论文",
@@ -304,7 +324,8 @@ const translations = {
       title: "学习与方向",
       zjuType: "本科 · ZJU",
       zjuTitle: "浙江大学",
-      zjuBody: "信息管理与信息系统专业毕业，建立了信息技术、数据与管理相结合的知识基础。",
+      zjuBody:
+        "信息管理与信息系统专业毕业（均分 85），建立了信息技术、数据与管理相结合的知识基础；获 2022-2023 学年浙江大学学业优秀标兵。",
       cuhkType: "硕士 · CUHK",
       cuhkTitle: "香港中文大学",
       cuhkBody: "现就读于商业分析理学硕士项目，进一步探索数据分析在商业场景中的应用。",
@@ -367,7 +388,8 @@ const translations = {
       title: "About me",
       lead: "Understanding problems through data and enabling better business decisions through analytics.",
       body:
-        "I graduated from Zhejiang University with a degree in Information Management & Information Systems and am currently pursuing an MSc in Business Analytics at The Chinese University of Hong Kong. This interdisciplinary journey keeps me focused on connecting data and technology with real business challenges.",
+        "I'm Dong Yanyuan (Actor.D). I graduated from Zhejiang University with a degree in Information Management & Information Systems and am currently pursuing an MSc in Business Analytics at The Chinese University of Hong Kong. This interdisciplinary journey keeps me focused on connecting data and technology with real business challenges.",
+      techLabel: "Tech stack",
       factFoundation: "FOUNDATION",
       factCurrent: "CURRENT PROGRAMME",
       factInterest: "INTERESTS",
@@ -482,6 +504,25 @@ const translations = {
       apiOrder: "Create and price a delivery order",
       apiOrderDetail: "Retrieve user-scoped order details",
       apiUpload: "Upload an order proof image",
+    },
+    moreProjects: {
+      title: "More projects",
+      hackathonType: "Data competition · UN Big Data Hackathon",
+      hackathonTitle: "Rider Delivery System Study",
+      hackathonBody:
+        "From 75 surveys and field research, found the platform compressed average delivery time by 9.4% while rider violations rose 23%; proposed an improved greedy scheduling algorithm, with simulated efficiency gains of 15%.",
+      petType: "Deep learning · Computer vision",
+      petTitle: "Cross-style Cat & Dog Recognition",
+      petBody:
+        "Collected and cleaned 27,000 cross-style images, built a CNN classifier reaching 94.32% test accuracy; CAM visualization verified that anime data raised texture sensitivity by 3.2%.",
+      biliType: "NLP · Text mining",
+      biliTitle: "Danmaku Sentiment & Topic Mining",
+      biliBody:
+        "Scraped Bilibili social-science danmaku, applied Jieba + SnowNLP sentiment analysis and LDA topic modeling; 38.7% domain-term density, built a term-density × sentiment-polarity evaluation model.",
+      bikeType: "Machine learning · Demand forecasting",
+      bikeTitle: "Bike-share Demand Forecasting",
+      bikeBody:
+        "Across 20,000+ rental records, benchmarked six models (MLP, XGBoost) to reach RMSLE 0.29 (+15% vs baseline), revealing non-linear peak-time and weather effects.",
     },
     research: {
       title: "Research Paper",
@@ -626,7 +667,7 @@ const translations = {
       zjuType: "UNDERGRADUATE · ZJU",
       zjuTitle: "Zhejiang University",
       zjuBody:
-        "Graduated in Information Management & Information Systems, building a foundation across technology, data, and management.",
+        "Graduated in Information Management & Information Systems (average score 85), building a foundation across technology, data, and management; awarded the 2022–2023 ZJU Academic Excellence honor.",
       cuhkType: "MASTER'S · CUHK",
       cuhkTitle: "The Chinese University of Hong Kong",
       cuhkBody:

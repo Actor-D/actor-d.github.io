@@ -693,6 +693,47 @@ body::after {
   background: transparent;
 }
 
+.art-four {
+  background: var(--accent);
+  color: #fff7f3;
+}
+
+.art-four::before {
+  width: 120px;
+  height: 120px;
+  border: 24px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+}
+
+.art-four::after {
+  width: 90px;
+  height: 90px;
+  bottom: -34px;
+  left: 14%;
+  background: rgba(27, 28, 26, 0.9);
+  transform: rotate(45deg);
+}
+
+.skill-caption {
+  margin: 34px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.about-body .tech-stack {
+  margin-top: 14px;
+}
+
+.more-projects-heading {
+  margin: clamp(56px, 8vw, 96px) 0 clamp(28px, 4vw, 48px);
+  color: var(--muted);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
 .contact {
   border-color: var(--line);
   background:
