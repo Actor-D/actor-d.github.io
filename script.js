@@ -3,6 +3,9 @@ const translations = {
     pageTitle: "Actor.D｜个人主页",
     pageDescription:
       "Actor.D 的个人主页——浙江大学信息管理与信息系统专业毕业，现就读于香港中文大学商业分析理学硕士。",
+    visionPageTitle: "猫狗图像分类 · Actor.D｜个人主页",
+    visionPageDescription:
+      "Actor.D 的图像识别大作业——猫狗图像分类：从零搭建 CNN，27,000 张图像训练，验证集准确率 94.33%，并加入 2,000 张动漫猫狗做泛化实验。",
     danmuPageTitle: "弹幕文本分析 · Actor.D｜个人主页",
     danmuPageDescription:
       "Actor.D 的文本挖掘作业——B 站《社会学与经济学》弹幕分析：44 个视频、9.95 万条弹幕，词典法情感分析与自创「传播效果指数」。",
@@ -28,10 +31,12 @@ const translations = {
       lightboxClose: "关闭图表预览",
       github: "在新标签页打开 Actor-D 的 GitHub 主页",
     },
-    nav: { about: "关于我", projects: "项目案例", analysis: "数据分析", research: "研究论文", journey: "学习经历", contact: "联系我" },
+    nav: { about: "关于我", projects: "项目案例", analysis: "数据分析", vision: "图像识别", research: "研究论文", journey: "学习经历", contact: "联系我" },
     common: {
       backHome: "回到主页",
       nextProject: "继续阅读：项目案例",
+      nextAnalysis: "继续阅读：数据分析",
+      nextVision: "继续阅读：图像识别",
       nextResearch: "继续阅读：研究论文",
     },
     hero: {
@@ -69,6 +74,9 @@ const translations = {
       llmTitle: "大模型对话助手",
       llmBody:
         "通过 OpenAI 兼容协议接入 DeepSeek，以约 700 字中文 system prompt 约束回答范围；会话与消息落库，支持多会话切换与历史回看。",
+      cvTitle: "卷积网络图像分类",
+      cvBody:
+        "从零搭建 4 块 CNN（511 万参数）完成猫狗二分类，并追加 2,000 张自爬动漫图做对照实验，如实记录「精度反而下降」的负面结论与原因。",
       nlpTitle: "弹幕文本挖掘",
       nlpBody:
         "自建爬虫采集 44 个视频的 9.95 万条弹幕，用 BosonNLP 词典法做情感打分，并对互动指标做相关性与回归建模，检验传播驱动因素。",
@@ -369,6 +377,98 @@ const translations = {
       eng4Body: "加载 11 万条 BosonNLP 词典，结合否定翻转与程度加权逐条打分，输出情感分布图与词云。",
       navPrev: "上一个项目：浙就来",
     },
+    vision: {
+      title: "猫狗图像分类",
+      pageKicker: "课程大作业 · 图像识别",
+      name: "从零搭建 CNN",
+      lead: "从零搭建卷积网络，并做了一次「加入动漫图像」的对照实验——结论是负面的，但我把原因也一并写清楚。",
+      subtitle: "25,000 张实拍图的基线模型，与加入 2,000 张动漫图后的对照",
+      summary:
+        "不使用任何预训练权重，用 Keras 逐层搭出 4 个卷积块的网络：图像统一到 128×128，训练时做旋转、缩放、翻转增强，配合学习率衰减与早停。基线模型在纯真实图上取得测试准确率 95.12%；随后按同样的架构与流程，把自行爬取的 2,000 张动漫猫狗混入训练集重训，测试准确率降到 93.93%。",
+      viewArtifacts: "查看 Notebook 与数据",
+      factTest: "基线测试准确率",
+      factImages: "张训练用图像",
+      factAnime: "张自爬动漫图",
+      factParams: "模型参数量",
+      cmpEyebrow: "对照实验",
+      cmpTitle: "加入动漫图像，究竟是帮助还是伤害",
+      cmpIntro: "两次训练使用完全相同的架构、增强策略与回调配置，唯一变量是训练集里有没有那 2,000 张动漫图。",
+      cmpMetric: "指标",
+      cmpColReal: "变体 A · 纯真实图",
+      cmpColAnime: "变体 B · 真实 + 动漫",
+      cmpImages: "图像总量",
+      cmpEpochs: "实际训练轮数",
+      cmpTrain: "训练准确率",
+      cmpVal: "验证准确率",
+      cmpTest: "测试准确率",
+      cmpNote:
+        "结论：加入动漫数据后，模型在真实图像上的准确率下降了约 1.2 个百分点。课件里曾把 94.32% 与 93.93% 当作两个模型对比，实际上这两个数字都属于变体 B（前者是验证集、后者是测试集）。",
+      cmpFindTitle: "动漫增益没有被量化",
+      cmpFindBody:
+        "课件结论称「动漫图上的准确率有所提升」，但变体 B 从未在纯动漫图像上单独测过，这个说法没有数字支撑；可确认的只有真实图精度的下降。",
+      cmpFlawTitle: "对照组并不干净",
+      cmpFlawBody:
+        "变体 B 的 2,700 张测试集里混入了约 200 张动漫图，因此 93.93% 是「真实 + 动漫」的混合精度，与变体 A 的纯真实 95.12% 并非同一把尺子——这也是我复盘时最该早点发现的问题。",
+      dataEyebrow: "数据集",
+      dataTitle: "实拍照片 + 自爬动漫图",
+      dataIntro: "Kaggle 基线保证可比性，动漫部分没有现成数据集，只能自己爬取并人工筛选。",
+      realTitle: "实拍猫狗",
+      realBody: "Kaggle Dogs vs Cats 标注集，猫狗各 12,500 张，类别严格 1:1，覆盖各种姿态、光照与背景。",
+      animeTitle: "自爬动漫猫狗",
+      animeBody:
+        "用爬虫从抖音、小红书、知乎等社交平台、动漫漫画与微信表情包中收集并人工筛选，共 2,000 张（每类 1,000）。网络缺乏现成标准数据集，因此风格差异很大。",
+      splitTitle: "混入同一目录",
+      splitBody: "动漫图被重命名为 cat.*/dog.* 序列接在原编号之后（12,500 起），与实拍图混在同一目录，靠文件名前缀取标签。",
+      figDist: "类别分布：训练 10,800 / 10,800，验证与测试各 1,350 / 1,350，全程保持 1:1 平衡。",
+      figCurves: "基线模型（纯真实图）的损失与准确率曲线，30 轮后趋于平稳。",
+      sampleNote: "数据集样本（每张压缩到 900px 以内，仅供预览）。",
+      modelEyebrow: "模型与训练",
+      modelTitle: "四个卷积块，511 万参数",
+      modelIntro: "通道数逐块加倍，每块都带批归一化与 Dropout，全部参数从随机初始化开始训练。",
+      archEyebrow: "网络结构",
+      archTitle: "Conv 32 → 64 → 128 → 256",
+      archOne: "4 个卷积块，每块：Conv2D(3×3, ReLU, valid) → BatchNorm → MaxPool(2×2) → Dropout(0.2)",
+      archTwo: "通道数逐块加倍 32 → 64 → 128 → 256，特征图尺寸逐层收缩",
+      archThree: "分类头：Flatten → Dense(512, ReLU) → BatchNorm → Dropout → Dense(2, softmax)",
+      archFour: "总参数 5,112,514，其中可训练 5,110,530，无任何预训练权重",
+      trainEyebrow: "训练配置",
+      trainTitle: "增强 + 两个回调",
+      trainOne: "Adam 优化器，损失 binary crossentropy，批量大小 32",
+      trainTwo: "增强：旋转 15°、缩放 0.2、水平翻转、剪切 0.1、宽高平移各 0.1、fill_mode=reflect",
+      trainThree: "ReduceLROnPlateau：监控 val_accuracy，patience=10，factor=0.9（学习率从 1e-3 逐步衰减到 9e-4、1.56e-5）",
+      trainFour: "EarlyStopping：监控 val_loss，patience=10，并恢复最优权重；未使用 ModelCheckpoint",
+      trainFive: "变体 A 训练 30 轮；变体 B 配置 60 轮、第 40 轮早停，每轮 675 个 batch，约 142 秒",
+      reflectEyebrow: "复盘与反思",
+      reflectTitle: "这个实验没做好的四个地方",
+      reflectIntro: "比「跑出 95%」更有价值的，是能说清哪些结论站不住、以及下次该怎么设计。",
+      issue1Title: "测试集被动漫图污染",
+      issue1Body:
+        "动漫图与实拍图混合后随机划分，约 200 张动漫图落进了测试集，导致两个变体的测试分数不可直接比较。正确做法是固定同一份纯真实测试集，动漫图只进训练集。",
+      issue2Title: "动漫侧的收益从未测量",
+      issue2Body:
+        "既然加动漫数据是为了提升动漫图识别，就该单独构造一份动漫测试集来验证。缺少这一测，结论只剩「真实图变差了」，动漫增益无法证实。",
+      issue3Title: "CAM 分析只做了一张",
+      issue3Body:
+        "可视化计划只完成了一张真实照片的热力图，没有覆盖计划中的三张图，更没有任何定量指标。它只能算作初步尝试，不足以支撑任何关于「关注纹理」的结论。",
+      issue4Title: "划分与记录不够严谨",
+      issue4Body:
+        "训练/验证集用随机数切分而非按类别分层，导致两类样本数略有偏差；两个模型的权重文件字节数完全相同、命名无法区分；课件中还存在把同一模型的验证与测试分数当作两个模型对比的笔误。",
+      figCam: "CAM 可视化的唯一一张产出（真实照片，高亮集中在狗的面部区域），属于未完成的初步尝试。",
+      engEyebrow: "工程拆解",
+      engTitle: "从数据到提交的完整链路",
+      engBody: "数据探索、生成器增强、模型搭建、回调训练、预测提交与结果可视化，都在同一个 Notebook 内完成。",
+      eng1Title: "数据探索与划分",
+      eng1Body:
+        "统计类别分布与图像尺寸分布，用 DataFrame 与目录两种方式划分训练、验证与测试集，并确认真实图与动漫图都按 1:1 混入。",
+      eng2Title: "数据增强管线",
+      eng2Body: "ImageDataGenerator 归一化到 0–1，训练集叠加六项几何变换，验证集只做归一化，避免评估偏差。",
+      eng3Title: "回调驱动的训练",
+      eng3Body: "ReduceLROnPlateau 在平台期衰减学习率，EarlyStopping 恢复最优权重，完整保留逐轮学习率变化记录。",
+      eng4Title: "预测与提交",
+      eng4Body:
+        "载入保存的模型批量预测 12,500 张测试图，输出 id/label 提交文件（6,366 猫 / 6,134 狗），并对难例做错误分析。",
+      navPrev: "上一个项目：弹幕文本分析",
+    },
     research: {
       title: "研究论文",
       expandAbstract: "展开全文",
@@ -533,6 +633,9 @@ const translations = {
     pageTitle: "Actor.D | Personal Website",
     pageDescription:
       "Actor.D's personal website — ZJU graduate in Information Management & Information Systems and MSc Business Analytics student at CUHK.",
+    visionPageTitle: "Cat vs Dog Image Classification · Actor.D | Personal Website",
+    visionPageDescription:
+      "Actor.D's computer-vision coursework: a from-scratch CNN for cat/dog classification over 27,000 images, 94.33% validation accuracy, plus 2,000 anime images for a generalisation experiment.",
     danmuPageTitle: "Danmaku Text Analytics · Actor.D | Personal Website",
     danmuPageDescription:
       "Actor.D's text-mining project: a danmaku study of a Sociology & Economics video series — 44 videos, 99,590 comments, lexicon-based sentiment scoring and a self-defined reach index.",
@@ -558,10 +661,12 @@ const translations = {
       lightboxClose: "Close figure preview",
       github: "Open Actor-D's GitHub profile in a new tab",
     },
-    nav: { about: "About", projects: "Project", analysis: "Analytics", research: "Research", journey: "Journey", contact: "Contact" },
+    nav: { about: "About", projects: "Project", analysis: "Analytics", vision: "Vision", research: "Research", journey: "Journey", contact: "Contact" },
     common: {
       backHome: "Back to home",
       nextProject: "Continue: the project case",
+      nextAnalysis: "Continue: the data analysis",
+      nextVision: "Continue: the computer-vision project",
       nextResearch: "Continue: the research paper",
     },
     hero: {
@@ -600,6 +705,9 @@ const translations = {
       llmTitle: "LLM chat assistant",
       llmBody:
         "DeepSeek is reached over the OpenAI-compatible protocol with a ~700-character Chinese system prompt; sessions and messages persist so conversations can be switched and revisited.",
+      cvTitle: "Convolutional image classification",
+      cvBody:
+        "A four-block CNN built from scratch (5.11M parameters) for cat/dog classification, plus a control experiment adding 2,000 self-crawled anime images — documenting the negative result and why it happened.",
       nlpTitle: "Danmaku text mining",
       nlpBody:
         "A custom crawler collected 99,590 danmaku across 44 videos, scored sentiment with the BosonNLP lexicon, then modelled engagement with correlation and regression to test what drives reach.",
@@ -783,10 +891,10 @@ const translations = {
       hackathonTitle: "Rider Delivery System Study",
       hackathonBody:
         "From 75 surveys and field research, found the platform compressed average delivery time by 9.4% while rider violations rose 23%; proposed an improved greedy scheduling algorithm, with simulated efficiency gains of 15%.",
-      petType: "Deep learning · Computer vision",
-      petTitle: "Cross-style Cat & Dog Recognition",
+      petType: "Computer vision · CNN",
+      petTitle: "Cat & Dog Classification with an Anime Control Test",
       petBody:
-        "Collected and cleaned 27,000 cross-style images, built a CNN classifier reaching 94.32% test accuracy; CAM visualization verified that anime data raised texture sensitivity by 3.2%.",
+        "Built a four-block CNN from scratch (5.11M parameters) reaching 95.12% test accuracy on 25,000 real photos; retraining with 2,000 self-crawled anime images cost about 1.2 points on real images.",
       biliType: "Crawling · NLP · Sentiment",
       biliTitle: "Bilibili Danmaku Sentiment & Reach",
       biliBody:
@@ -905,6 +1013,101 @@ const translations = {
       eng4Body:
         "Loads the 110k-entry BosonNLP lexicon and scores every comment with negation flipping and degree weighting, then renders distribution charts and a word cloud.",
       navPrev: "Previous project: Zhejiulai",
+    },
+    vision: {
+      title: "Cat vs Dog Image Classification",
+      pageKicker: "COURSE PROJECT · COMPUTER VISION",
+      name: "A CNN built from scratch",
+      lead: "A convolutional network trained from scratch, plus a controlled experiment adding anime images — the result was negative, and I document exactly why.",
+      subtitle: "A 25,000-photo baseline model versus the same pipeline with 2,000 anime images added",
+      summary:
+        "With no pretrained weights, I built a Keras network of four convolutional blocks by hand: images resized to 128×128, augmented with rotation, zoom and flips during training, and tuned with learning-rate decay and early stopping. The baseline reached 95.12% test accuracy on real photographs; retraining the identical architecture with 2,000 self-crawled anime cat and dog images dropped test accuracy to 93.93%.",
+      viewArtifacts: "Browse notebook & data",
+      factTest: "baseline test accuracy",
+      factImages: "training images",
+      factAnime: "self-crawled anime images",
+      factParams: "model parameters",
+      cmpEyebrow: "CONTROLLED COMPARISON",
+      cmpTitle: "Does adding anime art help or hurt?",
+      cmpIntro:
+        "Both runs share the same architecture, augmentation and callbacks — the only variable is whether those 2,000 anime images are in the training set.",
+      cmpMetric: "Metric",
+      cmpColReal: "Variant A · real photos only",
+      cmpColAnime: "Variant B · real + anime",
+      cmpImages: "Total images",
+      cmpEpochs: "Epochs actually run",
+      cmpTrain: "Training accuracy",
+      cmpVal: "Validation accuracy",
+      cmpTest: "Test accuracy",
+      cmpNote:
+        "Conclusion: adding anime data reduced accuracy on real photographs by about 1.2 percentage points. The slides once presented 94.32% and 93.93% as two different models, but both numbers actually belong to variant B — one is its validation score and the other its test score.",
+      cmpFindTitle: "The claimed anime benefit was never measured",
+      cmpFindBody:
+        "The slides state that accuracy on anime images improved, yet variant B was never evaluated on an anime-only set. That claim has no numbers behind it; all we can confirm is the drop on real photos.",
+      cmpFlawTitle: "The comparison is not clean",
+      cmpFlawBody:
+        "About 200 anime images leaked into variant B's 2,700-image test set, so its 93.93% is a mixed real-plus-anime figure and is not measured on the same scale as variant A's 95.12%. This is the flaw I should have caught during the project rather than after.",
+      dataEyebrow: "DATASET",
+      dataTitle: "Photographs plus self-crawled anime art",
+      dataIntro:
+        "The Kaggle set keeps the baseline comparable; no anime dataset existed, so that part had to be crawled and hand-filtered.",
+      realTitle: "Real photographs",
+      realBody: "The Kaggle Dogs vs Cats labelled set — 12,500 cats and 12,500 dogs, strictly 1:1 across poses, lighting and backgrounds.",
+      animeTitle: "Self-crawled anime cats and dogs",
+      animeBody:
+        "Crawled and hand-filtered from social platforms such as Douyin, Xiaohongshu and Zhihu, anime comics, and WeChat cat/dog sticker packs — 2,000 images in total (1,000 per class). With no standard dataset available, visual style varies widely.",
+      splitTitle: "Merged into one directory",
+      splitBody:
+        "Anime images were renamed into the cat.*/dog.* series continuing the original numbering from 12,500 and mixed into the same folder, with labels derived from the filename prefix.",
+      figDist: "Class distribution: 10,800 / 10,800 for training and 1,350 / 1,350 for validation and test, strictly balanced throughout.",
+      figCurves: "Loss and accuracy curves for the baseline model (real photos only), flattening out after 30 epochs.",
+      sampleNote: "Dataset samples (each downscaled below 900px, for preview only).",
+      modelEyebrow: "MODEL & TRAINING",
+      modelTitle: "Four convolutional blocks, 5.11M parameters",
+      modelIntro: "Channel counts double at every block, each with batch normalisation and dropout, all trained from random initialisation.",
+      archEyebrow: "ARCHITECTURE",
+      archTitle: "Conv 32 → 64 → 128 → 256",
+      archOne: "Four blocks, each: Conv2D(3×3, ReLU, valid) → BatchNorm → MaxPool(2×2) → Dropout(0.2)",
+      archTwo: "Channels double per block — 32 → 64 → 128 → 256 — while feature maps shrink",
+      archThree: "Classifier head: Flatten → Dense(512, ReLU) → BatchNorm → Dropout → Dense(2, softmax)",
+      archFour: "5,112,514 parameters in total (5,110,530 trainable), with no pretrained weights",
+      trainEyebrow: "TRAINING SETUP",
+      trainTitle: "Augmentation plus two callbacks",
+      trainOne: "Adam optimiser, binary cross-entropy loss, batch size 32",
+      trainTwo: "Augmentation: 15° rotation, 0.2 zoom, horizontal flips, 0.1 shear, 0.1 width and height shift, fill_mode=reflect",
+      trainThree: "ReduceLROnPlateau: monitors val_accuracy, patience=10, factor=0.9 (learning rate decaying from 1e-3 to 9e-4 and 1.56e-5)",
+      trainFour: "EarlyStopping: monitors val_loss, patience=10, restoring the best weights; no ModelCheckpoint was used",
+      trainFive: "Variant A ran 30 epochs; variant B was configured for 60 and stopped at epoch 40 — 675 batches per epoch, about 142 seconds each",
+      reflectEyebrow: "REFLECTION",
+      reflectTitle: "Four things this experiment got wrong",
+      reflectIntro: "More valuable than the 95% is being able to say which conclusions do not hold, and how to design it better next time.",
+      issue1Title: "Anime images contaminated the test set",
+      issue1Body:
+        "Because anime and real images were mixed before the random split, roughly 200 anime images landed in the test set, making the two variants' scores incomparable. The right approach is one fixed, real-only test set with anime images confined to training.",
+      issue2Title: "The anime-side benefit was never measured",
+      issue2Body:
+        "If the goal of adding anime data is better anime recognition, an anime-only test set should have been built to verify it. Without that, the only defensible conclusion is that real-photo accuracy dropped.",
+      issue3Title: "Only one CAM image was produced",
+      issue3Body:
+        "The visualisation plan produced a single heat-map on one real photo, not the three images it called for, and no quantitative metric at all. It counts as an initial attempt and cannot support any claim about texture attention.",
+      issue4Title: "Splitting and record-keeping were sloppy",
+      issue4Body:
+        "Train/validation splits used random values rather than stratified sampling, leaving the two classes slightly unbalanced; the two weight files have identical byte sizes and indistinguishable names; and the slides mistakenly present one model's validation and test scores as two different models.",
+      figCam: "The single CAM output — a real photo with the highlight concentrated on the dog's face — an unfinished initial attempt.",
+      engEyebrow: "ENGINEERING",
+      engTitle: "The full path from data to submission",
+      engBody: "Exploration, generator-based augmentation, model construction, callback-driven training, prediction and visualisation all live in one notebook.",
+      eng1Title: "Exploration & splitting",
+      eng1Body:
+        "Class balance and image-size distributions are inspected, train/validation/test splits are built from both DataFrames and directories, and the 1:1 mix of real and anime images is verified.",
+      eng2Title: "Augmentation pipeline",
+      eng2Body: "ImageDataGenerator normalises to 0–1; six geometric transforms apply to training data only, while validation is normalised only to avoid evaluation bias.",
+      eng3Title: "Callback-driven training",
+      eng3Body: "ReduceLROnPlateau decays the learning rate on plateaus and EarlyStopping restores the best weights, with the full per-epoch learning-rate trail preserved.",
+      eng4Title: "Prediction & submission",
+      eng4Body:
+        "The saved model predicts in batches over 12,500 test images and exports an id/label submission file (6,366 cats / 6,134 dogs), followed by error analysis on hard cases.",
+      navPrev: "Previous project: danmu text analytics",
     },
     research: {
       title: "Research Paper",
@@ -1104,6 +1307,7 @@ function setLanguage(language) {
     research: ["researchPageTitle", "researchPageDescription"],
     project: ["projectPageTitle", "projectPageDescription"],
     danmu: ["danmuPageTitle", "danmuPageDescription"],
+    vision: ["visionPageTitle", "visionPageDescription"],
   }[pageKind] || ["pageTitle", "pageDescription"];
   document.title = translations[language][pageMeta[0]];
   description.setAttribute("content", translations[language][pageMeta[1]]);

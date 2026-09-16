@@ -2212,3 +2212,94 @@ section.reveal:target {
 .ai-bento .rule-facts {
   margin-bottom: 22px;
 }
+
+/* ==========================================================================
+   Computer-vision case study
+   ========================================================================== */
+
+.vision-samples {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.vision-samples img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  object-fit: cover;
+  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s ease;
+}
+
+.vision-samples img:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-4px) scale(1.03);
+}
+
+@media (max-width: 860px) {
+  .vision-samples {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .vision-samples {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vision-samples img {
+    transition: none;
+  }
+}
+
+/* Vision case study — figure blocks */
+
+.vision-visuals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.vision-figure {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+}
+
+.vision-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 14px;
+  background: #fff;
+}
+
+.vision-figure figcaption {
+  padding: 0 18px 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+  .vision-visuals {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bento-card,
+  .vision-figure {
+    transition: none;
+  }
+}

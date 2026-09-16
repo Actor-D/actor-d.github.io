@@ -68,6 +68,7 @@
           <a href="#about" data-i18n="nav.about">关于我</a>
           <a href="#projects" data-i18n="nav.projects">项目案例</a>
           <a href="danmu.html" data-i18n="nav.analysis">数据分析</a>
+          <a href="vision.html" data-i18n="nav.vision">图像识别</a>
           <a href="#research" data-i18n="nav.research">研究论文</a>
           <a href="#journey" data-i18n="nav.journey">学习经历</a>
           <a href="#contact" data-i18n="nav.contact">联系我</a>
@@ -213,7 +214,7 @@
         </div>
 
         <div class="bento ai-bento">
-          <article class="bento-card span-2 rule-card reveal">
+          <article class="bento-card span-3 rule-card reveal">
             <span class="rule-code">ML · PRICING</span>
             <h4 data-i18n="ai.mlTitle">机器学习计价模型</h4>
             <p data-i18n="ai.mlBody">
@@ -226,7 +227,7 @@
             </a>
           </article>
 
-          <article class="bento-card span-2 rule-card reveal">
+          <article class="bento-card span-3 rule-card reveal">
             <span class="rule-code">LLM · ASSISTANT</span>
             <h4 data-i18n="ai.llmTitle">大模型对话助手</h4>
             <p data-i18n="ai.llmBody">
@@ -239,7 +240,7 @@
             </a>
           </article>
 
-          <article class="bento-card span-2 rule-card reveal">
+          <article class="bento-card span-3 rule-card reveal">
             <span class="rule-code">NLP · TEXT</span>
             <h4 data-i18n="ai.nlpTitle">弹幕文本挖掘</h4>
             <p data-i18n="ai.nlpBody">
@@ -248,6 +249,19 @@
             <div class="rule-facts"><span>jieba</span><span>99,590 danmaku</span><span>r = 0.922</span></div>
             <a class="tile-link" href="danmu.html">
               <span data-i18n="moreProjects.viewAnalysis">查看完整分析</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+
+          <article class="bento-card span-3 rule-card reveal">
+            <span class="rule-code">CV · VISION</span>
+            <h4 data-i18n="ai.cvTitle">卷积网络图像分类</h4>
+            <p data-i18n="ai.cvBody">
+              从零搭建 4 块 CNN（511 万参数）完成猫狗二分类，并追加 2,000 张自爬动漫图做对照实验，如实记录「精度反而下降」的负面结论与原因。
+            </p>
+            <div class="rule-facts"><span>TensorFlow / Keras</span><span>27,000 images</span><span>95.12% baseline</span></div>
+            <a class="tile-link" href="vision.html">
+              <span data-i18n="projects.viewFull">查看完整案例</span>
               <span aria-hidden="true">↗</span>
             </a>
           </article>
@@ -324,14 +338,17 @@
             </p>
           </article>
 
-          <article class="bento-card tile-card span-3 reveal">
-            <div class="tile-art art-two" aria-hidden="true"><span>CNN<br />VISION</span></div>
-            <p class="project-type" data-i18n="moreProjects.petType">深度学习 · 计算机视觉</p>
-            <h3 data-i18n="moreProjects.petTitle">跨风格猫狗图像识别</h3>
+          <a class="bento-card tile-card tile-card-link span-3 reveal" href="vision.html">
+            <div class="tile-art art-two" aria-hidden="true">
+              <span>CNN<br />VISION</span>
+              <i class="tile-go">↗</i>
+            </div>
+            <p class="project-type" data-i18n="moreProjects.petType">计算机视觉 · CNN</p>
+            <h3 data-i18n="moreProjects.petTitle">猫狗图像分类与动漫对照实验</h3>
             <p data-i18n="moreProjects.petBody">
-              采集清洗 27,000 张跨风格图像，构建 CNN 分类模型，测试集准确率 94.32%；用 CAM 可视化验证动漫数据使纹理敏感度提升 3.2%。
+              从零搭建 4 块 CNN（511 万参数），25,000 张实拍图测试准确率 95.12%；追加 2,000 张自爬动漫图后重训，真实图精度下降约 1.2 个百分点。
             </p>
-          </article>
+          </a>
 
           <a class="bento-card tile-card tile-card-link span-3 reveal" href="danmu.html">
             <div class="tile-art art-three" aria-hidden="true">

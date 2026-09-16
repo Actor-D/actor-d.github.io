@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Actor.D 的图像识别大作业——猫狗图像分类：从零搭建 4 块 CNN（511 万参数），纯真实图测试准确率 95.12%，并加入 2,000 张动漫猫狗做泛化对比实验。"
+    />
+    <meta name="theme-color" content="#f5f5f7" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <title>猫狗图像分类 · Actor.D</title>
+    <script>
+      document.documentElement.classList.add("page-pre");
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="theme-tech.css" />
+    <link rel="stylesheet" href="research.css" />
+    <script src="script.js" defer></script>
+    <script src="research.js" defer></script>
+  </head>
+  <body data-page="vision">
+    <div class="scroll-progress" aria-hidden="true"><i></i></div>
+    <div class="page-atmosphere" aria-hidden="true">
+      <span class="atmosphere-grid"></span>
+      <span class="atmosphere-glow glow-one"></span>
+      <span class="atmosphere-glow glow-two"></span>
+      <span class="atmosphere-glow glow-three"></span>
+      <span class="atmosphere-noise"></span>
+      <canvas id="droplet-canvas" class="atmosphere-droplets" aria-hidden="true"></canvas>
+    </div>
+    <a class="skip-link" href="#main" data-i18n="accessibility.skip">跳到主要内容</a>
+
+    <header class="site-header">
+      <a class="brand" href="index.html#home" data-i18n-aria-label="accessibility.home">
+        <span class="brand-mark">A</span>
+        <span>Actor.D</span>
+      </a>
+
+      <div class="header-tools">
+        <a
+          class="header-github"
+          href="https://github.com/Actor-D"
+          target="_blank"
+          rel="noopener"
+          data-i18n-aria-label="accessibility.github"
+        >
+          <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+
+        <div class="language-switcher" role="group" data-i18n-aria-label="accessibility.language">
+          <button type="button" data-lang="zh" aria-pressed="true">中</button>
+          <span aria-hidden="true">/</span>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+
+        <button
+          class="menu-button"
+          type="button"
+          data-i18n-aria-label="accessibility.menuOpen"
+          aria-expanded="false"
+          aria-controls="site-nav"
+        >
+          <span></span><span></span>
+        </button>
+
+        <nav id="site-nav" class="site-nav" data-i18n-aria-label="accessibility.navigation">
+          <a href="index.html#about" data-i18n="nav.about">关于我</a>
+          <a href="project.html" data-i18n="nav.projects">项目案例</a>
+          <a href="danmu.html" data-i18n="nav.analysis">数据分析</a>
+          <a href="vision.html" data-i18n="nav.vision">图像识别</a>
+          <a href="research.html" data-i18n="nav.research">研究论文</a>
+          <a href="index.html#contact" data-i18n="nav.contact">联系我</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="vision" class="case-study section-shell">
+        <div class="section-heading reveal">
+          <p class="eyebrow">COMPUTER VISION · CNN</p>
+          <h2 data-i18n="vision.title">猫狗图像分类</h2>
+          <p class="section-lead" data-i18n="vision.lead">
+            从零搭建卷积网络，并做了一次「加入动漫图像」的对照实验——结论是负面的，但我把原因也一并写清楚。
+          </p>
+        </div>
+
+        <div class="case-study-overview">
+          <div class="case-study-title reveal">
+            <p class="project-kicker" data-i18n="vision.pageKicker">课程大作业 · 图像识别</p>
+            <h3 data-i18n="vision.name">从零搭建 CNN</h3>
+            <p data-i18n="vision.subtitle">25,000 张实拍图的基线模型，与加入 2,000 张动漫图后的对照</p>
+          </div>
+          <div class="case-study-summary reveal">
+            <p data-i18n="vision.summary">
+              不使用任何预训练权重，用 Keras 逐层搭出 4 个卷积块的网络：图像统一到 128×128，训练时做旋转、缩放、翻转增强，配合学习率衰减与早停。基线模型在纯真实图上取得测试准确率 95.12%；随后按同样的架构与流程，把自行爬取的 2,000 张动漫猫狗混入训练集重训，测试准确率降到 93.93%。
+            </p>
+            <div class="tech-stack" data-i18n-aria-label="accessibility.techStack">
+              <span>TensorFlow / Keras 3</span>
+              <span>NumPy</span>
+              <span>pandas</span>
+              <span>ImageDataGenerator</span>
+              <span>Matplotlib</span>
+              <span>Pillow</span>
+            </div>
+            <div class="case-study-actions">
+              <a class="button button-primary" href="vision/" target="_blank" rel="noopener">
+                <span data-i18n="vision.viewArtifacts">查看 Notebook 与数据</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a class="button button-glass" href="index.html#projects" target="_blank" rel="noopener">
+                <span data-i18n="danmu.backToProjects">返回项目列表</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-facts reveal">
+          <div><strong>95.12%</strong><span data-i18n="vision.factTest">基线测试准确率</span></div>
+          <div><strong>27,000</strong><span data-i18n="vision.factImages">张训练用图像</span></div>
+          <div><strong>2,000</strong><span data-i18n="vision.factAnime">张自爬动漫图</span></div>
+          <div><strong>5.11M</strong><span data-i18n="vision.factParams">模型参数量</span></div>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="vision.cmpEyebrow">对照实验</p>
+            <h3 data-i18n="vision.cmpTitle">加入动漫图像，究竟是帮助还是伤害</h3>
+            <p class="flow-note" data-i18n="vision.cmpIntro">
+              两次训练使用完全相同的架构、增强策略与回调配置，唯一变量是训练集里有没有那 2,000 张动漫图。
+            </p>
+          </div>
+          <div class="table-scroll reveal">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th data-i18n="vision.cmpMetric">指标</th>
+                  <th data-i18n="vision.cmpColReal">变体 A · 纯真实图</th>
+                  <th data-i18n="vision.cmpColAnime">变体 B · 真实 + 动漫</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th data-i18n="vision.cmpImages">图像总量</th><td>25,000</td><td>27,000（+2,000）</td></tr>
+                <tr><th data-i18n="vision.cmpEpochs">实际训练轮数</th><td>30</td><td>40（配置 60，早停触发）</td></tr>
+                <tr><th data-i18n="vision.cmpTrain">训练准确率</th><td>96.39%</td><td>94.65%</td></tr>
+                <tr><th data-i18n="vision.cmpVal">验证准确率</th><td>95.56%</td><td>94.33%</td></tr>
+                <tr class="is-winner"><th data-i18n="vision.cmpTest">测试准确率</th><td><strong>95.12%</strong></td><td>93.93%</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note" data-i18n="vision.cmpNote">
+            结论：加入动漫数据后，模型在真实图像上的准确率下降了约 1.2 个百分点。课件里曾把 94.32% 与 93.93% 当作两个模型对比，实际上这两个数字都属于变体 B（前者是验证集、后者是测试集）。
+          </p>
+
+          <div class="bento" style="margin-top: 28px">
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">FINDING · NEGATIVE</span>
+              <h4 data-i18n="vision.cmpFindTitle">动漫增益没有被量化</h4>
+              <p data-i18n="vision.cmpFindBody">
+                课件结论称「动漫图上的准确率有所提升」，但变体 B 从未在纯动漫图像上单独测过，这个说法没有数字支撑；可确认的只有真实图精度的下降。
+              </p>
+              <div class="rule-facts"><span>−1.19 pp test</span><span>−1.23 pp val</span></div>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">FLAW · COMPARABILITY</span>
+              <h4 data-i18n="vision.cmpFlawTitle">对照组并不干净</h4>
+              <p data-i18n="vision.cmpFlawBody">
+                变体 B 的 2,700 张测试集里混入了约 200 张动漫图，因此 93.93% 是「真实 + 动漫」的混合精度，与变体 A 的纯真实 95.12% 并非同一把尺子——这也是我复盘时最该早点发现的问题。
+              </p>
+              <div class="rule-facts"><span>test 2700</span><span>≈200 anime</span></div>
+            </article>
+          </div>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="vision.dataEyebrow">数据集</p>
+            <h3 data-i18n="vision.dataTitle">实拍照片 + 自爬动漫图</h3>
+            <p class="flow-note" data-i18n="vision.dataIntro">
+              Kaggle 基线保证可比性，动漫部分没有现成数据集，只能自己爬取并人工筛选。
+            </p>
+          </div>
+          <div class="bento">
+            <article class="bento-card span-2 rule-card reveal">
+              <span class="rule-code">REAL · 25,000</span>
+              <h4 data-i18n="vision.realTitle">实拍猫狗</h4>
+              <p data-i18n="vision.realBody">
+                Kaggle Dogs vs Cats 标注集，猫狗各 12,500 张，类别严格 1:1，覆盖各种姿态、光照与背景。
+              </p>
+              <div class="rule-facts"><span>12,500 cats</span><span>12,500 dogs</span></div>
+            </article>
+            <article class="bento-card span-2 rule-card reveal">
+              <span class="rule-code">ANIME · 2,000</span>
+              <h4 data-i18n="vision.animeTitle">自爬动漫猫狗</h4>
+              <p data-i18n="vision.animeBody">
+                用爬虫从抖音、小红书、知乎等社交平台、动漫漫画与微信表情包中收集并人工筛选，共 2,000 张（每类 1,000）。网络缺乏现成标准数据集，因此风格差异很大。
+              </p>
+              <div class="rule-facts"><span>1,000 cats</span><span>1,000 dogs</span></div>
+            </article>
+            <article class="bento-card span-2 rule-card reveal">
+              <span class="rule-code">SPLIT</span>
+              <h4 data-i18n="vision.splitTitle">混入同一目录</h4>
+              <p data-i18n="vision.splitBody">
+                动漫图被重命名为 cat.*/dog.* 序列接在原编号之后（12,500 起），与实拍图混在同一目录，靠文件名前缀取标签。
+              </p>
+              <div class="rule-facts"><span>15,000 file samples</span></div>
+            </article>
+          </div>
+
+          <div class="vision-visuals">
+            <figure class="vision-figure reveal">
+              <img src="vision/images/class-distribution.png" alt="类别分布：训练 10800/10800，验证与测试 1350/1350" loading="lazy" />
+              <figcaption data-i18n="vision.figDist">类别分布：训练 10,800 / 10,800，验证与测试各 1,350 / 1,350，全程保持 1:1 平衡。</figcaption>
+            </figure>
+            <figure class="vision-figure reveal">
+              <img src="vision/images/curves-real-only.png" alt="基线模型的损失与准确率曲线" loading="lazy" />
+              <figcaption data-i18n="vision.figCurves">基线模型（纯真实图）的损失与准确率曲线，30 轮后趋于平稳。</figcaption>
+            </figure>
+          </div>
+
+          <div class="vision-samples reveal">
+            <img src="vision/images/cat_1_jpg.jpg" alt="真实猫样本" loading="lazy" />
+            <img src="vision/images/cat_5_jpeg.jpg" alt="真实猫样本" loading="lazy" />
+            <img src="vision/images/cat_12_jpg.jpg" alt="真实猫样本" loading="lazy" />
+            <img src="vision/images/dog_2_jpg.jpg" alt="真实狗样本" loading="lazy" />
+            <img src="vision/images/dog_7_jpg.jpg" alt="真实狗样本" loading="lazy" />
+            <img src="vision/images/dog_11_jpg.jpg" alt="真实狗样本" loading="lazy" />
+          </div>
+          <p class="table-note" data-i18n="vision.sampleNote">数据集样本（每张压缩到 900px 以内，仅供预览）。</p>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="vision.modelEyebrow">模型与训练</p>
+            <h3 data-i18n="vision.modelTitle">四个卷积块，511 万参数</h3>
+            <p class="flow-note" data-i18n="vision.modelIntro">
+              通道数逐块加倍，每块都带批归一化与 Dropout，全部参数从随机初始化开始训练。
+            </p>
+          </div>
+          <div class="project-detail-grid">
+            <article class="project-detail reveal">
+              <p class="eyebrow" data-i18n="vision.archEyebrow">网络结构</p>
+              <h3 data-i18n="vision.archTitle">Conv 32 → 64 → 128 → 256</h3>
+              <ul>
+                <li data-i18n="vision.archOne">4 个卷积块，每块：Conv2D(3×3, ReLU, valid) → BatchNorm → MaxPool(2×2) → Dropout(0.2)</li>
+                <li data-i18n="vision.archTwo">通道数逐块加倍 32 → 64 → 128 → 256，特征图尺寸逐层收缩</li>
+                <li data-i18n="vision.archThree">分类头：Flatten → Dense(512, ReLU) → BatchNorm → Dropout → Dense(2, softmax)</li>
+                <li data-i18n="vision.archFour">总参数 5,112,514，其中可训练 5,110,530，无任何预训练权重</li>
+              </ul>
+            </article>
+            <article class="project-detail reveal">
+              <p class="eyebrow" data-i18n="vision.trainEyebrow">训练配置</p>
+              <h3 data-i18n="vision.trainTitle">增强 + 两个回调</h3>
+              <ul>
+                <li data-i18n="vision.trainOne">Adam 优化器，损失 binary crossentropy，批量大小 32</li>
+                <li data-i18n="vision.trainTwo">增强：旋转 15°、缩放 0.2、水平翻转、剪切 0.1、宽高平移各 0.1、fill_mode=reflect</li>
+                <li data-i18n="vision.trainThree">ReduceLROnPlateau：监控 val_accuracy，patience=10，factor=0.9（学习率从 1e-3 逐步衰减到 9e-4、1.56e-5）</li>
+                <li data-i18n="vision.trainFour">EarlyStopping：监控 val_loss，patience=10，并恢复最优权重；未使用 ModelCheckpoint</li>
+                <li data-i18n="vision.trainFive">变体 A 训练 30 轮；变体 B 配置 60 轮、第 40 轮早停，每轮 675 个 batch，约 142 秒</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="vision.reflectEyebrow">复盘与反思</p>
+            <h3 data-i18n="vision.reflectTitle">这个实验没做好的四个地方</h3>
+            <p class="flow-note" data-i18n="vision.reflectIntro">
+              比"跑出 95%"更有价值的，是能说清哪些结论站不住、以及下次该怎么设计。
+            </p>
+          </div>
+          <div class="bento">
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">LEAKAGE</span>
+              <h4 data-i18n="vision.issue1Title">测试集被动漫图污染</h4>
+              <p data-i18n="vision.issue1Body">
+                动漫图与实拍图混合后随机划分，约 200 张动漫图落进了测试集，导致两个变体的测试分数不可直接比较。正确做法是固定同一份纯真实测试集，动漫图只进训练集。
+              </p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">UNMEASURED</span>
+              <h4 data-i18n="vision.issue2Title">动漫侧的收益从未测量</h4>
+              <p data-i18n="vision.issue2Body">
+                既然加动漫数据是为了提升动漫图识别，就该单独构造一份动漫测试集来验证。缺少这一测，结论只剩「真实图变差了」，动漫增益无法证实。
+              </p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">CAM · INCOMPLETE</span>
+              <h4 data-i18n="vision.issue3Title">CAM 分析只做了一张</h4>
+              <p data-i18n="vision.issue3Body">
+                可视化计划只完成了一张真实照片的热力图，没有覆盖计划中的三张图，更没有任何定量指标。它只能算作初步尝试，不足以支撑任何关于"关注纹理"的结论。
+              </p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">METHOD</span>
+              <h4 data-i18n="vision.issue4Title">划分与记录不够严谨</h4>
+              <p data-i18n="vision.issue4Body">
+                训练/验证集用随机数切分而非按类别分层，导致两类样本数略有偏差；两个模型的权重文件字节数完全相同、命名无法区分；课件中还存在把同一模型的验证与测试分数当作两个模型对比的笔误。
+              </p>
+            </article>
+          </div>
+
+          <figure class="vision-figure reveal" style="margin-top: 28px">
+            <img src="vision/images/cam-attempt.png" alt="CAM 热力图初步尝试" loading="lazy" />
+            <figcaption data-i18n="vision.figCam">CAM 可视化的唯一一张产出（真实照片，高亮集中在狗的面部区域），属于未完成的初步尝试。</figcaption>
+          </figure>
+        </div>
+
+        <div class="engineering-section">
+          <div class="engineering-heading reveal">
+            <p class="eyebrow" data-i18n="vision.engEyebrow">工程拆解</p>
+            <h3 data-i18n="vision.engTitle">从数据到提交的完整链路</h3>
+            <p data-i18n="vision.engBody">
+              数据探索、生成器增强、模型搭建、回调训练、预测提交与结果可视化，都在同一个 Notebook 内完成。
+            </p>
+          </div>
+          <div class="engineering-grid">
+            <article class="engineering-card reveal">
+              <span class="engineering-code">01 / DATA</span>
+              <div class="engineering-icon">▦</div>
+              <h4 data-i18n="vision.eng1Title">数据探索与划分</h4>
+              <p data-i18n="vision.eng1Body">
+                统计类别分布与图像尺寸分布，用 DataFrame 与目录两种方式划分训练、验证与测试集，并确认真实图与动漫图都按 1:1 混入。
+              </p>
+              <div class="engineering-tags"><span>pandas</span><span>Pillow</span><span>Matplotlib</span></div>
+            </article>
+            <article class="engineering-card reveal">
+              <span class="engineering-code">02 / AUGMENT</span>
+              <div class="engineering-icon">⟳</div>
+              <h4 data-i18n="vision.eng2Title">数据增强管线</h4>
+              <p data-i18n="vision.eng2Body">
+                ImageDataGenerator 归一化到 0–1，训练集叠加六项几何变换，验证集只做归一化，避免评估偏差。
+              </p>
+              <div class="engineering-tags"><span>ImageDataGenerator</span><span>rescale 1/255</span></div>
+            </article>
+            <article class="engineering-card reveal">
+              <span class="engineering-code">03 / TRAIN</span>
+              <div class="engineering-icon">≋</div>
+              <h4 data-i18n="vision.eng3Title">回调驱动的训练</h4>
+              <p data-i18n="vision.eng3Body">
+                ReduceLROnPlateau 在平台期衰减学习率，EarlyStopping 恢复最优权重，完整保留逐轮学习率变化记录。
+              </p>
+              <div class="engineering-tags"><span>Keras 3</span><span>Callbacks</span></div>
+            </article>
+            <article class="engineering-card reveal">
+              <span class="engineering-code">04 / PREDICT</span>
+              <div class="engineering-icon">◉</div>
+              <h4 data-i18n="vision.eng4Title">预测与提交</h4>
+              <p data-i18n="vision.eng4Body">
+                载入保存的模型批量预测 12,500 张测试图，输出 id/label 提交文件（6,366 猫 / 6,134 狗），并对难例做错误分析。
+              </p>
+              <div class="engineering-tags"><span>NumPy</span><span>submission.csv</span></div>
+            </article>
+          </div>
+        </div>
+
+        <nav class="page-nav" data-i18n-aria-label="accessibility.navigation">
+          <a href="danmu.html"><span aria-hidden="true">←</span> <span data-i18n="vision.navPrev">上一个项目：弹幕文本分析</span></a>
+          <a class="nav-next" href="research.html"><span data-i18n="common.nextResearch">继续阅读：研究论文</span> <span aria-hidden="true">→</span></a>
+        </nav>
+      </section>
+    </main>
+
+    <footer class="site-footer section-shell">
+      <p>© <span id="current-year">2026</span> Actor.D</p>
+      <p class="education-signature">ZJU · CUHK</p>
+      <div class="footer-links">
+        <a
+          href="https://github.com/Actor-D"
+          target="_blank"
+          rel="noopener"
+          data-i18n-aria-label="accessibility.github"
+          data-i18n="footer.github"
+        >GitHub</a>
+        <a href="#main" data-i18n="footer.backToTop">回到顶部 ↑</a>
+      </div>
+    </footer>
+  </body>
+</html>

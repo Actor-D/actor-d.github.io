@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>猫狗图像分类 · 数据与代码</title>
+    <meta
+      name="description"
+      content="图像识别大作业：从零搭建 CNN 完成猫狗二分类，25,000 张实拍图测试准确率 95.12%，并加入 2,000 张动漫图做对照实验。含 Notebook、训练配置与图表。"
+    />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <style>
+      :root {
+        --ink: #1d1d1f;
+        --muted: #6e6e73;
+        --line: rgba(0, 0, 0, 0.08);
+        --accent: #0071e3;
+        --bg: #f5f5f7;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 56px 24px 80px;
+        background:
+          radial-gradient(620px circle at 78% 4%, rgba(41, 151, 255, 0.1), transparent 60%),
+          var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC",
+          "Helvetica Neue", "Noto Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      main { max-width: 840px; margin: 0 auto; }
+      .eyebrow { margin: 0 0 14px; color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.16em; }
+      h1 { margin: 0 0 16px; font-size: clamp(32px, 5.6vw, 50px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.1; }
+      .lead { margin: 0 0 12px; color: var(--muted); font-size: 17px; line-height: 1.8; }
+      .stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 0; }
+      .stats span {
+        padding: 8px 15px; border: 1px solid var(--line); border-radius: 99px;
+        background: #fff; color: #48484a; font-size: 12.5px;
+      }
+      .stats b { color: var(--accent); }
+      .card {
+        margin-top: 22px; padding: 26px 28px; border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 24px; background: rgba(255, 255, 255, 0.64);
+        box-shadow: 0 20px 55px rgba(15, 23, 42, 0.07); backdrop-filter: blur(18px) saturate(160%);
+      }
+      .card h2 { margin: 0 0 14px; font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+      .card p { margin: 0 0 10px; color: var(--muted); font-size: 14.5px; line-height: 1.8; }
+      .card p:last-child { margin-bottom: 0; }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; }
+      thead th { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+      tbody th { font-weight: 500; }
+      td strong { color: var(--accent); }
+      ul.files { margin: 0; padding: 0; list-style: none; }
+      ul.files li {
+        display: flex; gap: 14px; align-items: baseline; justify-content: space-between;
+        padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 14px;
+      }
+      ul.files li:last-child { border-bottom: 0; }
+      ul.files a { color: var(--accent); text-decoration: none; }
+      ul.files a:hover { text-decoration: underline; }
+      ul.files em { color: var(--muted); font-size: 12px; font-style: normal; white-space: nowrap; }
+      .note {
+        margin-top: 18px; padding: 14px 18px; border-left: 3px solid var(--accent);
+        border-radius: 0 12px 12px 0; background: rgba(0, 113, 227, 0.05);
+        color: var(--muted); font-size: 13px; line-height: 1.75;
+      }
+      figure { margin: 18px 0 0; }
+      figure img { display: block; width: 100%; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+      figcaption { margin-top: 8px; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+      pre {
+        margin: 0 0 10px; padding: 15px 18px; overflow-x: auto; border: 1px solid var(--line);
+        border-radius: 14px; background: #fff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12.5px; line-height: 1.7;
+      }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--accent); font-size: 0.94em; }
+      .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+      .links a {
+        display: inline-flex; gap: 8px; align-items: center; padding: 12px 22px;
+        border-radius: 99px; background: var(--ink); color: #fff;
+        font-size: 14px; font-weight: 500; text-decoration: none;
+        transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+      }
+      .links a:hover { background: var(--accent); transform: translateY(-2px); }
+      .links a.ghost { border: 1px solid var(--line); background: rgba(255, 255, 255, 0.65); color: var(--ink); }
+      .links a.ghost:hover { background: #fff; color: var(--accent); }
+      footer { margin-top: 40px; color: var(--muted); font-size: 13px; }
+      footer a { color: var(--accent); text-decoration: none; }
+      @media (prefers-reduced-motion: reduce) { .links a { transition: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">COMPUTER VISION · 数据与代码</p>
+      <h1>猫狗图像分类</h1>
+      <p class="lead">
+        不使用预训练权重，用 Keras 逐层搭建 4 个卷积块的网络，在 128×128 输入上完成猫狗二分类；
+        随后加入自行爬取的 2,000 张动漫猫狗做对照实验。
+      </p>
+      <div class="stats">
+        <span><b>25,000</b> 张实拍图</span>
+        <span><b>2,000</b> 张自爬动漫图</span>
+        <span><b>5.11M</b> 参数</span>
+        <span>测试准确率 <b>95.12%</b>（基线）</span>
+      </div>
+
+      <div class="card">
+        <h2>对照实验结论</h2>
+        <table>
+          <thead>
+            <tr><th>指标</th><th>变体 A · 纯真实图</th><th>变体 B · 真实 + 动漫</th></tr>
+          </thead>
+          <tbody>
+            <tr><th>图像总量</th><td>25,000</td><td>27,000（+2,000）</td></tr>
+            <tr><th>实际训练轮数</th><td>30</td><td>40（配置 60，早停触发）</td></tr>
+            <tr><th>训练准确率</th><td>96.39%</td><td>94.65%</td></tr>
+            <tr><th>验证准确率</th><td>95.56%</td><td>94.33%</td></tr>
+            <tr><th>测试准确率</th><td><strong>95.12%</strong></td><td>93.93%</td></tr>
+          </tbody>
+        </table>
+        <div class="note">
+          <b>两个必须说明的问题：</b>① 加入动漫数据后，真实图像上的准确率下降约 1.2 个百分点；
+          ② 变体 B 的测试集里混入了约 200 张动漫图，因此 93.93% 是「真实 + 动漫」的混合精度，
+          与变体 A 的 95.12% 并非同一口径。课件曾把 94.32% 与 93.93% 当作两个模型对比，
+          实际上两者都属于变体 B（前者验证集、后者测试集）。动漫图上的收益从未单独测量。
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>训练图表</h2>
+        <figure>
+          <img src="./images/class-distribution.png" alt="类别分布" loading="lazy" />
+          <figcaption>类别分布：训练 10,800 / 10,800，验证与测试各 1,350 / 1,350，全程 1:1 平衡。</figcaption>
+        </figure>
+        <figure>
+          <img src="./images/curves-real-only.png" alt="基线模型损失与准确率曲线" loading="lazy" />
+          <figcaption>基线模型（纯真实图）的损失与准确率曲线。</figcaption>
+        </figure>
+        <figure>
+          <img src="./images/cam-attempt.png" alt="CAM 热力图初步尝试" loading="lazy" />
+          <figcaption>CAM 可视化的唯一一张产出，属于未完成的初步尝试，不含定量结论。</figcaption>
+        </figure>
+      </div>
+
+      <div class="card">
+        <h2>文件清单</h2>
+        <ul class="files">
+          <li><a href="./notebook-cats-vs-dogs.md">notebook-cats-vs-dogs.md</a><em>含动漫变体的完整 Notebook 导出（文本）</em></li>
+          <li><a href="./submission.csv">submission.csv</a><em>12,500 行预测结果（6,366 猫 / 6,134 狗）</em></li>
+          <li><a href="./environment.txt">environment.txt</a><em>conda 环境导出（仅含基础包，无 TF/Keras 版本）</em></li>
+          <li><a href="./images/">images/</a><em>训练曲线、类别分布、数据集样本、CAM 图</em></li>
+        </ul>
+        <p class="note">
+          未随仓库发布：训练好的模型权重（<code>model.h5</code> / <code>model1.h5</code> 各约 61 MB）、
+          原数据集（25,000 张实拍图 + 2,000 张动漫图，约 1.8 GB）。需要请按 Notebook 重新训练。
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>关键配置</h2>
+        <pre>输入尺寸     128 × 128 × 3
+网络结构     Conv2D(32/64/128/256, 3×3, valid) + BatchNorm + MaxPool + Dropout(0.2)
+             → Flatten → Dense(512) → BatchNorm → Dropout → Dense(2, softmax)
+参数量       5,112,514（可训练 5,110,530）
+优化器       Adam，loss = binary_crossentropy，batch = 32
+数据增强     旋转 15°、缩放 0.2、水平翻转、剪切 0.1、宽高平移 0.1、fill_mode=reflect
+回调         ReduceLROnPlateau(val_accuracy, patience=10, factor=0.9)
+             EarlyStopping(val_loss, patience=10, restore_best_weights=True)</pre>
+      </div>
+
+      <div class="links">
+        <a href="../vision.html">查看作品集案例页 <span aria-hidden="true">↗</span></a>
+        <a class="ghost" href="./notebook-cats-vs-dogs.md">阅读 Notebook</a>
+        <a class="ghost" href="../index.html#projects">返回项目列表</a>
+      </div>
+
+      <footer>
+        作者：董炎源（Actor.D） ·
+        <a href="https://github.com/Actor-D" target="_blank" rel="noopener">GitHub 主页</a> ·
+        课程作业，仅供学习交流
+      </footer>
+    </main>
+  </body>
+</html>
