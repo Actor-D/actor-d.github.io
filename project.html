@@ -82,13 +82,16 @@
               项目围绕校园外卖与物品配送需求，连接用户认证、多步骤下单、地址管理、支付选择和订单查询，形成完整的前后端业务流程。
             </p>
             <div class="tech-stack" data-i18n-aria-label="accessibility.techStack">
-              <span>Vue 3</span>
-              <span>Vite</span>
-              <span>Pinia</span>
-              <span>Flask</span>
-              <span>SQLAlchemy</span>
+              <span>Vue 3.5</span>
+              <span>Vite 6</span>
+              <span>Vue Router 4</span>
+              <span>Pinia 3</span>
+              <span>Element Plus</span>
+              <span>axios</span>
+              <span>Flask 3</span>
+              <span>Flask-SQLAlchemy</span>
+              <span>PyJWT</span>
               <span>SQLite</span>
-              <span>JWT</span>
             </div>
           </div>
         </div>
@@ -254,8 +257,9 @@
 
         <div class="project-facts reveal">
           <div><strong>04</strong><span data-i18n="projects.factWorkflow">步订单流程</span></div>
-          <div><strong>03</strong><span data-i18n="projects.factModels">个核心数据模型</span></div>
-          <div><strong>JWT</strong><span data-i18n="projects.factAuth">令牌身份认证</span></div>
+          <div><strong>03</strong><span data-i18n="projects.factModels">张数据表</span></div>
+          <div><strong>17</strong><span data-i18n="projects.factApi">个 REST 接口</span></div>
+          <div><strong>16</strong><span data-i18n="projects.factRoutes">条受保护路由</span></div>
         </div>
 
         <div class="delivery-flow reveal">
@@ -290,6 +294,105 @@
               <small>STATUS</small>
               <h4 data-i18n="projects.flowFourTitle">追踪订单</h4>
               <p data-i18n="projects.flowFourBody">查看订单列表、详情、状态并支持再次下单。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="projects.dataEyebrow">数据模型</p>
+            <h3 data-i18n="projects.dataTitle">三张表撑起完整业务闭环</h3>
+            <p class="flow-note" data-i18n="projects.dataIntro">
+              SQLAlchemy ORM 定义 users / addresses / orders 三个模型，通过 user_id 外键串联，所有读写按用户隔离。
+            </p>
+          </div>
+          <div class="bento data-bento">
+            <article class="bento-card span-2 reveal">
+              <p class="bento-label">TABLE / users</p>
+              <h4 data-i18n="projects.dataUserName">用户与身份</h4>
+              <p class="data-desc" data-i18n="projects.dataUserDesc">账户、校区与积分余额</p>
+              <ul class="field-list">
+                <li><code>student_id</code><em>unique · 10 digits</em></li>
+                <li><code>public_id</code><em>uuid4</em></li>
+                <li><code>password</code><em>pbkdf2:sha256</em></li>
+                <li><code>points</code><em>default 100</em></li>
+                <li><code>campus</code><em>login check</em></li>
+                <li><code>last_login</code><em>datetime</em></li>
+              </ul>
+            </article>
+            <article class="bento-card span-2 reveal">
+              <p class="bento-label">TABLE / addresses</p>
+              <h4 data-i18n="projects.dataAddressName">常用地址</h4>
+              <p class="data-desc" data-i18n="projects.dataAddressDesc">用户级地址簿与默认地址</p>
+              <ul class="field-list">
+                <li><code>user_id</code><em>FK → users.id</em></li>
+                <li><code>icon</code><em>type tag</em></li>
+                <li><code>title</code><em>location name</em></li>
+                <li><code>detail</code><em>full address</em></li>
+                <li><code>time</code><em>availability</em></li>
+                <li><code>is_default</code><em>boolean</em></li>
+              </ul>
+            </article>
+            <article class="bento-card span-2 reveal">
+              <p class="bento-label">TABLE / orders</p>
+              <h4 data-i18n="projects.dataOrderName">订单与计价</h4>
+              <p class="data-desc" data-i18n="projects.dataOrderDesc">草稿到支付的完整状态</p>
+              <ul class="field-list">
+                <li><code>order_id</code><em>uuid4</em></li>
+                <li><code>user_id</code><em>FK → users.id</em></li>
+                <li><code>food_name</code><em>item</em></li>
+                <li><code>locker_info</code><em>pickup point</em></li>
+                <li><code>is_urgent</code><em>pricing flag</em></li>
+                <li><code>delivery_address</code><em>drop-off</em></li>
+                <li><code>receiver_address</code><em>resolved</em></li>
+                <li><code>delivery_fee_cash</code><em>5.0 / 7.0</em></li>
+                <li><code>delivery_fee_points</code><em>50 / 70</em></li>
+                <li><code>payment_status</code><em>draft→pending→paid</em></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="projects.rulesEyebrow">业务规则</p>
+            <h3 data-i18n="projects.rulesTitle">把规则写进代码，而不是文档里</h3>
+            <p class="flow-note" data-i18n="projects.rulesIntro">
+              从计价到鉴权，每条业务约束在服务端都有对应的校验与实现。
+            </p>
+          </div>
+          <div class="bento rules-bento">
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">PRICING</span>
+              <h4 data-i18n="projects.rulePriceTitle">双向计价：现金与积分同价</h4>
+              <p data-i18n="projects.rulePriceBody">
+                普通 ¥5 / 50 积分，加急 ¥7 / 70 积分，固定 1 元 = 10 积分；下单瞬间同时写入两种费用字段，用户可自由选择支付货币。
+              </p>
+              <div class="rule-facts"><span>¥5 / 50 pts</span><span>¥7 / 70 pts</span><span>1 : 10</span></div>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">VALIDATION</span>
+              <h4 data-i18n="projects.ruleValidTitle">身份校验前置到接口层</h4>
+              <p data-i18n="projects.ruleValidBody">
+                学号必须匹配 10 位数字、手机号匹配 1[3-9] 开头共 11 位，注册时还会检查学号与手机号是否已被占用。
+              </p>
+              <div class="rule-facts"><span>^\d{10}$</span><span>^1[3-9]\d{9}$</span><span>409 dup</span></div>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">AUTH</span>
+              <h4 data-i18n="projects.ruleAuthTitle">令牌鉴权与会话守卫</h4>
+              <p data-i18n="projects.ruleAuthBody">
+                后端用 @token_required 装饰器解析 HS256 令牌并回查用户，令牌 24 小时过期；前端 router.beforeEach 拦截未登录访问。
+              </p>
+              <div class="rule-facts"><span>HS256</span><span>24h exp</span><span>@token_required</span></div>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">ISOLATION</span>
+              <h4 data-i18n="projects.ruleScopeTitle">用户级隔离与上传安全</h4>
+              <p data-i18n="projects.ruleScopeBody">
+                地址与订单查询强制携带 user_id 过滤，越权 ID 返回 404；上传仅允许 png/jpg/jpeg/gif，限制 5MB 并用 UUID 重命名防覆盖。
+              </p>
+              <div class="rule-facts"><span>user_id filter</span><span>5 MB cap</span><span>uuid filename</span></div>
             </article>
           </div>
         </div>
@@ -332,28 +435,28 @@
               <div class="engineering-icon">&lt;/&gt;</div>
               <h4 data-i18n="projects.engineeringFrontTitle">前端应用层</h4>
               <p data-i18n="projects.engineeringFrontBody">Vue 3 组件化页面，Vue Router 管理受保护路由，Pinia 负责广告等共享状态。</p>
-              <div class="engineering-tags"><span>Vue 3</span><span>Router</span><span>Pinia</span></div>
+              <div class="engineering-tags"><span>Vue 3.5</span><span>Router 4</span><span>Pinia 3</span><span>Element Plus</span></div>
             </article>
             <article class="engineering-card reveal">
               <span class="engineering-code">API / 02</span>
               <div class="engineering-icon">↔</div>
               <h4 data-i18n="projects.engineeringApiTitle">后端服务层</h4>
               <p data-i18n="projects.engineeringApiBody">Flask 提供 REST API，处理注册登录、资料、地址、订单和图片上传。</p>
-              <div class="engineering-tags"><span>Flask</span><span>REST</span><span>CORS</span></div>
+              <div class="engineering-tags"><span>Flask 3</span><span>PyJWT</span><span>Flask-CORS</span><span>REST</span></div>
             </article>
             <article class="engineering-card reveal">
               <span class="engineering-code">DB / 03</span>
               <div class="engineering-icon">◫</div>
               <h4 data-i18n="projects.engineeringDataTitle">数据模型层</h4>
               <p data-i18n="projects.engineeringDataBody">User、Address、Order 三个核心模型通过用户外键关联，支持用户级数据隔离。</p>
-              <div class="engineering-tags"><span>SQLAlchemy</span><span>SQLite</span><span>ORM</span></div>
+              <div class="engineering-tags"><span>SQLAlchemy 2</span><span>SQLite</span><span>Foreign&nbsp;Key</span></div>
             </article>
             <article class="engineering-card reveal">
               <span class="engineering-code">SEC / 04</span>
               <div class="engineering-icon">◇</div>
               <h4 data-i18n="projects.engineeringSecurityTitle">认证与安全</h4>
               <p data-i18n="projects.engineeringSecurityBody">PBKDF2 密码哈希、24 小时 JWT、请求鉴权与上传文件类型、大小限制。</p>
-              <div class="engineering-tags"><span>JWT</span><span>PBKDF2</span><span>Validation</span></div>
+              <div class="engineering-tags"><span>PBKDF2-SHA256</span><span>HS256</span><span>Regex</span><span>5&nbsp;MB</span></div>
             </article>
           </div>
 
@@ -366,8 +469,15 @@
             <div class="api-console-body">
               <div><span class="method post">POST</span><code>/api/register</code><small data-i18n="projects.apiRegister">创建学生账户</small><b>201</b></div>
               <div><span class="method post">POST</span><code>/api/login</code><small data-i18n="projects.apiLogin">验证身份并签发令牌</small><b>200</b></div>
+              <div><span class="method get">GET</span><code>/api/user_profile</code><small data-i18n="projects.apiProfile">读取当前用户资料</small><b>200</b></div>
+              <div><span class="method put">PUT</span><code>/api/update_profile</code><small data-i18n="projects.apiUpdateProfile">更新姓名、手机号与校区</small><b>200</b></div>
               <div><span class="method get">GET</span><code>/api/addresses</code><small data-i18n="projects.apiAddresses">读取当前用户地址</small><b>200</b></div>
+              <div><span class="method post">POST</span><code>/api/addresses</code><small data-i18n="projects.apiAddAddress">新增常用地址</small><b>201</b></div>
+              <div><span class="method post">POST</span><code>/api/addresses/:id/default</code><small data-i18n="projects.apiDefaultAddress">切换默认地址</small><b>200</b></div>
+              <div><span class="method put">PUT</span><code>/api/addresses/:id</code><small data-i18n="projects.apiEditAddress">更新或删除地址</small><b>200</b></div>
               <div><span class="method post">POST</span><code>/api/order</code><small data-i18n="projects.apiOrder">创建并计算配送订单</small><b>201</b></div>
+              <div><span class="method post">POST</span><code>/api/order/:id/address</code><small data-i18n="projects.apiOrderAddress">回填配送与接收地址</small><b>200</b></div>
+              <div><span class="method get">GET</span><code>/api/order</code><small data-i18n="projects.apiOrderList">按时间倒序读取订单列表</small><b>200</b></div>
               <div><span class="method get">GET</span><code>/api/order/:id</code><small data-i18n="projects.apiOrderDetail">获取用户订单详情</small><b>200</b></div>
               <div><span class="method post">POST</span><code>/api/upload</code><small data-i18n="projects.apiUpload">上传订单凭证图片</small><b>200</b></div>
             </div>

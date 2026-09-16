@@ -203,20 +203,22 @@
             <p class="project-kicker" data-i18n="projects.type">全栈 Web 应用</p>
             <h3 class="preview-title">浙就来</h3>
             <p class="preview-subtitle" data-i18n="projects.subtitle">面向浙江大学校园场景的配送服务平台</p>
-            <p class="preview-summary" data-i18n="projects.previewSummary">连接用户认证、多步骤下单、地址管理、支付选择与订单查询的完整前后端业务流程——以学生身份为起点，把校园配送的每一个环节数字化。</p>
+            <p class="preview-summary" data-i18n="projects.previewSummary">从学号注册到订单履约的完整闭环：JWT 会话与路由守卫、四步下单流程、用户级地址簿、现金与积分双币计价，以及带类型白名单的图片上传——全部由真实接口驱动。</p>
             <div class="tech-stack" data-i18n-aria-label="accessibility.techStack">
-              <span>Vue 3</span>
-              <span>Vite</span>
-              <span>Pinia</span>
-              <span>Flask</span>
+              <span>Vue 3.5</span>
+              <span>Vite 6</span>
+              <span>Vue Router 4</span>
+              <span>Pinia 3</span>
+              <span>Element Plus</span>
+              <span>Flask 3</span>
               <span>SQLAlchemy</span>
               <span>SQLite</span>
-              <span>JWT</span>
+              <span>PyJWT</span>
             </div>
             <ul class="preview-highlights">
-              <li data-i18n="projects.highlightOne">学号注册登录、密码加密与受保护路由</li>
-              <li data-i18n="projects.highlightTwo">订单创建、地址选择、加急费用与多种支付方式</li>
-              <li data-i18n="projects.highlightThree">订单状态管理、图片上传与用户级 API 权限</li>
+              <li data-i18n="projects.highlightOne">18 条路由 + router.beforeEach 守卫，JWT 会话 24 小时过期</li>
+              <li data-i18n="projects.highlightTwo">四步下单与双向计价：普通 ¥5 / 50 积分，加急 ¥7 / 70 积分</li>
+              <li data-i18n="projects.highlightThree">3 张表 + 17 个接口，地址与订单按 user_id 强制隔离</li>
             </ul>
             <a class="button button-primary preview-cta" href="project.html">
               <span data-i18n="projects.viewFull">查看完整案例</span>
