@@ -71,6 +71,8 @@ const translations = {
       previewSummary:
         "从学号注册到订单履约的完整闭环：JWT 会话与路由守卫、四步下单流程、用户级地址簿、现金与积分双币计价，以及带类型白名单的图片上传——全部由真实接口驱动。",
       viewFull: "查看完整案例",
+      viewSource: "查看源码",
+      viewReadme: "运行说明",
       highlightOne: "18 条路由 + router.beforeEach 守卫，JWT 会话 24 小时过期",
       highlightTwo: "四步下单与双向计价：普通 ¥5 / 50 积分，加急 ¥7 / 70 积分",
       highlightThree: "3 张表 + 17 个接口，地址与订单按 user_id 强制隔离",
@@ -446,6 +448,8 @@ const translations = {
       previewSummary:
         "A full loop from student sign-up to order fulfilment: JWT sessions with route guards, a four-step ordering flow, a per-user address book, dual cash/points pricing, and type-allow-listed image uploads — all driven by real endpoints.",
       viewFull: "View the full case study",
+      viewSource: "View source",
+      viewReadme: "Run guide",
       highlightOne: "18 routes with router.beforeEach guards and 24-hour JWT sessions",
       highlightTwo: "Four-step ordering with dual pricing: ¥5 / 50 points, or ¥7 / 70 priority",
       highlightThree: "3 tables and 17 endpoints, with addresses and orders scoped by user_id",

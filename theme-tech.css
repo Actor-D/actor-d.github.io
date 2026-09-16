@@ -1889,3 +1889,48 @@ section.reveal:target {
     margin-top: 12px;
   }
 }
+
+/* ==========================================================================
+   Source-code entry points (case study + featured card)
+   ========================================================================== */
+
+.case-study-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.case-study-actions .button {
+  min-height: 48px;
+  padding: 0 24px;
+  font-size: 14.5px;
+}
+
+.preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+  margin-top: 4px;
+}
+
+.preview-source {
+  font-size: 15px;
+}
+
+@media (max-width: 480px) {
+  .case-study-actions .button,
+  .preview-actions {
+    width: 100%;
+  }
+
+  .case-study-actions .button {
+    justify-content: center;
+  }
+
+  .preview-actions {
+    gap: 16px;
+  }
+}
