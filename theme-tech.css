@@ -1934,3 +1934,107 @@ section.reveal:target {
     gap: 16px;
   }
 }
+
+/* ==========================================================================
+   GitHub entry points — header icon, contact button, footer link
+   ========================================================================== */
+
+.header-github {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--muted);
+  transition: color 0.25s ease, background-color 0.25s ease, transform 0.3s var(--ease-out-expo);
+}
+
+.header-github:hover,
+.header-github:focus-visible {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 52px;
+}
+
+/* The email link already carries its own top margin — neutralise it here. */
+.contact-links .contact-email {
+  margin-top: 0;
+}
+
+.contact-github {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5f5f7;
+  font-size: 15px;
+  backdrop-filter: blur(12px);
+  transition:
+    transform 0.3s var(--ease-out-expo),
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.contact-github:hover,
+.contact-github:focus-visible {
+  border-color: var(--accent-ice);
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--accent-ice);
+  transform: translateY(-2px);
+}
+
+.footer-links {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  justify-self: end;
+}
+
+.footer-links a {
+  color: var(--muted);
+  transition: color 0.25s ease;
+}
+
+.footer-links a:hover,
+.footer-links a:focus-visible {
+  color: var(--accent);
+}
+
+@media (max-width: 700px) {
+  /* Keep the compact mobile header uncluttered. */
+  .header-github {
+    display: none;
+  }
+
+  .contact-links {
+    margin-top: 40px;
+    flex-direction: column;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 520px) {
+  .site-footer {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .footer-links {
+    justify-self: center;
+  }
+}

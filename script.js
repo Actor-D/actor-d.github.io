@@ -23,6 +23,7 @@ const translations = {
       projectTabs: "选择要预览的项目界面",
       lightboxLabel: "论文图表预览",
       lightboxClose: "关闭图表预览",
+      github: "在新标签页打开 Actor-D 的 GitHub 主页",
     },
     nav: { about: "关于我", projects: "项目案例", research: "研究论文", journey: "学习经历", contact: "联系我" },
     common: {
@@ -373,8 +374,13 @@ const translations = {
       focusBody:
         "将信息系统背景与商业分析方法相连接，从数据中提炼洞察，为复杂问题寻找清晰、可执行的答案。",
     },
-    contact: { lineOne: "期待与你连接，", lineTwo: "聊聊新的想法。" },
-    footer: { backToTop: "回到顶部 ↑" },
+    contact: {
+      lineOne: "期待与你连接，",
+      lineTwo: "聊聊新的想法。",
+      github: "在 GitHub 上查看我的代码",
+      githubHandle: "github.com/Actor-D",
+    },
+    footer: { backToTop: "回到顶部 ↑", github: "GitHub" },
   },
   en: {
     pageTitle: "Actor.D | Personal Website",
@@ -400,6 +406,7 @@ const translations = {
       projectTabs: "Choose a project screen to preview",
       lightboxLabel: "Thesis figure preview",
       lightboxClose: "Close figure preview",
+      github: "Open Actor-D's GitHub profile in a new tab",
     },
     nav: { about: "About", projects: "Project", research: "Research", journey: "Journey", contact: "Contact" },
     common: {
@@ -751,8 +758,13 @@ const translations = {
       focusBody:
         "Connecting an information systems background with business analytics to turn data into insight and complex questions into clear, actionable answers.",
     },
-    contact: { lineOne: "Let's connect and", lineTwo: "explore new ideas." },
-    footer: { backToTop: "Back to top ↑" },
+    contact: {
+      lineOne: "Let's connect and",
+      lineTwo: "explore new ideas.",
+      github: "See my code on GitHub",
+      githubHandle: "github.com/Actor-D",
+    },
+    footer: { backToTop: "Back to top ↑", github: "GitHub" },
   },
 };
 

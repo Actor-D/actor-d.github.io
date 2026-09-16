@@ -5,6 +5,7 @@
 前端为 Vue 3 单页应用，后端为 Flask REST 服务，数据落库 SQLite。项目由董炎源（Actor.D）独立完成，包含 **18 条前端路由（16 条受保护）**、**17 个 REST 接口**、**3 张数据表**。
 
 > 在线作品集：https://actor-d.github.io/project.html
+> 作者 GitHub：https://github.com/Actor-D
 
 ---
 
