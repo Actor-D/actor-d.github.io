@@ -258,7 +258,7 @@ const translations = {
       biliType: "爬虫 · NLP · 情感分析",
       biliTitle: "B 站弹幕情感与传播分析",
       biliBody:
-        "自建爬虫采集 44 个视频的 9.95 万条弹幕（去重后 8.13 万条、3.85 万名用户），基于 BosonNLP 与否定词/程度副词词典做情感打分（正面 54.4% / 负面 41.1%），自创「传播效果指数」并验证其与播放量相关性 r=0.92。",
+        "爬取 44 个视频 9.95 万条弹幕（去重 8.13 万），词典法情感打分，自创「传播效果指数」并与播放量验证相关性 r=0.92。",
       bikeType: "机器学习 · 需求预测",
       bikeTitle: "共享单车需求预测",
       bikeBody:
@@ -790,7 +790,7 @@ const translations = {
       biliType: "Crawling · NLP · Sentiment",
       biliTitle: "Bilibili Danmaku Sentiment & Reach",
       biliBody:
-        "Built a crawler that collected 99,590 danmaku across 44 videos (81,278 unique, 38,502 users), scored sentiment with a BosonNLP lexicon plus negation and degree words (54.4% positive / 41.1% negative), and defined a reach index correlating with views at r=0.92.",
+        "Crawled 99,590 danmaku across 44 videos (81,278 unique), scored sentiment with a lexicon, and defined a reach index that correlates with views at r=0.92.",
       bikeType: "Machine learning · Demand forecasting",
       bikeTitle: "Bike-share Demand Forecasting",
       bikeBody:

@@ -1534,7 +1534,9 @@ section.reveal:target {
   color: var(--accent);
 }
 
-.tile-card > p:last-child {
+/* 用 :not(.project-type) 而不是 :last-child —— 卡片末尾可能出现 CTA，
+   :last-child 会因结构变化而失效，导致正文字号/颜色退回默认值。 */
+.tile-card > p:not(.project-type) {
   margin: 0;
   color: var(--muted);
   font-size: 14.5px;
@@ -2044,6 +2046,37 @@ section.reveal:target {
    ========================================================================== */
 
 /* Tile CTA on the home page */
+
+/* 整卡可点击：用角落箭头徽标提示，避免在卡片流里插入突兀的文字链接 */
+.tile-card-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tile-go {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+  color: var(--ink);
+  font-size: 15px;
+  font-style: normal;
+  transition: transform 0.35s var(--ease-out-expo), background-color 0.3s ease, color 0.3s ease;
+}
+
+.tile-card-link:hover .tile-go,
+.tile-card-link:focus-visible .tile-go {
+  background: var(--accent);
+  color: #fff;
+  transform: translate(3px, -3px);
+}
 
 .tile-link {
   display: inline-flex;
