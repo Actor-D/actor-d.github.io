@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Actor.D 的文本挖掘作业——B 站《社会学与经济学》弹幕分析：自建爬虫采集 44 个视频的 9.95 万条弹幕，词典法情感分析、传播效果指数与相关性建模。"
+    />
+    <meta name="theme-color" content="#f5f5f7" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <title>弹幕文本分析 · Actor.D</title>
+    <script>
+      document.documentElement.classList.add("page-pre");
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="theme-tech.css" />
+    <link rel="stylesheet" href="research.css" />
+    <script src="script.js" defer></script>
+    <script src="research.js" defer></script>
+  </head>
+  <body data-page="danmu">
+    <div class="scroll-progress" aria-hidden="true"><i></i></div>
+    <div class="page-atmosphere" aria-hidden="true">
+      <span class="atmosphere-grid"></span>
+      <span class="atmosphere-glow glow-one"></span>
+      <span class="atmosphere-glow glow-two"></span>
+      <span class="atmosphere-glow glow-three"></span>
+      <span class="atmosphere-noise"></span>
+      <canvas id="droplet-canvas" class="atmosphere-droplets" aria-hidden="true"></canvas>
+    </div>
+    <a class="skip-link" href="#main" data-i18n="accessibility.skip">跳到主要内容</a>
+
+    <header class="site-header">
+      <a class="brand" href="index.html#home" data-i18n-aria-label="accessibility.home">
+        <span class="brand-mark">A</span>
+        <span>Actor.D</span>
+      </a>
+
+      <div class="header-tools">
+        <a
+          class="header-github"
+          href="https://github.com/Actor-D"
+          target="_blank"
+          rel="noopener"
+          data-i18n-aria-label="accessibility.github"
+        >
+          <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+
+        <div class="language-switcher" role="group" data-i18n-aria-label="accessibility.language">
+          <button type="button" data-lang="zh" aria-pressed="true">中</button>
+          <span aria-hidden="true">/</span>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+
+        <button
+          class="menu-button"
+          type="button"
+          data-i18n-aria-label="accessibility.menuOpen"
+          aria-expanded="false"
+          aria-controls="site-nav"
+        >
+          <span></span><span></span>
+        </button>
+
+        <nav id="site-nav" class="site-nav" data-i18n-aria-label="accessibility.navigation">
+          <a href="index.html#about" data-i18n="nav.about">关于我</a>
+          <a href="project.html" data-i18n="nav.projects">项目案例</a>
+          <a href="danmu.html" data-i18n="nav.analysis">数据分析</a>
+          <a href="research.html" data-i18n="nav.research">研究论文</a>
+          <a href="index.html#contact" data-i18n="nav.contact">联系我</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="danmu" class="case-study section-shell">
+        <div class="section-heading reveal">
+          <p class="eyebrow">03 / TEXT ANALYTICS</p>
+          <h2 data-i18n="danmu.title">弹幕文本分析</h2>
+        </div>
+
+        <div class="case-study-overview">
+          <div class="case-study-title reveal">
+            <p class="project-kicker" data-i18n="danmu.pageKicker">课程最终作业 · 文本挖掘</p>
+            <h3>B 站弹幕分析</h3>
+            <p data-i18n="danmu.subtitle">《社会学与经济学》系列视频的公众认知与传播效果研究</p>
+          </div>
+          <div class="case-study-summary reveal">
+            <p data-i18n="danmu.summary">
+              自建爬虫采集单个知识区 UP 主 44 个视频的弹幕，用词典法做情感打分、自创「传播效果指数」衡量传播力，并对互动指标做相关性与回归分析，观察网络大众对复杂社会学科的讨论方式。
+            </p>
+            <div class="tech-stack" data-i18n-aria-label="accessibility.techStack">
+              <span>Selenium</span>
+              <span>BeautifulSoup</span>
+              <span>requests</span>
+              <span>pandas</span>
+              <span>jieba</span>
+              <span>BosonNLP</span>
+              <span>scikit-learn</span>
+              <span>scipy</span>
+              <span>seaborn</span>
+              <span>WordCloud</span>
+            </div>
+            <div class="case-study-actions">
+              <a class="button button-primary" href="danmu-analysis/" target="_blank" rel="noopener">
+                <span data-i18n="danmu.viewArtifacts">查看 Notebook 与报告</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a class="button button-glass" href="index.html#projects" target="_blank" rel="noopener">
+                <span data-i18n="danmu.backToProjects">返回项目列表</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-facts reveal">
+          <div><strong>44</strong><span data-i18n="danmu.factVideos">个视频</span></div>
+          <div><strong>99,590</strong><span data-i18n="danmu.factRaw">行原始弹幕</span></div>
+          <div><strong>81,278</strong><span data-i18n="danmu.factUnique">条唯一弹幕</span></div>
+          <div><strong>38,502</strong><span data-i18n="danmu.factUsers">名去重用户</span></div>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="danmu.questionEyebrow">研究问题</p>
+            <h3 data-i18n="danmu.questionTitle">从弹幕里读出什么</h3>
+            <p class="flow-note" data-i18n="danmu.questionIntro">
+              作业要求围绕四个层次展开：认知水平、内容满意度、社会议题态度与传播效果因素。
+            </p>
+          </div>
+          <div class="bento">
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">Q1 · COGNITION</span>
+              <h4 data-i18n="danmu.q1Title">对复杂社会学科的了解程度</h4>
+              <p data-i18n="danmu.q1Body">观众是真正在讨论理论，还是停留在情绪表达与玩梗？</p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">Q2 · SATISFACTION</span>
+              <h4 data-i18n="danmu.q2Title">对内容的情感满意度</h4>
+              <p data-i18n="danmu.q2Body">弹幕情感极性可以近似看作即时的内容反馈。</p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">Q3 · ATTITUDE</span>
+              <h4 data-i18n="danmu.q3Title">对社会经济议题的看法</h4>
+              <p data-i18n="danmu.q3Body">由学科内容延伸出的社会态度与价值判断。</p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">Q4 · REACH</span>
+              <h4 data-i18n="danmu.q4Title">传播效果的关键因素</h4>
+              <p data-i18n="danmu.q4Body">播放、点赞、投币、收藏、分享与弹幕之间，谁在驱动传播？</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="danmu.pipelineEyebrow">数据管线</p>
+            <h3 data-i18n="danmu.pipelineTitle">从爬取到建模的四个阶段</h3>
+            <p class="flow-note" data-i18n="danmu.pipelineIntro">
+              四个 Jupyter Notebook 分工完成采集、清洗、分词、分析与可视化。
+            </p>
+          </div>
+          <div class="flow-track">
+            <article>
+              <span class="flow-icon">01</span>
+              <small>CRAWL</small>
+              <h4 data-i18n="danmu.step1Title">采集</h4>
+              <p data-i18n="danmu.step1Body">
+                Selenium 无头浏览器抓搜索结果页取 BV 号，REST API 取元数据，旧版 XML 接口逐视频下载弹幕。
+              </p>
+            </article>
+            <i aria-hidden="true"></i>
+            <article>
+              <span class="flow-icon">02</span>
+              <small>CLEAN</small>
+              <h4 data-i18n="danmu.step2Title">清洗</h4>
+              <p data-i18n="danmu.step2Body">按视频 CID 分文件落盘，合并为 10 列总表，与视频元数据表按 BV 关联。</p>
+            </article>
+            <i aria-hidden="true"></i>
+            <article>
+              <span class="flow-icon">03</span>
+              <small>SEGMENT</small>
+              <h4 data-i18n="danmu.step3Title">分词</h4>
+              <p data-i18n="danmu.step3Body">jieba 分词 + nltk 中文停用词过滤，输出分词列供词云与情感打分使用。</p>
+            </article>
+            <i aria-hidden="true"></i>
+            <article>
+              <span class="flow-icon">04</span>
+              <small>MODEL</small>
+              <h4 data-i18n="danmu.step4Title">分析与建模</h4>
+              <p data-i18n="danmu.step4Body">词典法情感打分、词云、相关矩阵、线性回归与 NMF 主题提取。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="project-detail-grid">
+          <article class="project-detail reveal">
+            <p class="eyebrow" data-i18n="danmu.sentimentEyebrow">情感分析</p>
+            <h3 data-i18n="danmu.sentimentTitle">基于词典的加性打分</h3>
+            <ul>
+              <li data-i18n="danmu.sentimentOne">主词典 BosonNLP，含 114,766 条带分值的词条</li>
+              <li data-i18n="danmu.sentimentTwo">否定词表 71 条，命中时翻转情感极性</li>
+              <li data-i18n="danmu.sentimentThree">程度副词加权（非常 2.0 / 特别 1.5 / 较 1.2 / 略 0.7）</li>
+              <li data-i18n="danmu.sentimentFour">分数求和后按正负零三分类，均值 0.47，总体倾向正面</li>
+            </ul>
+          </article>
+          <article class="project-detail architecture reveal">
+            <p class="eyebrow" data-i18n="danmu.distEyebrow">情感分布</p>
+            <h3 data-i18n="danmu.distTitle">正面过半，负面四成</h3>
+            <div class="sentiment-bars" role="img" data-i18n-aria-label="danmu.distAria">
+              <div class="sentiment-row">
+                <span data-i18n="danmu.distPos">正面</span>
+                <i style="--w: 54.55%; --c: var(--accent)"></i>
+                <b>54.55%</b>
+              </div>
+              <div class="sentiment-row">
+                <span data-i18n="danmu.distNeg">负面</span>
+                <i style="--w: 40.97%; --c: #ff6961"></i>
+                <b>40.97%</b>
+              </div>
+              <div class="sentiment-row">
+                <span data-i18n="danmu.distNeu">中性</span>
+                <i style="--w: 4.48%; --c: #aeaeb2"></i>
+                <b>4.48%</b>
+              </div>
+            </div>
+            <p class="data-desc" data-i18n="danmu.distNote">按 99,590 行统计；去除重复采集后比例几乎不变（54.42 / 41.08 / 4.50）。</p>
+          </article>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="danmu.indexEyebrow">自创指标</p>
+            <h3 data-i18n="danmu.indexTitle">传播效果指数</h3>
+            <p class="flow-note" data-i18n="danmu.indexIntro">
+              把 7 个互动维度按权重取对数压缩，得到一个可横向比较的传播力分数。
+            </p>
+          </div>
+          <div class="api-console reveal">
+            <div class="api-console-header">
+              <div><i></i><i></i><i></i></div>
+              <span>Crawler-blili.ipynb</span>
+              <b>REACH INDEX</b>
+            </div>
+            <div class="api-console-body">
+              <div class="formula-row">
+                <code>reach = log( 0.5 × plays + 0.3 × (likes + coins + favs) + 0.2 × (replies + danmaku) )</code>
+              </div>
+            </div>
+          </div>
+          <div class="table-scroll reveal">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th data-i18n="danmu.corrMetric">互动指标</th>
+                  <th data-i18n="danmu.corrR">与传播效果指数的相关系数 r</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="is-winner"><th data-i18n="danmu.corrPlays">播放量</th><td><strong>0.922</strong></td></tr>
+                <tr><th data-i18n="danmu.corrLikes">点赞</th><td>0.799</td></tr>
+                <tr><th data-i18n="danmu.corrFavs">收藏</th><td>0.749</td></tr>
+                <tr><th data-i18n="danmu.corrReplies">评论</th><td>0.747</td></tr>
+                <tr><th data-i18n="danmu.corrCoins">投币</th><td>0.669</td></tr>
+                <tr><th data-i18n="danmu.corrDanmaku">弹幕数</th><td>0.603</td></tr>
+                <tr><th data-i18n="danmu.corrShares">分享</th><td>0.546</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note" data-i18n="danmu.corrNote">
+            基于清洗后 41 个视频的有效样本计算。
+          </p>
+        </div>
+
+        <div class="project-detail-grid">
+          <article class="project-detail reveal">
+            <p class="eyebrow" data-i18n="danmu.findingEyebrow">关键发现</p>
+            <h3 data-i18n="danmu.findingTitle">互动高度耦合，粉丝量解释力有限</h3>
+            <ul>
+              <li data-i18n="danmu.findingOne">弹幕数与分享 r=0.932、投币 r=0.926，说明「愿意付费表达」的观众同时在评论与转发</li>
+              <li data-i18n="danmu.findingTwo">点赞数对 UP 主粉丝数做线性回归，R²=0.376 —— 粉丝量只解释了约三分之一的点赞差异</li>
+              <li data-i18n="danmu.findingThree">41 个有效样本平均播放 593,760，最高 2,475,678，平均时长 2,506 秒</li>
+              <li data-i18n="danmu.findingFour">44 个视频累计播放 26,108,495，弹幕 99,856 条，评论 83,689 条</li>
+            </ul>
+          </article>
+          <article class="project-detail reveal">
+            <p class="eyebrow" data-i18n="danmu.wordsEyebrow">高频词</p>
+            <h3 data-i18n="danmu.wordsTitle">讨论集中在宏大议题</h3>
+            <ul>
+              <li data-i18n="danmu.wordOne">社会 1,164 · 人类 1,311 · 世界 1,216 —— 抽象概念出现频率最高</li>
+              <li data-i18n="danmu.wordTwo">美国 1,289 · 中国 936 · 国家 814 · 经济 705 · 资本 684</li>
+              <li data-i18n="danmu.wordThree">理论 661 · 精英 610 · 异化 459 · 工人 455 —— 学科术语确实进入了讨论</li>
+              <li data-i18n="danmu.wordFour">同时「一个 2,148」「哈哈哈 1,367」「确实 1,006」显示大量口语化回应</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="danmu.qualityEyebrow">数据质量与反思</p>
+            <h3 data-i18n="danmu.qualityTitle">发现并修正了自己的坑</h3>
+            <p class="flow-note" data-i18n="danmu.qualityIntro">
+              复盘时重新核对数据，发现原始统计中被重复与脏数据抬高了约 18%，这些结论比报告本身更有价值。
+            </p>
+          </div>
+          <div class="bento">
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">DEDUP</span>
+              <h4 data-i18n="danmu.issue1Title">去重未生效，虚高 18%</h4>
+              <p data-i18n="danmu.issue1Body">
+                去掉重复后视频数从 52 降到 44：代码里写了去重但没有重新赋值，导致 8 个视频被采集两次，另有 8 行表头混进数据。真实唯一弹幕为 81,278 条。
+              </p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">NMF ≠ LDA</span>
+              <h4 data-i18n="danmu.issue2Title">主题建模名不副实</h4>
+              <p data-i18n="danmu.issue2Body">
+                实际用的是 NMF 对 TF-IDF 降维，而且作用对象是「视频标题」而非弹幕，中文标题未分词导致关键词就是整条标题——不足以称为主题发现，报告中已如实标注。
+              </p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">SAMPLE</span>
+              <h4 data-i18n="danmu.issue3Title">样本污染与幸存者偏差</h4>
+              <p data-i18n="danmu.issue3Body">
+                语料混入 1 条非目标 UP 主的视频（播放 152 万，传播指数排第 2），会抬高整体统计；弹幕本身也只代表愿意发言的观众，无法覆盖沉默的大多数。
+              </p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">LEXICON</span>
+              <h4 data-i18n="danmu.issue4Title">词典体系未全部启用</h4>
+              <p data-i18n="danmu.issue4Body">
+                自建词典含正面词 10,189、负面词 13,710、程度副词 78 条，但代码只加载了 BosonNLP 与否定词表，程度副词是硬编码的 8 个——若全部接入，打分粒度会更好。
+              </p>
+            </article>
+          </div>
+        </div>
+
+        <div class="engineering-section">
+          <div class="engineering-heading reveal">
+            <p class="eyebrow" data-i18n="danmu.engEyebrow">工程拆解</p>
+            <h3 data-i18n="danmu.engTitle">四个 Notebook，一条可复现的管线</h3>
+            <p data-i18n="danmu.engBody">
+              采集、处理、分析、汇总各自独立，产物以 CSV 串联，任一环节可单独重跑。
+            </p>
+          </div>
+          <div class="engineering-grid">
+            <article class="engineering-card reveal">
+              <span class="engineering-code">01 / CRAWLER</span>
+              <div class="engineering-icon">⇣</div>
+              <h4 data-i18n="danmu.eng1Title">采集与元数据</h4>
+              <p data-i18n="danmu.eng1Body">
+                Selenium 翻页取 BV，调用 view / card 接口补全播放、点赞、投币、收藏、分享、粉丝数与分区标签，并自建「传播效果指数」列。
+              </p>
+              <div class="engineering-tags"><span>Selenium</span><span>bs4</span><span>requests</span></div>
+            </article>
+            <article class="engineering-card reveal">
+              <span class="engineering-code">02 / PROCESS</span>
+              <div class="engineering-icon">≣</div>
+              <h4 data-i18n="danmu.eng2Title">解析与分词</h4>
+              <p data-i18n="danmu.eng2Body">
+                解析 XML 中 &lt;d&gt; 标签的 9 个属性（时间、模式、字号、颜色、用户 ID 等），合并成分层表，jieba + 停用词产出分词列。
+              </p>
+              <div class="engineering-tags"><span>XML</span><span>jieba</span><span>nltk</span></div>
+            </article>
+            <article class="engineering-card reveal">
+              <span class="engineering-code">03 / ANALYSIS</span>
+              <div class="engineering-icon">∿</div>
+              <h4 data-i18n="danmu.eng3Title">统计与建模</h4>
+              <p data-i18n="danmu.eng3Body">
+                相关矩阵热力图、传播指数分布、linregress 回归、pairplot 分组对比，以及 TF-IDF + NMF 的主题提取。
+              </p>
+              <div class="engineering-tags"><span>pandas</span><span>scipy</span><span>sklearn</span></div>
+            </article>
+            <article class="engineering-card reveal">
+              <span class="engineering-code">04 / SENTIMENT</span>
+              <div class="engineering-icon">±</div>
+              <h4 data-i18n="danmu.eng4Title">情感打分与词云</h4>
+              <p data-i18n="danmu.eng4Body">
+                加载 11 万条 BosonNLP 词典，结合否定翻转与程度加权逐条打分，输出情感分布图与词云。
+              </p>
+              <div class="engineering-tags"><span>BosonNLP</span><span>WordCloud</span><span>seaborn</span></div>
+            </article>
+          </div>
+        </div>
+
+        <nav class="page-nav" data-i18n-aria-label="accessibility.navigation">
+          <a href="project.html"><span aria-hidden="true">←</span> <span data-i18n="danmu.navPrev">上一个项目：浙就来</span></a>
+          <a class="nav-next" href="research.html"><span data-i18n="common.nextResearch">继续阅读：研究论文</span> <span aria-hidden="true">→</span></a>
+        </nav>
+      </section>
+    </main>
+
+    <footer class="site-footer section-shell">
+      <p>© <span id="current-year">2026</span> Actor.D</p>
+      <p class="education-signature">ZJU · CUHK</p>
+      <div class="footer-links">
+        <a
+          href="https://github.com/Actor-D"
+          target="_blank"
+          rel="noopener"
+          data-i18n-aria-label="accessibility.github"
+          data-i18n="footer.github"
+        >GitHub</a>
+        <a href="#main" data-i18n="footer.backToTop">回到顶部 ↑</a>
+      </div>
+    </footer>
+  </body>
+</html>

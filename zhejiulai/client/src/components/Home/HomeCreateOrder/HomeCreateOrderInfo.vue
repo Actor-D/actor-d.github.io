@@ -1,48 +1,42 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router'; // 添加这行
-const router = useRouter(); // 获取路由实例
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const uploadedImage = ref(null);
 const isUrgentDelivery = ref(false);
-const isDragging = ref(false);
-const food_name = ref('');
-const locker_info = ref('');
-const foodAddress = ref('');
+const size = ref('medium');
 const newOrder = ref({
   food_name: "",
   locker_info: "",
   notes: "",
-  is_urgent: false
+  is_urgent: false,
+  size: ""
 });
-
+const errorMessage = ref('');
+const isDragging = ref(false);
 
 const fetchOrder = async () => {
   try {
     const token = sessionStorage.getItem('token');
     const response = await axios.get('http://127.0.0.1:5000/api/order', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      headers: { 'Authorization': `Bearer ${token}` }
     });
     newOrder.value = response.data;
   } catch (error) {
     console.error('Error fetching order', error);
   }
 };
-// 提交到 /api/orders
+
 const uploadImage = async () => {
   if (!uploadedImage.value) return null;
-
   try {
     const formData = new FormData();
-    // 获取原始文件对象
     const fileInput = document.getElementById('file-upload');
     if (fileInput.files.length === 0) return null;
 
     formData.append('image', fileInput.files[0]);
-
     const token = sessionStorage.getItem('token');
     const response = await axios.post('http://127.0.0.1:5000/api/upload', formData, {
       headers: {
@@ -50,8 +44,7 @@ const uploadImage = async () => {
         'Content-Type': 'multipart/form-data'
       }
     });
-
-    return response.data.imageUrl; // 假设后端返回{ imageUrl: '...' }
+    return response.data.imageUrl;
   } catch (error) {
     console.error('图片上传失败:', error);
     throw error;
@@ -59,97 +52,46 @@ const uploadImage = async () => {
 };
 
 const saveOrder = async () => {
-  // 强化验证（仅验证必填字段）
   if (!newOrder.value.food_name?.trim()) {
-    alert('外卖名称不能为空');
-    document.getElementById('food-name').focus();
+    errorMessage.value = '外卖名称不能为空';
+    setTimeout(() => errorMessage.value = '', 2000);
     return;
   }
 
-  // 移除对 locker_info 的强制验证（根据需求保留）
-  // if (!newOrder.value.locker_info?.trim()) {
-  //   alert('外卖柜信息不能为空');
-  //   document.getElementById('food-address').focus();
-  //   return;
-  // }
-
   try {
+    const imageUrl = await uploadImage();
     const token = sessionStorage.getItem('token');
-    if (!token) {
-      alert('登录信息已过期，请重新登录');
-      router.push('/login');
-      return;
-    }
-
-    // 处理图片上传（允许为空）
-    let imageUrl = null;
-    try {
-      imageUrl = await uploadImage();
-    } catch (uploadError) {
-      console.warn('图片上传失败，继续提交订单');
-    }
-
-    // 构造请求数据
-    const requestData = {
+    const response = await axios.post('http://127.0.0.1:5000/api/order', {
       food_name: newOrder.value.food_name.trim(),
-      locker_info: newOrder.value.locker_info?.trim() || '待填写', // 后端兼容处理
-      notes: newOrder.value.notes?.trim() || '',    // 改为空字符串
+      locker_info: newOrder.value.locker_info.trim() || '待填写',
+      notes: newOrder.value.notes.trim() || '无',
       is_urgent: isUrgentDelivery.value,
-      delivery_address: '', // 临时值
-      image_url: imageUrl
-    };
-
-    console.log('提交数据:', requestData); // 调试日志
-
-    const response = await axios.post('http://127.0.0.1:5000/api/order',
-      requestData,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        timeout: 5000 // 添加超时设置
+      size: size.value,
+      delivery_address: '',
+      image_url: imageUrl || null
+    }, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
-    );
-
-    console.log('响应数据:', response.data); // 调试日志
+    });
 
     if (response.status === 201) {
       sessionStorage.setItem('current_order_id', response.data.order_id);
+      sessionStorage.setItem('current_order', JSON.stringify(newOrder.value));
       router.push('/Home/CreateOrder/Address');
     }
   } catch (error) {
-    // 增强错误处理
-    let errorMessage = '提交失败，请稍后重试';
-
-    if (axios.isCancel(error)) {
-      errorMessage = '请求超时';
-    } else if (error.response) {
-      // 处理 4xx/5xx 错误
-      errorMessage = error.response.data?.message || `服务器错误 (${error.response.status})`;
-    } else if (error.request) {
-      // 请求已发送但无响应
-      errorMessage = '无法连接服务器，请检查网络';
-    }
-
-    console.error('完整错误信息:', {
-      message: error.message,
-      config: error.config,
-      response: error.response?.data
-    });
-
-    alert(errorMessage);
+    errorMessage.value = `提交失败: ${error.response?.data?.message || '服务器错误'}`;
+    setTimeout(() => errorMessage.value = '', 2000);
   }
 };
-
 
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file && file.type.match('image.*')) {
     const reader = new FileReader();
-    reader.onload = (e) => {
-      uploadedImage.value = e.target.result;
-    };
+    reader.onload = (e) => uploadedImage.value = e.target.result;
     reader.readAsDataURL(file);
   }
 };
@@ -170,7 +112,6 @@ const handleDragOver = (e) => {
 const handleDragLeave = () => {
   isDragging.value = false;
 };
-
 
 onMounted(fetchOrder);
 </script>
@@ -242,7 +183,9 @@ onMounted(fetchOrder);
             v-model="newOrder.food_name"
             placeholder="请输入您要点的外卖名称"
             class="food-input"
+            :class="{ 'error-border': errorMessage }"
           />
+          <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div> <!-- 显示错误消息 -->
           <label for="food-address" class="food-address">外卖柜信息：</label>
           <input
             type="text"
@@ -251,49 +194,77 @@ onMounted(fetchOrder);
             placeholder="请输入外卖柜信息（例：蓝田外卖柜3号柜）"
             class="food-input"
           />
+          <div class="size-option">
+        <label for="size" class="size-label">外卖尺寸：</label>
+        <select id="size" v-model="size" class="size-select">
+          <option value="small">小</option>
+          <option value="medium">中</option>
+          <option value="large">大</option>
+        </select>
+      </div>
         </div>
       </div>
-    </div>
 
-    <div class="delivery-option">
-      <input
-        type="checkbox"
-        id="urgent-delivery"
-        v-model="newOrder.is_urgent"
-        class="delivery-checkbox"
-      />
-      <label for="urgent-delivery" class="delivery-label">
-        加急配送
-        <span class="delivery-hint">消耗积分：20</span>
-      </label>
-    </div>
 
-    <div class="remark-option">
-      <div class="remark-place">
-        <label for="food-remark">备注：</label>
-        <br>
+      <div class="delivery-option">
         <input
-          type="text"
-          id="food-remark"
-          v-model="newOrder.notes"
-          placeholder="如有备注信息，请输入"
-          class="remark-input"
+          type="checkbox"
+          id="urgent-delivery"
+          v-model="isUrgentDelivery"
+          class="delivery-checkbox"
         />
+        <label for="urgent-delivery" class="delivery-label">
+          加急配送
+        </label>
       </div>
-    </div>
 
-    <div class="button-content">
-      <button class="order-button1">
-        <router-link to="/Home" class="nav-link">返回首页</router-link>
-      </button>
-      <button class="order-button2" @click="saveOrder">
-    下一步
-  </button>
+      <div class="remark-option">
+        <div class="remark-place">
+          <label for="food-remark">备注：</label>
+          <br>
+          <input
+            type="text"
+            id="food-remark"
+            v-model="newOrder.notes"
+            placeholder="如有备注信息，请输入"
+            class="remark-input"
+          />
+        </div>
+      </div>
+
+      <div class="button-content">
+        <button class="order-button1">
+          <router-link to="/Home" class="nav-link">返回首页</router-link>
+        </button>
+        <button class="order-button2" @click="saveOrder">
+          下一步
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.error-border {
+  animation: shake 0.5s; /* 抖动0.5秒 */
+  border-color: red; /* 错误时的边框颜色 */
+}
+
+@keyframes shake {
+  0% { transform: translateX(1px); }
+  25% { transform: translateX(-1px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+/* 错误消息样式 */
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
 /* 基础样式保持不变 */
 .remark-place {
   padding: 0 12px;
@@ -419,6 +390,8 @@ onMounted(fetchOrder);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   transition: all 0.3s ease;
+  min-height: 400px; /* 增加最小高度 */
+  padding-bottom: 20px; /* 增加底部内边距 */
 }
 
 .order-content:hover {
@@ -453,7 +426,8 @@ h2::after {
   display: flex;
   flex-direction: row;
   width: 100%;
-  padding: 0 0 0 20px;
+  padding: 20px;
+  min-height: 300px; /* 增加最小高度 */
 }
 
 /* 上传区域动画 */
@@ -467,6 +441,11 @@ h2::after {
   transition: all 0.3s ease;
   margin-bottom: 20px;
   background-color: #f9f9f9;
+  height: 200px; /* 固定高度 */
+  width: 300px; /* 固定宽度 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .upload-container:hover {
@@ -613,6 +592,42 @@ h2::after {
   margin-top: 25px;
 }
 
+/* 外卖尺寸选项样式 */
+.size-option {
+  margin: 20px 0 0 0;
+  width: 100%;
+}
+
+.size-select {
+  width: 80%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  color: #999; /* 默认提示文字颜色 */
+}
+
+.size-select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.size-select:valid {
+  color: #333; /* 选择后文字颜色 */
+}
+
+.size-label {
+  margin-top: 20px;
+  display: block;
+}
+
 /* 加急配送动画 */
 .delivery-option {
   border: 1px solid #f6f3f3;
@@ -718,7 +733,7 @@ button {
 .button-content {
   display: flex;
   flex-direction: row;
-  align-self: flex-end;
+  justify-content: flex-end; 
   margin-top: 10px;
 }
 

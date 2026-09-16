@@ -32,7 +32,7 @@ const activeIndex = ref(0)
 const footerItems = [
   { icon: '🏠', text: '首页', path: '/Home' },
   { icon: '📋', text: '订单', path: '/Home/ViewOrder' },
-  { icon: '🔔', text: '消息', path: '/Home/MessagePageList' },
+  { icon: '🔔', text: '消息（无功能）', path: '/Home/MessagePageList' },
   { icon: '👤', text: '我的', path: '/Home/MyPage' }
 ]
 

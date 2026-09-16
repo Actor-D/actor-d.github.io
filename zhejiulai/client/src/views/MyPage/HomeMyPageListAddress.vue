@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import Address from "@/components/Home/HomeMyPage/HomeMyPageList/HomeMyPageListAddress.vue";
-export default {
-  components: {
-      Address
-  }
-}
 </script>
 <template>
   <div id="app">

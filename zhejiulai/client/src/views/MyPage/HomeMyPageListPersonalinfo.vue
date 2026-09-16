@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import Personalinfo from "@/components/Home/HomeMyPage/HomeMyPageList/HomeMyPageListPersonalinfo.vue";
-export default {
-  components: {
-      Personalinfo
-  }
-}
 </script>
 <template>
   <div id="app">

@@ -1,13 +1,21 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-const router = useRouter();
 import axios from 'axios';
 
-const newOrder = ref({ delivery_address: "", receiver_address: "" });
+const router = useRouter();
+const newOrder = ref({
+  delivery_address: "",
+  receiver_address: "",
+  receiver_address_id: null,
+  distance: ""
+});
 const addressOptions = ref([]);
 const isDropdownVisible = ref(false);
-const searchTerm = ref(""); // 用于搜索地址
+const searchTerm = ref("");
+const errorMessage1 = ref('');
+const errorMessage2 = ref('');
+
 const filteredAddresses = computed(() => {
   return addressOptions.value.filter(addr =>
     addr.title.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
@@ -19,9 +27,7 @@ const fetchOrder = async () => {
   try {
     const token = sessionStorage.getItem('token');
     const response = await axios.get('http://127.0.0.1:5000/api/order', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      headers: { 'Authorization': `Bearer ${token}` }
     });
     newOrder.value = response.data;
   } catch (error) {
@@ -31,32 +37,29 @@ const fetchOrder = async () => {
 
 const submitAddress = async () => {
   try {
-    // 1. 检查必填字段
     if (!newOrder.value.delivery_address?.trim()) {
-      throw new Error('请填写配送地址！');
+      errorMessage1.value = '配送地址不能为空';
+      setTimeout(() => errorMessage1.value = '', 2000);
+      return;
     }
 
-    // 2. 获取订单ID和token
     const orderId = sessionStorage.getItem('current_order_id');
-    if (!orderId) {
-      throw new Error('找不到订单ID');
-    }
+    if (!orderId) throw new Error('找不到订单ID');
 
     const token = sessionStorage.getItem('token');
+    const postData = {
+      delivery_address: newOrder.value.delivery_address.trim(),
+      receiver_address: newOrder.value.receiver_address?.trim() || '',
+      distance: parseFloat(newOrder.value.distance) || 0
+    };
 
-    // 3. 打印调试信息
-    console.log('提交的数据:', {
-      delivery_address: newOrder.value.delivery_address,
-      receiver_address: newOrder.value.receiver_address
-    });
+    if (newOrder.value.receiver_address_id) {
+      postData.receiver_address = newOrder.value.receiver_address_id.toString();
+    }
 
-    // 4. 发送请求
     const response = await axios.post(
       `http://127.0.0.1:5000/api/order/${orderId}/address`,
-      {
-        delivery_address: newOrder.value.delivery_address.trim(),
-        receiver_address: newOrder.value.receiver_address?.trim() || '',
-      },
+      postData,
       {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -65,16 +68,13 @@ const submitAddress = async () => {
       }
     );
 
-    // 5. 成功后跳转
     if (response.data.success) {
       router.push('/Home/CreateOrder/Complete');
     }
   } catch (error) {
-    console.error('提交失败详情:', {
-      error: error.message,
-      response: error.response?.data
-    });
-    alert(`提交失败: ${error.response?.data?.message || error.message}`);
+    console.error('提交失败:', error);
+    errorMessage2.value = error.response?.data?.message || error.message;
+    setTimeout(() => errorMessage2.value = '', 2000);
   }
 };
 
@@ -82,9 +82,7 @@ const loadAddresses = async () => {
   try {
     const token = sessionStorage.getItem('token');
     const response = await axios.get('http://127.0.0.1:5000/api/addresses', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      headers: { 'Authorization': `Bearer ${token}` }
     });
     addressOptions.value = response.data;
   } catch (error) {
@@ -94,14 +92,24 @@ const loadAddresses = async () => {
 
 const handleAddressSelect = (address) => {
   newOrder.value.receiver_address = `${address.title} - ${address.detail}`;
+  newOrder.value.receiver_address_id = address.id;
   isDropdownVisible.value = false;
   searchTerm.value = `${address.title} - ${address.detail}`;
 };
 
-// 页面加载时获取地址
+const handleManualInput = () => {
+  newOrder.value.receiver_address_id = null;
+};
+const hideDropdown = () => {
+  setTimeout(() => {
+    isDropdownVisible.value = false;
+  }, 200);
+};
 onMounted(() => {
   loadAddresses();
   fetchOrder();
+  const savedOrder = JSON.parse(sessionStorage.getItem('current_order') || '{}');
+  newOrder.value = { ...newOrder.value, ...savedOrder };
 });
 </script>
 
@@ -130,7 +138,6 @@ onMounted(() => {
       <div class="step-text">支付完成</div>
     </div>
   </div>
-
   <div class="order-container">
     <div class="order-content">
       <h2>填写地址信息</h2>
@@ -139,28 +146,31 @@ onMounted(() => {
           <img src="../../../../public/images/zjg-map.jpg" class="map-image" />
         </div>
         <div class="input-group">
-          <label for="food-name">外卖地址：</label>
+          <label for="delivery-address">外卖地址：</label>
           <input
             type="text"
-            id="food-name"
+            id="delivery-address"
             v-model="newOrder.delivery_address"
             placeholder="请输入您的外卖地址信息"
             class="food-input"
+            :class="{ 'error-border': errorMessage1 }"
           />
+          <div v-if="errorMessage1" class="error-message">{{ errorMessage1 }}</div>
 
           <!-- 接收地址（带下拉选择） -->
-          <label for="food-address" class="food-address">收货地址：</label>
+          <label for="receiver-address" class="food-address">收货地址：</label>
           <div class="custom-select-container">
             <input
               type="text"
-              id="food-address"
-              v-model="searchTerm"
+              id="receiver-address"
+              v-model="newOrder.receiver_address"
               @focus="isDropdownVisible = true"
-              @blur="isDropdownVisible = false"
-              @input="searchTerm = $event.target.value"
+              @blur="hideDropdown"
+              @input="handleManualInput"
               placeholder="选择或输入收货地址"
               class="food-input"
             />
+            
             <div
               class="dropdown-list"
               v-if="isDropdownVisible && filteredAddresses.length > 0"
@@ -169,13 +179,25 @@ onMounted(() => {
                 v-for="addr in filteredAddresses"
                 :key="addr.id"
                 class="dropdown-item"
-                @click="handleAddressSelect(addr)"
+                @mousedown="handleAddressSelect(addr)"
               >
                 <span>{{ addr.title }}</span>
                 <span>{{ addr.detail }}</span>
               </div>
             </div>
           </div>
+
+          <!-- 新增预估距离输入框 -->
+          <label for="estimated-distance" class="food-address">预估距离（km）：</label>
+          <input
+            type="number"
+            id="estimated-distance"
+            v-model="newOrder.distance"
+            placeholder="请输入预估距离"
+            class="food-input"
+          />
+
+          <div v-if="errorMessage2" class="error-message">{{ errorMessage2 }}</div>
         </div>
       </div>
     </div>
@@ -191,12 +213,30 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Element Plus 选择器样式覆盖 */
-/* 标签样式保持原有风格 */
-/* Element Plus 选择器样式覆盖 */
-/* 更精确的下拉箭头控制 */
+.error-border {
+  animation: shake 0.5s; /* 抖动0.5秒 */
+  border-color: red; /* 错误时的边框颜色 */
+}
 
-/* 悬停和聚焦状态 */
+@keyframes shake {
+  0% { transform: translateX(1px); }
+  25% { transform: translateX(-1px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+/* 错误消息样式 */
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* 基础样式保持不变 */
+.remark-place {
+  padding: 0 12px;
+}
 
 /* 展开状态 */
 h2 {

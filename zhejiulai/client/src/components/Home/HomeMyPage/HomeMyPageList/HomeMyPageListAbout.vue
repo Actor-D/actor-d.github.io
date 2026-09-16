@@ -1,18 +1,25 @@
 <script setup>
 import { ref } from 'vue'
 
+const message = ref('');
+const isHovering = ref(false)
+
 const checkUpdate = () => {
-  alert('正在检查更新...')
+  message.value = '正在检查更新...';
   setTimeout(() => {
-    alert('当前已是最新版本')
-  }, 1000)
-}
+    message.value = '当前已是最新版本';
+    setTimeout(() => {
+      message.value = '';
+    }, 2000);
+  }, 1000);
+};
 
 const showTerms = () => {
-  alert('跳转到服务条款页面')
-}
-
-const isHovering = ref(false)
+  message.value = '跳转到服务条款页面';
+  setTimeout(() => {
+    message.value = '';
+  }, 2000);
+};
 </script>
 
 <template>

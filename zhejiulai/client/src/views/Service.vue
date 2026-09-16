@@ -1,17 +1,9 @@
-<script>
-import HomeFooter from "@/components/Navigation/HomeFooter.vue";
+<script setup>
 import HomeService from "@/components/Home/HomeService.vue";
-export default {
-  components: {
-    HomeFooter,
-    HomeService
-  }
-}
 </script>
 <template>
   <div id="app">
     <HomeService />
-    <HomeFooter />
     </div>
 </template>
 

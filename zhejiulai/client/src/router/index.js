@@ -12,6 +12,11 @@ import HomeMyPageListPersonalinfo from "@/views/MyPage/HomeMyPageListPersonalinf
 import HomeMyPageListSetting from "@/views/MyPage/HomeMyPageListSetting.vue";
 import HomeViewOrderListDetail from "@/views/ViewOrderDetail.vue";
 import HomeMessagePageDetail from "@/Views/MessagePage/HomeMessagePageDetail.vue";
+import HomeCreateGoodInfo from '@/views/CreateOrder/HomeCreateGoodInfo.vue';
+import HomeCreateGoodAddress from '@/views/CreateOrder/HomeCreateGoodAddress.vue';
+import HomeCreateGoodComplete from '@/views/CreateOrder/HomeCreateGoodComplete.vue';
+import HomeCreateGoodPay from '@/views/CreateOrder/HomeCreateGoodPay.vue';
+import HomeViewGoodListDetail from '@/views/ViewGoodDetail.vue';
 import Home from "@/views/Home.vue";
 import MyPage from "@/views/MyPage.vue";
 import ViewOrder from "@/views/ViewOrder.vue";
@@ -52,6 +57,30 @@ const router = createRouter({
       path: '/Home/CreateOrder/Info',
       name: 'HomeCreateOrderInfo',
       component: HomeCreateOrderInfo,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/Home/CreateOrder/Good',
+      name: 'HomeCreateGoodInfo',
+      component: HomeCreateGoodInfo,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/Home/CreateOrder/GoodAddress',
+      name: 'HomeCreateGoodAddress',
+      component: HomeCreateGoodAddress,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/Home/CreateOrder/GoodComplete',
+      name: 'HomeCreateGoodComplete',
+      component: HomeCreateGoodComplete,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/Home/CreateOrder/GoodPay',
+      name: 'HomeCreateGoodPay',
+      component: HomeCreateGoodPay,
       meta: { requiresAuth: true }
     },
     {
@@ -106,6 +135,12 @@ const router = createRouter({
       path: '/Home/ViewOrder',
       name: 'HomeViewOrder',
       component: ViewOrder,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/Home/ViewOrder/GoodDetail',
+      name: 'HomeViewGoodListDetail',
+      component: HomeViewGoodListDetail,
       meta: { requiresAuth: true }
     },
     {

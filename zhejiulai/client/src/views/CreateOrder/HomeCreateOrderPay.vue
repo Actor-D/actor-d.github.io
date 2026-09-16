@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import Pay from "@/components/Home/HomeCreateOrder/HomeCreateOrderPay.vue";
-export default {
-  components: {
-      Pay
-  }
-}
 </script>
 <template>
   <div id="app">

@@ -1,4 +1,3 @@
-<!-- 页面是一个大个容器（order-list-container，width为80%），中间用v-for定义了三张商品卡片，改大容器的width可以改整个页面的width -->
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -8,50 +7,74 @@ const router = useRouter();
 const orders = ref([]);
 const isLoading = ref(true);
 
-// 获取订单列表
-const fetchOrders = async () => {
+const getFullImageUrl = (url) => {
+  return url ? `http://127.0.0.1:5000${url}` : '../../../../public/images/order-empty.jpg';
+};
+
+const fetchAllOrders = async () => {
   try {
     const token = sessionStorage.getItem('token');
-    const response = await axios.get('http://127.0.0.1:5000/api/order', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const [foodOrdersRes, goodOrdersRes] = await Promise.all([
+      axios.get('http://127.0.0.1:5000/api/order', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }),
+      axios.get('http://127.0.0.1:5000/api/good', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+    ]);
 
-    // 转换API数据为前端需要的格式
-    orders.value = response.data.orders.map(order => {
-      // 根据状态设置状态文本
-      let statusText = '';
-      let status = '';
+    const foodOrders = foodOrdersRes.data.orders.map(order => ({
+      id: order.id,
+      type: 'food',
+      status: order.status,
+      statusText: order.status === 'preparing' ? '准备中' :
+                order.status === 'delivering' ? '配送中' : '已完成',
+      GoodsAdress: order.delivery_address || '智能外卖柜',
+      orderTime: new Date(order.created_at).getTime(),
+      displayTime: new Date(order.created_at).toLocaleString(),
+      items: [{
+        id: 1,
+        name: order.food_name || '外卖订单',
+        price: order.payment_method === 'points' ? '0积分' : '¥0',
+        image: getFullImageUrl(order['image-url']),
+        type: 'food'
+      }],
+      total: order.payment_method === 'points'
+        ? `${order.payment_amount}积分`
+        : `¥${order.payment_amount}`,
+      paymentMethod: order.payment_method === 'points' ? '积分支付' : '现金支付',
+      isUrgent: order.is_urgent
+    }));
 
-      if (order.status === 'preparing') {
-        status = 'preparing';
-        statusText = '准备中';
-      } else if (order.status === 'delivering') {
-        status = 'delivering';
-        statusText = '配送中';
-      } else {
-        status = 'completed';
-        statusText = '已完成';
-      }
+    const goodOrders = goodOrdersRes.data.orders.map(order => ({
+      id: order.id,
+      type: 'good',
+      status: order.status,
+      statusText: order.status === 'preparing' ? '准备中' :
+                order.status === 'delivering' ? '配送中' : '已完成',
+      GoodsAdress: order.delivery_address || '物品配送',
+      orderTime: new Date(order.created_at).getTime(),
+      displayTime: new Date(order.created_at).toLocaleString(),
+      items: [{
+        id: 1,
+        name: `${order.good_name} (${order.good_type}, ${order.good_size})`,
+        price: order.payment_method === 'points' ? '0积分' : '¥0',
+        image: getFullImageUrl(order['image-url']),
+        type: 'good'
+      }],
+      total: order.payment_method === 'points'
+        ? `${order.payment_amount}积分`
+        : `¥${order.payment_amount}`,
+      paymentMethod: order.payment_method === 'points' ? '积分支付' : '现金支付',
+      isUrgent: order.is_urgent
+    }));
 
-      return {
-        id: order.id,
-        status: status,
-        statusText: statusText,
-        GoodsAdress: order.delivery_address || '智能外卖柜',
-        orderTime: new Date(order.created_at).toLocaleString(),
-        items: [{
-          id: 1,
-          name: order.food_name || '外卖订单',
-          price: order.payment_method === 'points' ? '0积分' : '¥0',
-          image: '../../../../public/images/order1.jpg'
-        }],
-        total: order.payment_method === 'points'
-          ? `${order.payment_amount}积分`
-          : `¥${order.payment_amount}`,
-        paymentMethod: order.payment_method === 'points' ? '积分支付' : '现金支付',
-        isUrgent: order.is_urgent
-      };
-    });
+    orders.value = [...foodOrders, ...goodOrders]
+      .sort((a, b) => b.orderTime - a.orderTime)
+      .map(order => ({
+        ...order,
+        orderTime: order.displayTime
+      }));
 
   } catch (error) {
     console.error('获取订单列表失败:', error);
@@ -60,20 +83,23 @@ const fetchOrders = async () => {
   }
 };
 
-// 查看订单详情
-const viewDetail = (orderId) => {
+const viewDetail = (orderId, orderType) => {
   router.push({
-    path: '/Home/ViewOrder/ListDetail',
-    query: { orderId: orderId }
+    path: orderType === 'food'
+      ? '/Home/ViewOrder/ListDetail'
+      : '/Home/ViewOrder/GoodDetail',
+    query: { orderId }
   });
 };
 
-// 再来一单
-const reorder = () => {
-  router.push('/Home/CreateOrder/Info');
+const reorder = (orderType) => {
+  router.push(orderType === 'food'
+    ? '/Home/CreateOrder/Info'
+    : '/Home/CreateOrder/Good'
+  );
 };
 
-onMounted(fetchOrders);
+onMounted(fetchAllOrders);
 </script>
 
 <template>
@@ -99,6 +125,7 @@ onMounted(fetchOrders);
             <h3>{{ order.GoodsAdress }}</h3>
             <span v-if="order.isUrgent" class="urgent-tag">加急</span>
             <span class="order-status" :class="order.status">{{ order.statusText }}</span>
+            <span class="order-type">{{ order.type === 'food' ? '外卖' : '物品配送' }}</span>
           </div>
           <div class="order-time">{{ order.orderTime }}</div>
         </div>
@@ -106,10 +133,10 @@ onMounted(fetchOrders);
         <!-- 商品列表 -->
         <div class="order-items">
           <div v-for="item in order.items" :key="item.id" class="order-item">
-            <img :src="item.image" :alt="item.name" class="item-image">
+            <a-image :width="80" :src="item.image" :alt="item.name" class="item-image" />
             <div class="item-info">
               <h4>{{ item.name }}</h4>
-              <p class="item-price">{{ item.price }}</p>
+              <p class="item-price">{{ order.total }}</p>
             </div>
           </div>
         </div>
@@ -121,29 +148,33 @@ onMounted(fetchOrders);
             <span v-if="order.isUrgent" class="urgent-fee">(含加急费)</span>
           </div>
           <div class="order-actions">
-            <button @click="viewDetail(order.id)" class="action-btn detail-btn">订单详情</button>
-            <button @click="reorder" class="action-btn reorder-btn">再来一单</button>
+            <button @click="viewDetail(order.id, order.type)" class="action-btn detail-btn">订单详情</button>
+            <button @click="reorder(order.type)" class="action-btn reorder-btn">再来一单</button>
           </div>
         </div>
       </div>
     </div>
+    <div class="footer-space"></div>
   </div>
 </template>
 
 <style scoped>
-
+.footer-space {
+  height: 100px; /* 设置高度 */
+  background-color: #f5f5f5; /* 设置背景颜色 */
+}
+.order-type {
+  margin-left: 8px;
+  padding: 2px 6px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #666;
+}
 .order-list-container {
   width: 100%;
   margin: 0 auto;
   font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.page-title {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
 }
 
 .order-list {
@@ -185,30 +216,6 @@ onMounted(fetchOrders);
   font-size: 12px;
 }
 
-.order-status.preparing {
-  background: #FFF3E0;
-  color: #FF6D00;
-}
-
-.order-status.delivering {
-  background: #E3F2FD;
-  color: #1976D2;
-}
-
-.top-button{
-  text-decoration: none;
-  margin-right: 15px;
-}
-
-.top-button1{
-  text-decoration: none;
-}
-
-.order-status.completed {
-  background: #E8F5E9;
-  color: #2E7D32;
-}
-
 .order-time {
   font-size: 12px;
   color: #999;
@@ -230,7 +237,7 @@ onMounted(fetchOrders);
 }
 
 .item-image {
-  width:5%;
+  width: 5%;
   height: 5%;
   border-radius: 8px;
   object-fit: cover;
@@ -283,14 +290,9 @@ onMounted(fetchOrders);
   border-radius: 15px;
   font-size: 13px;
   cursor: pointer;
-  color:white;
+  color: white;
   transition: all 0.3s;
   border: 1px solid transparent;
-}
-
-.nav-link {
-  color: white;
-  text-decoration: none;
 }
 
 .detail-btn {
@@ -301,16 +303,6 @@ onMounted(fetchOrders);
 
 .detail-btn:hover {
   background: #f5f5f5;
-}
-
-.review-btn {
-  background: white;
-  color: #007bff;
-  border-color: #007bff;
-}
-
-.review-btn:hover {
-  background: #FFF3E0;
 }
 
 .reorder-btn {

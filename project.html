@@ -67,6 +67,7 @@
         <nav id="site-nav" class="site-nav" data-i18n-aria-label="accessibility.navigation">
           <a href="index.html#about" data-i18n="nav.about">关于我</a>
           <a href="#projects" data-i18n="nav.projects">项目案例</a>
+          <a href="danmu.html" data-i18n="nav.analysis">数据分析</a>
           <a href="research.html" data-i18n="nav.research">研究论文</a>
           <a href="index.html#journey" data-i18n="nav.journey">学习经历</a>
           <a href="index.html#contact" data-i18n="nav.contact">联系我</a>
@@ -96,11 +97,12 @@
               <span>Vite 6</span>
               <span>Vue Router 4</span>
               <span>Pinia 3</span>
+              <span>vue-i18n</span>
               <span>Element Plus</span>
-              <span>axios</span>
               <span>Flask 3</span>
               <span>Flask-SQLAlchemy</span>
-              <span>PyJWT</span>
+              <span>scikit-learn</span>
+              <span>DeepSeek</span>
               <span>SQLite</span>
             </div>
             <div class="case-study-actions">
@@ -276,10 +278,10 @@
         </div>
 
         <div class="project-facts reveal">
-          <div><strong>04</strong><span data-i18n="projects.factWorkflow">步订单流程</span></div>
-          <div><strong>03</strong><span data-i18n="projects.factModels">张数据表</span></div>
-          <div><strong>17</strong><span data-i18n="projects.factApi">个 REST 接口</span></div>
-          <div><strong>16</strong><span data-i18n="projects.factRoutes">条受保护路由</span></div>
+          <div><strong>23</strong><span data-i18n="projects.factRoutes">条路由 · 21 条受保护</span></div>
+          <div><strong>31</strong><span data-i18n="projects.factApi">个 REST 接口</span></div>
+          <div><strong>07</strong><span data-i18n="projects.factModels">张数据表</span></div>
+          <div><strong>100K</strong><span data-i18n="projects.factTraining">行模型训练数据</span></div>
         </div>
 
         <div class="delivery-flow reveal">
@@ -365,12 +367,82 @@
                 <li><code>is_urgent</code><em>pricing flag</em></li>
                 <li><code>delivery_address</code><em>drop-off</em></li>
                 <li><code>receiver_address</code><em>resolved</em></li>
-                <li><code>delivery_fee_cash</code><em>5.0 / 7.0</em></li>
-                <li><code>delivery_fee_points</code><em>50 / 70</em></li>
+                <li><code>size</code><em>ML feature</em></li>
+                <li><code>distance</code><em>ML feature</em></li>
+                <li><code>delivery_fee_points</code><em>model output</em></li>
                 <li><code>payment_status</code><em>draft→pending→paid</em></li>
+                <li><code>confirm</code><em>receipt flag</em></li>
+              </ul>
+            </article>
+            <article class="bento-card span-3 reveal">
+              <p class="bento-label">TABLE / goods</p>
+              <h4 data-i18n="projects.dataGoodName">物品代送订单</h4>
+              <p class="data-desc" data-i18n="projects.dataGoodDesc">与外卖对称的第二条下单链路</p>
+              <ul class="field-list">
+                <li><code>goodorder_id</code><em>uuid4</em></li>
+                <li><code>user_id</code><em>FK → users.id</em></li>
+                <li><code>good_name</code><em>item</em></li>
+                <li><code>good_type</code><em>category</em></li>
+                <li><code>good_size</code><em>size label</em></li>
+                <li><code>is_urgent</code><em>flag</em></li>
+                <li><code>delivery_fee_points</code><em>fixed 10</em></li>
+              </ul>
+            </article>
+            <article class="bento-card span-3 reveal">
+              <p class="bento-label">TABLE / chat_sessions · chat_messages</p>
+              <h4 data-i18n="projects.dataChatName">AI 会话存储</h4>
+              <p class="data-desc" data-i18n="projects.dataChatDesc">让助手对话可追溯、可续聊</p>
+              <ul class="field-list">
+                <li><code>session_id</code><em>uuid4</em></li>
+                <li><code>user_id</code><em>FK → users.id</em></li>
+                <li><code>role</code><em>user / assistant</em></li>
+                <li><code>content</code><em>message text</em></li>
+                <li><code>timestamp</code><em>datetime</em></li>
+              </ul>
+            </article>
+            <article class="bento-card span-3 reveal">
+              <p class="bento-label">TABLE / feedbacks</p>
+              <h4 data-i18n="projects.dataFeedbackName">反馈中心</h4>
+              <p class="data-desc" data-i18n="projects.dataFeedbackDesc">分类反馈与联系方式</p>
+              <ul class="field-list">
+                <li><code>type</code><em>category</em></li>
+                <li><code>content</code><em>text</em></li>
+                <li><code>contact_info</code><em>optional</em></li>
+                <li><code>created_at</code><em>datetime</em></li>
               </ul>
             </article>
           </div>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="projects.aiEyebrow">智能能力</p>
+            <h3 data-i18n="projects.aiTitle">把机器学习和 LLM 接进真实业务流</h3>
+            <p class="flow-note" data-i18n="projects.aiIntro">
+              计价走模型、问答走大模型，两者都不是演示页面，而是订单与客服链路里的真实调用。
+            </p>
+          </div>
+          <div class="bento">
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">ML · PRICING</span>
+              <h4 data-i18n="projects.aiMlTitle">scikit-learn 配送费预测</h4>
+              <p data-i18n="projects.aiMlBody">
+                用 10 万行数据训练 model.pkl，输入尺寸 / 距离 / 加急，输出积分配送费；创建外卖订单时 joblib 加载模型实时推理，替代写死的计价表。
+              </p>
+              <div class="rule-facts"><span>100,000 rows</span><span>joblib</span><span>3 features</span></div>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">LLM · ASSISTANT</span>
+              <h4 data-i18n="projects.aiLlmTitle">DeepSeek 问答助手</h4>
+              <p data-i18n="projects.aiLlmBody">
+                通过 OpenAI 兼容协议接入 DeepSeek，约 700 字中文 system prompt 约束回答范围；会话与消息落库，支持多会话切换与历史回看。
+              </p>
+              <div class="rule-facts"><span>4 endpoints</span><span>chat_sessions</span><span>~700 char prompt</span></div>
+            </article>
+          </div>
+          <p class="table-note" data-i18n="projects.aiCaveat">
+            已知缺陷：创建订单时距离字段仍为 0，真实距离在下一步才回填，因此线上预测实际只用到尺寸与加急两个特征——这也是我在复盘时发现并记录的问题。
+          </p>
         </div>
 
         <div class="delivery-flow reveal">
@@ -422,21 +494,21 @@
             <p class="eyebrow" data-i18n="projects.featuresEyebrow">核心功能</p>
             <h3 data-i18n="projects.featuresTitle">从登录到履约的完整体验</h3>
             <ul>
-              <li data-i18n="projects.featureOne">学号注册登录、密码加密与受保护路由</li>
-              <li data-i18n="projects.featureTwo">订单创建、地址选择、加急费用与多种支付方式</li>
-              <li data-i18n="projects.featureThree">个人资料、常用地址、积分和订单状态管理</li>
-              <li data-i18n="projects.featureFour">订单图片上传与基于用户的 API 权限控制</li>
+              <li data-i18n="projects.featureOne">学号 10 位数字注册、PBKDF2 加密与 21 条受保护路由</li>
+              <li data-i18n="projects.featureTwo">双模式下单：代取外卖与代送物品，两条流程各自独立</li>
+              <li data-i18n="projects.featureThree">地址簿（含默认地址切换）、积分原子扣减与订单状态跟踪</li>
+              <li data-i18n="projects.featureFour">图片上传（类型白名单 + 5MB）与基于大模型的 AI 助手问答</li>
             </ul>
           </article>
           <article class="project-detail architecture reveal">
             <p class="eyebrow" data-i18n="projects.architectureEyebrow">系统架构</p>
             <h3 data-i18n="projects.architectureTitle">清晰的前后端分层</h3>
             <div class="architecture-flow">
-              <div><small data-i18n="projects.archClient">客户端</small><strong>Vue 3</strong><span>Router · Pinia</span></div>
+              <div><small data-i18n="projects.archClient">客户端</small><strong>Vue 3</strong><span>Router · Pinia · i18n</span></div>
               <b aria-hidden="true">→</b>
-              <div><small>REST API</small><strong>Flask</strong><span>JWT · CORS</span></div>
+              <div><small>REST API</small><strong>Flask</strong><span>JWT · 31 endpoints</span></div>
               <b aria-hidden="true">→</b>
-              <div><small data-i18n="projects.archData">数据层</small><strong>SQLAlchemy</strong><span>SQLite</span></div>
+              <div><small data-i18n="projects.archData">数据层</small><strong>SQLAlchemy</strong><span>7 tables · SQLite</span></div>
             </div>
           </article>
         </div>
@@ -488,18 +560,18 @@
             </div>
             <div class="api-console-body">
               <div><span class="method post">POST</span><code>/api/register</code><small data-i18n="projects.apiRegister">创建学生账户</small><b>201</b></div>
-              <div><span class="method post">POST</span><code>/api/login</code><small data-i18n="projects.apiLogin">验证身份并签发令牌</small><b>200</b></div>
+              <div><span class="method post">POST</span><code>/api/login</code><small data-i18n="projects.apiLogin">校验学号/密码/校区并签发令牌</small><b>200</b></div>
               <div><span class="method get">GET</span><code>/api/user_profile</code><small data-i18n="projects.apiProfile">读取当前用户资料</small><b>200</b></div>
-              <div><span class="method put">PUT</span><code>/api/update_profile</code><small data-i18n="projects.apiUpdateProfile">更新姓名、手机号与校区</small><b>200</b></div>
-              <div><span class="method get">GET</span><code>/api/addresses</code><small data-i18n="projects.apiAddresses">读取当前用户地址</small><b>200</b></div>
-              <div><span class="method post">POST</span><code>/api/addresses</code><small data-i18n="projects.apiAddAddress">新增常用地址</small><b>201</b></div>
-              <div><span class="method post">POST</span><code>/api/addresses/:id/default</code><small data-i18n="projects.apiDefaultAddress">切换默认地址</small><b>200</b></div>
-              <div><span class="method put">PUT</span><code>/api/addresses/:id</code><small data-i18n="projects.apiEditAddress">更新或删除地址</small><b>200</b></div>
-              <div><span class="method post">POST</span><code>/api/order</code><small data-i18n="projects.apiOrder">创建并计算配送订单</small><b>201</b></div>
-              <div><span class="method post">POST</span><code>/api/order/:id/address</code><small data-i18n="projects.apiOrderAddress">回填配送与接收地址</small><b>200</b></div>
-              <div><span class="method get">GET</span><code>/api/order</code><small data-i18n="projects.apiOrderList">按时间倒序读取订单列表</small><b>200</b></div>
-              <div><span class="method get">GET</span><code>/api/order/:id</code><small data-i18n="projects.apiOrderDetail">获取用户订单详情</small><b>200</b></div>
-              <div><span class="method post">POST</span><code>/api/upload</code><small data-i18n="projects.apiUpload">上传订单凭证图片</small><b>200</b></div>
+              <div><span class="method post">POST</span><code>/api/order</code><small data-i18n="projects.apiOrder">创建外卖订单并调用 ML 计价</small><b>201</b></div>
+              <div><span class="method put">PUT</span><code>/api/order/:id/payment</code><small data-i18n="projects.apiPay">选择支付方式并原子扣减积分</small><b>200</b></div>
+              <div><span class="method post">POST</span><code>/api/good</code><small data-i18n="projects.apiGood">创建物品代送订单</small><b>201</b></div>
+              <div><span class="method get">GET</span><code>/api/good</code><small data-i18n="projects.apiGoodList">物品订单列表</small><b>200</b></div>
+              <div><span class="method post">POST</span><code>/api/chat/send</code><small data-i18n="projects.apiChatSend">向 AI 助手发送消息</small><b>200</b></div>
+              <div><span class="method get">GET</span><code>/api/chat/history</code><small data-i18n="projects.apiChatHistory">读取会话历史</small><b>200</b></div>
+              <div><span class="method post">POST</span><code>/api/feedback</code><small data-i18n="projects.apiFeedback">提交分类反馈</small><b>201</b></div>
+              <div><span class="method post">POST</span><code>/api/upload</code><small data-i18n="projects.apiUpload">上传订单图片</small><b>200</b></div>
+              <div><span class="method get">GET</span><code>/api/test_predict</code><small data-i18n="projects.apiPredict">公开的模型调试接口</small><b>200</b></div>
+              <div><span class="method delete">DELETE</span><code>/api/clear_data</code><small data-i18n="projects.apiClear">清空当前用户数据</small><b>200</b></div>
             </div>
           </div>
         </div>

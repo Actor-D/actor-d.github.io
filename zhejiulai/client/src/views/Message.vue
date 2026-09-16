@@ -1,14 +1,7 @@
-<script>
+<script setup>
 import HomeHeader from "@/components/Navigation/HomeHeader.vue";
 import HomeFooter from "@/components/Navigation/HomeFooter.vue";
 import Message from "@/components/Home/HomeMessagePage/HomeMessagePageList.vue";
-export default {
-  components: {
-    HomeHeader,
-    HomeFooter,
-    Message
-  }
-}
 </script>
 <template>
   <div id="app">

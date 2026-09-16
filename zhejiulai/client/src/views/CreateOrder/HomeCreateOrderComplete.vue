@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import Complete from "@/components/Home/HomeCreateOrder/HomeCreateOrderComplete.vue";
-export default {
-  components: {
-      Complete
-  }
-}
 </script>
 <template>
   <div id="app">

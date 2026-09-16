@@ -4,17 +4,17 @@
       <div class="header">
         <div class="logo">
           <span class="logo-icon">🚀</span>
-          <span class="logo-text">浙就来 <span class="highlight">校园专属配送平台</span></span>
+          <span class="logo-text">{{ $t("platformName") }} <span class="highlight">{{ $t("platformSubtitle") }}</span></span>
         </div>
         <div class="header-right">
-          <span @mouseenter="showHelpTooltip = true" @mouseleave="showHelpTooltip = false">帮助</span>
+          <span @mouseenter="showHelpTooltip = true" @mouseleave="showHelpTooltip = false" @click="toggleLanguage">{{ $t("switchLanguage") }}</span>
         </div>
       </div>
 
       <div class="login-content">
         <div class="welcome-section">
-          <h2>欢迎回来</h2>
-          <p>请使用学号登录校园配送系统</p>
+          <h2>{{ $t("welcomeBack") }}</h2>
+          <p>{{ $t("loginDescription") }}</p>
           <div class="campus-image" @click="redirectToZJU">
             <img src="../../../../public/images/zju.jpg" alt="浙江大学校园风光">
           </div>
@@ -23,14 +23,14 @@
         <div class="login-card">
           <div class="login-form">
             <div class="form-group">
-              <label class="form-label">选择校区</label>
+              <label class="form-label">{{ $t("selectCampus") }}</label>
               <select
                 class="form-input"
                 v-model="selectedCampus"
                 :class="{'input-error': campusError}"
               >
-                <option value="" disabled>请选择校区</option>
-                <option v-for="campus in campuses" :key="campus" :value="campus">{{ campus }}</option>
+                <option value="" disabled>{{ $t("pleaseSelectCampus") }}</option>
+                <option v-for="(campus, index) in translatedCampuses" :key="index" :value="campus.value">{{ campus.text }}</option>
               </select>
               <transition name="fade">
                 <div class="error-message" v-if="campusError">{{ campusError }}</div>
@@ -38,12 +38,12 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">学号</label>
+              <label class="form-label">{{ $t("studentNumber") }}</label>
               <input
                 type="text"
                 class="form-input"
                 v-model="username"
-                placeholder="请输入学号"
+                :placeholder="$t('pleaseEnterStudentNumber')"
                 @focus="inputFocused('username')"
                 @blur="inputBlurred"
                 :class="{'input-error': usernameError}"
@@ -54,13 +54,13 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">密码</label>
+              <label class="form-label">{{ $t("password") }}</label>
               <div class="password-input">
                 <input
                   :type="showPassword ? 'text' : 'password'"
                   class="form-input"
                   v-model="password"
-                  placeholder="请输入密码"
+                  :placeholder="$t('pleaseEnterPassword')"
                   @focus="inputFocused('password')"
                   @blur="inputBlurred"
                   :class="{'input-error': passwordError || loginError}"
@@ -68,7 +68,7 @@
                 <span
                   class="eye-icon"
                   @click="togglePasswordVisibility"
-                  :title="showPassword ? '隐藏密码' : '显示密码'"
+                  :title="showPassword ? $t('hidePassword') : $t('showPassword')"
                 >
                   {{ showPassword ? '👁️' : '🔒' }}
                 </span>
@@ -87,13 +87,13 @@
                 @click="handleLogin"
                 :disabled="isLoggingIn"
               >
-                <span v-if="!isLoggingIn">立即登录</span>
+                <span v-if="!isLoggingIn">{{ $t("login") }}</span>
                 <span v-else class="loading-spinner"></span>
               </button>
 
               <div class="quick-links">
-                <router-link to="/FrontPage/ContentRegister" class="nav-link">注册账号</router-link>
-                <span class="forgot-password" @click="showForgotPassword = true">找回密码</span>
+                <router-link to="/FrontPage/ContentRegister" class="nav-link">{{ $t("registerAccount") }}</router-link>
+                <span class="forgot-password" @click="showForgotPassword = true">{{ $t("forgotPassword") }}（无功能）</span>
               </div>
             </div>
           </div>
@@ -106,28 +106,31 @@
             <div class="agreement-error" v-if="agreementError">{{ agreementError }}</div>
             <div class="agreement">
               <input type="checkbox" id="agree" v-model="agreed">
-              <label for="agree">我已阅读并同意《用户协议[](@replace=10001)》和《隐私政策[](@replace=10002)》</label>
+              <label for="agree">{{ $t("iAgree") }} <a href="javascript:void(0);" @click="downloadUserAgreement">{{ $t("userAgreement") }}</a> {{ $t("and") }} <a href="javascript:void(0);" @click="downloadPrivacyPolicy">{{ $t("privacyPolicy") }}</a></label>
             </div>
           </div>
         </transition>
         <div class="warning">
-          <span>⚠️ 禁止共享账号，违者封禁配送权限</span>
+          <span>{{ $t("noAccountSharing") }}</span>
         </div>
       </div>
 
       <transition name="modal">
         <div class="modal-overlay" v-if="showForgotPassword" @click.self="showForgotPassword = false">
           <div class="modal-content">
-            <h3>找回密码</h3>
+            <h3>{{ $t("resetPassword") }}（无功能）</h3>
             <div class="form-group">
-              <label class="form-label">学号</label>
-              <input type="text" class="form-input" v-model="forgotUsername" placeholder="请输入学号">
+              <label class="form-label">{{ $t("studentNumber") }}</label>
+              <input type="text" class="form-input" v-model="forgotUsername" :placeholder="$t('pleaseEnterStudentNumber')">
             </div>
             <div class="form-group">
-              <label class="form-label">注册邮箱</label>
-              <input type="email" class="form-input" v-model="forgotEmail" placeholder="请输入注册邮箱">
+              <label class="form-label">{{ $t("registeredPhone") }}</label>
+              <input type="email" class="form-input" v-model="forgotPhone" :placeholder="$t('pleaseEnterRegisteredPhone')">
             </div>
-            <button class="login-btn" @click="resetPassword">提交申请</button>
+            <transition name="fade">
+    <div class="success-message" v-if="resetSuccess">{{ t("passwordResetLinkSent") }}</div>
+  </transition>
+            <button class="login-btn" @click="resetPassword">{{ $t("submit") }}</button>
           </div>
         </div>
       </transition>
@@ -135,166 +138,208 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'LoginPage',
-  data() {
-    return {
-      username: '',
-      password: '',
-      agreed: false,
-      selectedCampus: '',
-      campuses: [
-        '浙江大学紫金港校区',
-        '浙江大学玉泉校区',
-        '浙江大学西溪校区',
-        '浙江大学华家池校区',
-        '浙江大学之江校区',
-        '浙江大学海宁国际校区'
-      ],
-      usernameError: '',
-      passwordError: '',
-      campusError: '',
-      isLoggingIn: false,
-      showHelpTooltip: false,
-      showForgotPassword: false,
-      forgotUsername: '',
-      forgotEmail: '',
-      showPassword: false,
-      loginError: '',
-      agreementError: '',
-      lastSubmitTime: 0
-    }
-  },
-  methods: {
-    redirectToZJU() {
-      window.open('https://www.zju.edu.cn', '_blank');
-    },
-    togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
-    },
-    inputFocused(field) {
-      console.log(`${field} focused`);
-    },
-    inputBlurred() {
-      this.validateInputs();
-    },
-    validateInputs() {
-      let isValid = true;
+<script setup>
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
-      // 重置错误信息
-      this.usernameError = '';
-      this.passwordError = '';
-      this.campusError = '';
-      this.agreementError = '';
+const { t, locale } = useI18n();
+const router = useRouter();
 
-      // 验证校区选择
-      if (!this.selectedCampus) {
-        this.campusError = '请选择校区';
-        isValid = false;
-      }
+// 响应式数据
+const username = ref('');
+const password = ref('');
+const agreed = ref(false);
+const selectedCampus = ref('');
+const usernameError = ref('');
+const passwordError = ref('');
+const campusError = ref('');
+const isLoggingIn = ref(false);
+const showHelpTooltip = ref(false);
+const showForgotPassword = ref(false);
+const forgotUsername = ref('');
+const forgotPhone = ref('');
+const showPassword = ref(false);
+const loginError = ref('');
+const agreementError = ref('');
+const lastSubmitTime = ref(0);
+const resetSuccess = ref(false);
+// 固定校区选项
+const campusOptions = [
+  '浙江大学紫金港校区',
+  '浙江大学玉泉校区',
+  '浙江大学西溪校区',
+  '浙江大学华家池校区',
+  '浙江大学之江校区',
+  '浙江大学舟山校区',
+  '浙江大学海宁国际校区'
+];
 
-      // 验证学号格式
-      if (!this.username) {
-        this.usernameError = '请输入学号';
-        isValid = false;
-      } else if (this.username.length < 10) {
-        this.usernameError = '学号长度至少10位';
-        isValid = false;
-      } else if (!/^\d+$/.test(this.username)) {
-        this.usernameError = '学号必须为数字';
-        isValid = false;
-      }
+// 计算属性
+const translatedCampuses = computed(() => {
+  return campusOptions.map((campus, index) => ({
+    value: campus,
+    text: t(`campus${index + 1}`)
+  }));
+});
 
-      // 验证密码长度
-      if (!this.password) {
-        this.passwordError = '请输入密码';
-        isValid = false;
-      } else if (this.password.length < 8) {
-        this.passwordError = '密码长度至少8位';
-        isValid = false;
-      }
+// 方法
+const redirectToZJU = () => {
+  window.open('https://www.zju.edu.cn', '_blank');
+};
 
-      // 验证用户协议
-      if (!this.agreed) {
-        this.agreementError = '请先同意用户协议和隐私政策';
-        isValid = false;
-      }
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
 
-      return isValid;
-    },
-    async handleLogin() {
-      // 防止重复提交
-      const now = Date.now();
-      if (now - this.lastSubmitTime < 500) {
-        return;
-      }
-      this.lastSubmitTime = now;
+const inputFocused = (field) => {
+  console.log(`${field} focused`);
+};
 
-      // 重置所有错误信息
-      this.usernameError = '';
-      this.passwordError = '';
-      this.campusError = '';
-      this.loginError = '';
-      this.agreementError = '';
+const inputBlurred = () => {
+  validateInputs();
+};
 
-      // 验证输入
-      const inputsValid = this.validateInputs();
-      if (!inputsValid) {
-        return;
-      }
+const validateInputs = () => {
+  let isValid = true;
 
-      this.isLoggingIn = true;
+  // 重置错误信息
+  usernameError.value = '';
+  passwordError.value = '';
+  campusError.value = '';
+  agreementError.value = '';
 
-      try {
-        const response = await fetch('http://localhost:5000/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            student_id: this.username,
-            password: this.password,
-            campus: this.selectedCampus
-          })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          // 登录成功，保存token和用户信息
-          sessionStorage.setItem('token', data.token);
-          sessionStorage.setItem('user', JSON.stringify(data.user));
-
-          // 跳转到主页
-          this.$router.push('/home');
-        } else {
-          // 根据后端返回的错误类型显示不同提示
-          if (data.message.includes('校区')) {
-            this.campusError = data.message;
-          } else {
-            this.loginError = data.message || '学号或密码错误，请重试';
-          }
-        }
-      } catch (error) {
-        this.loginError = '网络错误，请稍后再试';
-        console.error('登录错误:', error);
-      } finally {
-        this.isLoggingIn = false;
-      }
-    },
-    resetPassword() {
-      console.log('找回密码:', {
-        username: this.forgotUsername,
-        email: this.forgotEmail
-      });
-      this.showForgotPassword = false;
-      alert('密码重置链接已发送至您的邮箱');
-    }
+  // 验证校区选择
+  if (!selectedCampus.value) {
+    campusError.value = t("pleaseSelectCampus");
+    isValid = false;
   }
-}
-</script>
 
+  // 验证学号格式
+  if (!username.value) {
+    usernameError.value = t("pleaseEnterStudentNumber");
+    isValid = false;
+  } else if (username.value.length < 10) {
+    usernameError.value = t("studentNumberMinLength");
+    isValid = false;
+  } else if (!/^\d+$/.test(username.value)) {
+    usernameError.value = t("studentNumberMustBeDigits");
+    isValid = false;
+  }
+
+  // 验证密码长度
+  if (!password.value) {
+    passwordError.value = t("pleaseEnterPassword");
+    isValid = false;
+  } else if (password.value.length < 8) {
+    passwordError.value = t("passwordMinLength");
+    isValid = false;
+  }
+
+  // 验证用户协议
+  if (!agreed.value) {
+    agreementError.value = t("pleaseAgreeTerms");
+    isValid = false;
+  }
+
+  return isValid;
+};
+
+const handleLogin = async () => {
+  // 防止重复提交
+  const now = Date.now();
+  if (now - lastSubmitTime.value < 500) {
+    return;
+  }
+  lastSubmitTime.value = now;
+
+  // 重置错误信息
+  usernameError.value = '';
+  passwordError.value = '';
+  campusError.value = '';
+  loginError.value = '';
+  agreementError.value = '';
+
+  // 验证输入
+  const inputsValid = validateInputs();
+  if (!inputsValid) {
+    return;
+  }
+
+  isLoggingIn.value = true;
+
+  try {
+    const response = await fetch('http://localhost:5000/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        student_id: username.value,
+        password: password.value,
+        campus: selectedCampus.value
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      // 登录成功
+      sessionStorage.setItem('token', data.token);
+      sessionStorage.setItem('user', JSON.stringify(data.user));
+      router.push('/home');
+    } else {
+      if (data.message.includes('校区')) {
+        campusError.value = data.message;
+      } else {
+        loginError.value = data.message || t("invalidStudentNumberOrPassword");
+      }
+    }
+  } catch (error) {
+    loginError.value = t("networkError");
+    console.error('登录错误:', error);
+  } finally {
+    isLoggingIn.value = false;
+  }
+};
+
+const resetPassword = () => {
+  console.log('找回密码:', {
+    username: forgotUsername.value,
+    Phone: forgotPhone.value
+  });
+
+  // 显示成功消息
+  resetSuccess.value = true;
+
+  // 3秒后隐藏消息和弹窗
+  setTimeout(() => {
+    resetSuccess.value = false;
+    showForgotPassword.value = false;
+  }, 3000);
+};
+const toggleLanguage = () => {
+  locale.value = locale.value === 'zh-CN' ? 'en-US' : 'zh-CN';
+};
+
+const downloadUserAgreement = () => {
+  const link = document.createElement('a');
+  link.href = '../../../../public/PDF/user.pdf';
+  link.download = 'user_agreement.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+const downloadPrivacyPolicy = () => {
+  const link = document.createElement('a');
+  link.href = '../../../../public/PDF/public.pdf';
+  link.download = 'privacy_policy.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+</script>
 
 <style scoped>
 * {

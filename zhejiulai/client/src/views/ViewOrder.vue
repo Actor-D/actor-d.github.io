@@ -1,14 +1,7 @@
-<script>
+<script setup>
 import HomeHeader from "@/components/Navigation/HomeHeader.vue";
 import HomeFooter from "@/components/Navigation/HomeFooter.vue";
 import ViewOrder from "@/components/Home/HomeViewOrder/HomeViewOrderList.vue";
-export default {
-  components: {
-    HomeHeader,
-    HomeFooter,
-    ViewOrder
-  }
-}
 </script>
 <template>
   <div id="app">

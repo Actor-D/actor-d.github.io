@@ -87,6 +87,11 @@
         </button>
       </div>
     </div>
+
+    <!-- 自定义提示框 -->
+    <div v-if="showToast" class="toast" :class="toastClass">
+      {{ toastMessage }}
+    </div>
   </div>
 </template>
 
@@ -103,6 +108,10 @@ const userInfo = ref({
 })
 const initialUserInfo = ref(null)
 
+const showToast = ref(false)
+const toastMessage = ref('')
+const toastClass = ref('')
+
 const token = sessionStorage.getItem('token')
 
 const fetchUserInfo = async () => {
@@ -116,10 +125,10 @@ const fetchUserInfo = async () => {
       userInfo.value = response.data.user
       initialUserInfo.value = { ...response.data.user } // 保存初始信息
     } else {
-      console.error('Failed to fetch user info:', response.data.message)
+      showCustomToast('Failed to fetch user info: ' + response.data.message, 'error')
     }
-   } catch (error) {
-    console.error('Error fetching user info:', error)
+  } catch (error) {
+    showCustomToast('Error fetching user info: ' + error.message, 'error')
   }
 }
 
@@ -135,15 +144,25 @@ const updateProfile = async () => {
       }
     })
     if (response.data.success) {
-      alert('个人信息更新成功')
+      showCustomToast('个人信息更新成功', 'success')
       window.history.back() // 返回到上一个页面
     } else {
-      alert('更新失败: ' + response.data.message)
+      showCustomToast('更新失败: ' + response.data.message, 'error')
     }
-   } catch (error) {
-    console.error('Error updating user info:', error)
-    alert('更新失败，请稍后再试')
+  } catch (error) {
+    showCustomToast('更新失败，请稍后再试: ' + error.message, 'error')
   }
+}
+
+const showCustomToast = (message, type) => {
+  toastMessage.value = message
+  toastClass.value = type === 'success' ? 'toast-success' : 'toast-error'
+  showToast.value = true
+
+  // 3秒后自动关闭提示
+  setTimeout(() => {
+    showToast.value = false
+  }, 3000)
 }
 
 onMounted(fetchUserInfo)
@@ -468,5 +487,26 @@ const campuses = [
 .form-input:focus, select:focus {
   border-color: #1890FF;
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* 自定义提示框样式 */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: white;
+  z-index: 1000;
+}
+
+.toast-success {
+  background-color: #28a745;
+}
+
+.toast-error {
+  background-color: #dc3545;
 }
 </style>

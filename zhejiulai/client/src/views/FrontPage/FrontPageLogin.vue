@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import PageLogin from "@/components/FrontPage/FrontPageLogin.vue";
-export default {
-  components: {
-    PageLogin
-  }
-}
 </script>
 <template>
   <div id="app">

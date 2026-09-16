@@ -1,5 +1,8 @@
 <template>
   <transition name="fade">
+    <div class="error-message" :class="{'success-message': isSuccess}" v-if="errorMessage">{{ errorMessage }}</div>
+  </transition>
+  <transition name="fade">
     <div class="registration-container">
       <div class="registration-header">
         <h1>注册账号</h1>
@@ -37,26 +40,6 @@
               </div>
               <div class="identity-label">学生</div>
             </div>
-            <div
-              class="identity-option"
-              :class="{active: activeIdentity === 'staff'}"
-              @click="activeIdentity = 'staff'"
-            >
-              <div class="identity-icon">
-                <i class="icon-staff">👨‍🏫</i>
-              </div>
-              <div class="identity-label">教职工</div>
-            </div>
-            <div
-              class="identity-option"
-              :class="{active: activeIdentity === 'merchant'}"
-              @click="activeIdentity = 'merchant'"
-            >
-              <div class="identity-icon">
-                <i class="icon-merchant">🏪</i>
-              </div>
-              <div class="identity-label">校内商户</div>
-            </div>
           </div>
         </div>
       </transition>
@@ -80,6 +63,7 @@
               <option value="浙江大学西溪校区">浙江大学西溪校区</option>
               <option value="浙江大学华家池校区">浙江大学华家池校区</option>
               <option value="浙江大学之江校区">浙江大学之江校区</option>
+              <option value="浙江大学舟山校区">浙江大学舟山校区</option>
               <option value="浙江大学海宁国际校区">浙江大学海宁国际校区</option>
             </select>
           </div>
@@ -87,37 +71,6 @@
       </transition>
 
       <div class="divider"></div>
-
-      <transition name="slide-fade">
-        <div class="auth-section">
-          <h3>认证方式</h3>
-          <div class="auth-methods">
-            <div
-              class="auth-method"
-              :class="{active: authMethod === 'sso'}"
-              @click="authMethod = 'sso'"
-            >
-              <div class="method-header">
-                <input type="radio" name="authMethod" :checked="authMethod === 'sso'">
-                <label>统一身份认证（推荐）</label>
-              </div>
-              <div class="method-detail">跳转学校SSO登录验证</div>
-            </div>
-
-            <div
-              class="auth-method"
-              :class="{active: authMethod === 'email'}"
-              @click="authMethod = 'email'"
-            >
-              <div class="method-header">
-                <input type="radio" name="authMethod" :checked="authMethod === 'email'">
-                <label>邮箱验证</label>
-              </div>
-              <div class="method-detail">发送验证码至邮箱@zju.edu.cn</div>
-            </div>
-          </div>
-        </div>
-      </transition>
 
       <div class="auth-phone-divider"></div>
 
@@ -129,13 +82,6 @@
               <option>+86</option>
             </select>
             <input type="text" placeholder="请输入手机号" v-model="phone" @focus="onInputFocus" @blur="onInputBlur">
-          </div>
-          <div class="input-group with-button">
-            <input type="text" placeholder="请输入验证码" @focus="onInputFocus" @blur="onInputBlur">
-            <button class="get-code-btn" @click="getVerificationCode">
-              <span v-if="!isCounting">{{ countdownText }}</span>
-              <span v-else class="counting">{{ countdown }}秒后重新获取</span>
-            </button>
           </div>
           <div class="verification-note">仅用于配送联系，不会公开</div>
         </div>
@@ -177,9 +123,9 @@
             <input type="checkbox" id="agreement" v-model="agreementChecked">
             <label for="agreement">
               我已阅读并同意
-              <a href="#" class="policy-link">《用户协议[](@replace=10001)[](@replace=10001)》</a>
+              <a href="#" class="policy-link">《用户协议》</a>
               及
-              <a href="#" class="policy-link">《隐私政策[](@replace=10002)[](@replace=10002)》</a>
+              <a href="#" class="policy-link">《隐私政策》</a>
             </label>
           </div>
           <div class="checkbox-group">
@@ -211,184 +157,170 @@
   </transition>
 </template>
 
-<script>
-export default {
-  name: 'FrontPageContentRegister',
-  data() {
-    return {
-      authMethod: 'sso',
-      activeIdentity: 'student',
-      isCounting: false,
-      countdown: 60,
-      countdownText: '获取验证码',
-      agreementChecked: false,
-      notificationChecked: false,
-      student_id: '',
-      name: '',
-      campus: '',
-      phone: '',
-      password: '',
-      confirmPassword: '',
-      errorMessage: '',
-      isLoading: false,
-      passwordStrength: '',
-      showAgreementError: false
-    }
-  },
-  methods: {
-    async submitRegistration() {
-      // 重置错误状态
-      this.errorMessage = '';
-      this.showAgreementError = false;
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-      // 前端验证
-      if (!this.student_id) {
-        this.errorMessage = '请输入学号';
-        return;
-      }
+const router = useRouter();
+const isSuccess = ref(false);
+// 响应式数据
+const activeIdentity = ref('student');
+const agreementChecked = ref(false);
+const notificationChecked = ref(false);
+const student_id = ref('');
+const name = ref('');
+const campus = ref('');
+const phone = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const errorMessage = ref('');
+const isLoading = ref(false);
+const passwordStrength = ref('');
+const showAgreementError = ref(false);
 
-      if (!this.name) {
-        this.errorMessage = '请输入昵称';
-        return;
-      }
-
-      if (!this.campus) {
-        this.errorMessage = '请选择校区';
-        return;
-      }
-
-      if (!this.phone) {
-        this.errorMessage = '请输入手机号';
-        return;
-      }
-
-      if (!this.password) {
-        this.errorMessage = '请设置密码';
-        return;
-      }
-
-      if (!this.confirmPassword) {
-        this.errorMessage = '请确认密码';
-        return;
-      }
-
-      if (!this.agreementChecked) {
-        this.showAgreementError = true;
-        this.errorMessage = '请先同意用户协议和隐私政策';
-        return;
-      }
-
-      // 验证学号格式
-      if (!/^\d{10}$/.test(this.student_id)) {
-        this.errorMessage = '学号必须是10位数字';
-        return;
-      }
-
-      // 验证手机号格式
-      if (!/^1[3-9]\d{9}$/.test(this.phone)) {
-        this.errorMessage = '请输入有效的手机号';
-        return;
-      }
-
-      // 验证密码长度和复杂度
-      if (this.password.length < 8) {
-        this.errorMessage = '密码长度至少为8位';
-        return;
-      }
-
-      if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(this.password)) {
-        this.errorMessage = '密码必须包含字母和数字';
-        return;
-      }
-
-      // 验证密码一致性
-      if (this.password !== this.confirmPassword) {
-        this.errorMessage = '两次输入的密码不一致';
-        return;
-      }
-
-      this.isLoading = true;
-
-      try {
-        const response = await fetch('http://localhost:5000/api/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            student_id: this.student_id,
-            name: this.name,
-            campus: this.campus,
-            phone: this.phone,
-            password: this.password,
-            identity: this.activeIdentity
-          })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          alert('注册成功！');
-          // 注册成功后跳转到登录页面
-          this.$router.push('/');
-        } else {
-          this.errorMessage = data.message || '注册失败';
-        }
-      } catch (error) {
-        this.errorMessage = '网络错误，请稍后再试';
-      } finally {
-        this.isLoading = false;
-      }
-    },
-
-    checkPasswordStrength() {
-      if (this.password.length === 0) {
-        this.passwordStrength = '';
-        return;
-      }
-
-      if (this.password.length < 8) {
-        this.passwordStrength = 'weak';
-        return;
-      }
-
-      // 包含字母和数字
-      const hasLetter = /[a-zA-Z]/.test(this.password);
-      const hasNumber = /\d/.test(this.password);
-      const hasSpecialChar = /[^a-zA-Z0-9]/.test(this.password);
-
-      if (hasLetter && hasNumber && hasSpecialChar && this.password.length >= 12) {
-        this.passwordStrength = 'strong';
-      } else if ((hasLetter && hasNumber) || (hasLetter && hasSpecialChar) || (hasNumber && hasSpecialChar)) {
-        this.passwordStrength = 'medium';
-      } else {
-        this.passwordStrength = 'weak';
-      }
-    },
-
-    getVerificationCode() {
-      if (this.isCounting) return;
-
-      this.isCounting = true;
-      this.countdown = 60;
-      this.countdownText = '获取验证码';
-
-      const timer = setInterval(() => {
-        this.countdown--;
-        if (this.countdown <= 0) {
-          clearInterval(timer);
-          this.isCounting = false;
-        }
-      }, 1000);
-    },
-    onInputFocus(e) {
-      e.target.parentNode.classList.add('focused');
-    },
-    onInputBlur(e) {
-      e.target.parentNode.classList.remove('focused');
-    }
+// 提交注册
+const submitRegistration = async () => {
+  // 重置错误状态
+  errorMessage.value = '';
+  showAgreementError.value = false;
+  isSuccess.value = false;
+  // 前端验证
+  if (!student_id.value) {
+    errorMessage.value = '请输入学号';
+    return;
   }
-}
+
+  if (!name.value) {
+    errorMessage.value = '请输入昵称';
+    return;
+  }
+
+  if (!campus.value) {
+    errorMessage.value = '请选择校区';
+    return;
+  }
+
+  if (!phone.value) {
+    errorMessage.value = '请输入手机号';
+    return;
+  }
+
+  if (!password.value) {
+    errorMessage.value = '请设置密码';
+    return;
+  }
+
+  if (!confirmPassword.value) {
+    errorMessage.value = '请确认密码';
+    return;
+  }
+
+  if (!agreementChecked.value) {
+    showAgreementError.value = true;
+    errorMessage.value = '请先同意用户协议和隐私政策';
+    return;
+  }
+
+  // 验证学号格式
+  if (!/^\d{10}$/.test(student_id.value)) {
+    errorMessage.value = '学号必须是10位数字';
+    return;
+  }
+
+  // 验证手机号格式
+  if (!/^1[3-9]\d{9}$/.test(phone.value)) {
+    errorMessage.value = '请输入有效的手机号';
+    return;
+  }
+
+  // 验证密码长度和复杂度
+  if (password.value.length < 8) {
+    errorMessage.value = '密码长度至少为8位';
+    return;
+  }
+
+  if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(password.value)) {
+    errorMessage.value = '密码必须包含字母和数字';
+    return;
+  }
+
+  // 验证密码一致性
+  if (password.value !== confirmPassword.value) {
+    errorMessage.value = '两次输入的密码不一致';
+    return;
+  }
+
+  isLoading.value = true;
+
+  try {
+    const response = await fetch('http://localhost:5000/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        student_id: student_id.value,
+        name: name.value,
+        campus: campus.value,
+        phone: phone.value,
+        password: password.value,
+        identity: activeIdentity.value
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      isSuccess.value = true;
+      errorMessage.value = '注册成功！即将跳转到登录页面...';
+      // 注册成功后跳转到登录页面
+      setTimeout(() => {
+        router.push('/');
+      }, 2000);
+    } else {
+      isSuccess.value = false;
+      errorMessage.value = data.message || '注册失败';
+    }
+  } catch (error) {
+    errorMessage.value = '网络错误，请稍后再试';
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// 检查密码强度
+const checkPasswordStrength = () => {
+  if (password.value.length === 0) {
+    passwordStrength.value = '';
+    return;
+  }
+
+  if (password.value.length < 8) {
+    passwordStrength.value = 'weak';
+    return;
+  }
+
+  // 包含字母和数字
+  const hasLetter = /[a-zA-Z]/.test(password.value);
+  const hasNumber = /\d/.test(password.value);
+  const hasSpecialChar = /[^a-zA-Z0-9]/.test(password.value);
+
+  if (hasLetter && hasNumber && hasSpecialChar && password.value.length >= 12) {
+    passwordStrength.value = 'strong';
+  } else if ((hasLetter && hasNumber) || (hasLetter && hasSpecialChar) || (hasNumber && hasSpecialChar)) {
+    passwordStrength.value = 'medium';
+  } else {
+    passwordStrength.value = 'weak';
+  }
+};
+
+// 输入框焦点事件
+const onInputFocus = (e) => {
+  e.target.parentNode.classList.add('focused');
+};
+const onInputBlur = (e) => {
+  e.target.parentNode.classList.remove('focused');
+};
 </script>
 
 <style scoped>
@@ -670,27 +602,6 @@ export default {
   opacity: 1;
 }
 
-.auth-methods {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.auth-method {
-  padding: 15px;
-  border-radius: 8px;
-  background-color: #f5f5f5;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.auth-method.active {
-  background-color: #e6f7ff;
-  border: 1px solid #1890FF;
-  transform: scale(1.02);
-  animation: highlight 1.5s ease-out;
-}
-
 @keyframes highlight {
   0% {
     box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.2);
@@ -701,12 +612,6 @@ export default {
   100% {
     box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
   }
-}
-
-.method-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
 }
 
 .method-header input[type="radio"] {
@@ -724,12 +629,6 @@ export default {
   border-color: #1890FF;
   background-color: #1890FF;
   box-shadow: inset 0 0 0 3px white;
-}
-
-.method-detail {
-  font-size: 12pt;
-  color: #595959;
-  padding-left: 26px;
 }
 
 .phone-input {
@@ -795,51 +694,6 @@ export default {
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
-.get-code-btn {
-  position: relative;
-  padding: 12px 15px;
-  background-color: #1890FF;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 12pt;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.get-code-btn:hover {
-  background-color: #40a9ff;
-  transform: translateY(-2px);
-}
-
-.get-code-btn:active {
-  transform: translateY(0);
-}
-
-.get-code-btn::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.5);
-  opacity: 0;
-  border-radius: 100%;
-  transform: scale(1, 1) translate(-50%, -50%);
-  transform-origin: 50% 50%;
-}
-
-.get-code-btn:focus:not(:active)::after {
-  animation: ripple 1s ease-out;
-}
-
-.get-code-btn .counting {
-  display: inline-block;
-  animation: pulseText 1s infinite;
-}
-
 @keyframes pulseText {
   0%, 100% {
     opacity: 1;
@@ -860,22 +714,11 @@ export default {
   }
 }
 
-.input-group.with-button {
-  display: flex;
-  align-items: center;
-}
-
 .input-group.with-button input {
   flex: 1;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-right: none;
-}
-
-.input-group.with-button .get-code-btn {
-  position: static;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
 }
 
 .verification-note {
@@ -1063,11 +906,8 @@ export default {
   color: #52c41a;
   background-color: #f6ffed;
 }
-
-/* 添加复选框错误提示样式 */
-.checkbox-error {
-  color: #ff4d4f;
-  font-size: 12px;
-  margin-left: 10px;
+.success-message {
+  color: #52c41a !important;
+  animation: none !important;
 }
 </style>

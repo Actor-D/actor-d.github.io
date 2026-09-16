@@ -3,6 +3,9 @@ const translations = {
     pageTitle: "Actor.D｜个人主页",
     pageDescription:
       "Actor.D 的个人主页——浙江大学信息管理与信息系统专业毕业，现就读于香港中文大学商业分析理学硕士。",
+    danmuPageTitle: "弹幕文本分析 · Actor.D｜个人主页",
+    danmuPageDescription:
+      "Actor.D 的文本挖掘作业——B 站《社会学与经济学》弹幕分析：44 个视频、9.95 万条弹幕，词典法情感分析与自创「传播效果指数」。",
     researchPageTitle: "研究论文 · Actor.D｜个人主页",
     researchPageDescription:
       "Actor.D 的毕业论文展示页——基于强化学习的优惠券公平发放策略（Fair-DQN）：摘要、核心发现、模型与实验结果。",
@@ -25,7 +28,7 @@ const translations = {
       lightboxClose: "关闭图表预览",
       github: "在新标签页打开 Actor-D 的 GitHub 主页",
     },
-    nav: { about: "关于我", projects: "项目案例", research: "研究论文", journey: "学习经历", contact: "联系我" },
+    nav: { about: "关于我", projects: "项目案例", analysis: "数据分析", research: "研究论文", journey: "学习经历", contact: "联系我" },
     common: {
       backHome: "回到主页",
       nextProject: "继续阅读：项目案例",
@@ -68,15 +71,15 @@ const translations = {
       type: "全栈 Web 应用",
       subtitle: "面向浙江大学校园场景的配送服务平台",
       summary:
-        "Vue 3 单页应用 + Flask REST 服务的校园配送平台：18 条前端路由（16 条受保护）、17 个接口、3 张数据表，串联注册登录、四步下单、地址簿、现金与积分双币支付和订单查询。",
+        "Vue 3 单页应用 + Flask REST 服务的校园配送平台（最终版）：23 条路由（21 条受保护）、31 个接口、7 张数据表，覆盖注册登录、双模式下单、双币支付与订单跟踪，并接入 scikit-learn 计价模型与 DeepSeek 对话助手。",
       previewSummary:
-        "从学号注册到订单履约的完整闭环：JWT 会话与路由守卫、四步下单流程、用户级地址簿、现金与积分双币计价，以及带类型白名单的图片上传——全部由真实接口驱动。",
+        "从学号注册到订单履约的完整闭环：JWT 会话与路由守卫、外卖代取与物品代送两条下单流程、用户级地址簿、现金与积分双币支付，并集成机器学习计价模型与大模型问答助手。",
       viewFull: "查看完整案例",
       viewSource: "查看源码",
       viewReadme: "运行说明",
-      highlightOne: "18 条路由 + router.beforeEach 守卫，JWT 会话 24 小时过期",
-      highlightTwo: "四步下单与双向计价：普通 ¥5 / 50 积分，加急 ¥7 / 70 积分",
-      highlightThree: "3 张表 + 17 个接口，地址与订单按 user_id 强制隔离",
+      highlightOne: "23 条路由 + 登录守卫，JWT 会话 24 小时过期",
+      highlightTwo: "双模式下单：外卖代取与物品代送，各自独立流程与数据表",
+      highlightThree: "31 个接口 + 7 张表，集成 ML 计价模型与 DeepSeek AI 助手",
       challengeEyebrow: "业务问题",
       challengeTitle: "校园配送信息分散，履约流程缺少统一入口",
       challengeBody:
@@ -127,7 +130,8 @@ const translations = {
       factWorkflow: "步订单流程",
       factModels: "张数据表",
       factApi: "个 REST 接口",
-      factRoutes: "条受保护路由",
+      factRoutes: "条路由 · 21 条受保护",
+      factTraining: "行模型训练数据",
       flowEyebrow: "核心业务流",
       flowTitle: "从需求提交到订单履约",
       flowOneTitle: "提交需求",
@@ -148,6 +152,12 @@ const translations = {
       dataAddressDesc: "用户级地址簿与默认地址",
       dataOrderName: "订单与计价",
       dataOrderDesc: "草稿到支付的完整状态",
+      dataGoodName: "物品代送订单",
+      dataGoodDesc: "与外卖对称的第二条下单链路",
+      dataChatName: "AI 会话存储",
+      dataChatDesc: "让助手对话可追溯、可续聊",
+      dataFeedbackName: "反馈中心",
+      dataFeedbackDesc: "分类反馈与联系方式",
       rulesEyebrow: "业务规则",
       rulesTitle: "把规则写进代码，而不是文档里",
       rulesIntro: "从计价到鉴权，每条业务约束在服务端都有对应的校验与实现。",
@@ -202,6 +212,25 @@ const translations = {
       apiOrderList: "按时间倒序读取订单列表",
       apiOrderDetail: "获取用户订单详情",
       apiUpload: "上传订单凭证图片",
+      apiPay: "选择支付方式并原子扣减积分",
+      apiGood: "创建物品代送订单",
+      apiGoodList: "物品订单列表",
+      apiChatSend: "向 AI 助手发送消息",
+      apiChatHistory: "读取会话历史",
+      apiFeedback: "提交分类反馈",
+      apiPredict: "公开的模型调试接口",
+      apiClear: "清空当前用户数据",
+      aiEyebrow: "智能能力",
+      aiTitle: "把机器学习和 LLM 接进真实业务流",
+      aiIntro: "计价走模型、问答走大模型，两者都不是演示页面，而是订单与客服链路里的真实调用。",
+      aiMlTitle: "scikit-learn 配送费预测",
+      aiMlBody:
+        "用 10 万行数据训练 model.pkl，输入尺寸 / 距离 / 加急，输出积分配送费；创建外卖订单时 joblib 加载模型实时推理，替代写死的计价表。",
+      aiLlmTitle: "DeepSeek 问答助手",
+      aiLlmBody:
+        "通过 OpenAI 兼容协议接入 DeepSeek，约 700 字中文 system prompt 约束回答范围；会话与消息落库，支持多会话切换与历史回看。",
+      aiCaveat:
+        "已知缺陷：创建订单时距离字段仍为 0，真实距离在下一步才回填，因此线上预测实际只用到尺寸与加急两个特征——这也是我在复盘时发现并记录的问题。",
     },
     moreProjects: {
       title: "更多项目",
@@ -213,14 +242,119 @@ const translations = {
       petTitle: "跨风格猫狗图像识别",
       petBody:
         "采集清洗 27,000 张跨风格图像，构建 CNN 分类模型，测试集准确率 94.32%；用 CAM 可视化验证动漫数据使纹理敏感度提升 3.2%。",
-      biliType: "NLP · 文本挖掘",
-      biliTitle: "弹幕情感与主题挖掘",
+      biliType: "爬虫 · NLP · 情感分析",
+      biliTitle: "B 站弹幕情感与传播分析",
       biliBody:
-        "爬取 B 站社科视频弹幕，用 Jieba + SnowNLP 做情感分析、LDA 做主题建模；专业术语占比 38.7%，构建「术语密度-情感极性」评估模型。",
+        "自建爬虫采集 44 个视频的 9.95 万条弹幕（去重后 8.13 万条、3.85 万名用户），基于 BosonNLP 与否定词/程度副词词典做情感打分（正面 54.4% / 负面 41.1%），自创「传播效果指数」并验证其与播放量相关性 r=0.92。",
       bikeType: "机器学习 · 需求预测",
       bikeTitle: "共享单车需求预测",
       bikeBody:
         "20,000+ 条租赁记录，对比 MLP 与 XGBoost 等 6 种模型，RMSLE 0.29（较基线提升 15%），识别高峰与天气对需求的非线性影响。",
+      viewAnalysis: "查看完整分析",
+    },
+    danmu: {
+      title: "弹幕文本分析",
+      pageKicker: "课程最终作业 · 文本挖掘",
+      subtitle: "《社会学与经济学》系列视频的公众认知与传播效果研究",
+      summary:
+        "自建爬虫采集单个知识区 UP 主 44 个视频的弹幕，用词典法做情感打分、自创「传播效果指数」衡量传播力，并对互动指标做相关性与回归分析，观察网络大众对复杂社会学科的讨论方式。",
+      viewArtifacts: "查看 Notebook 与报告",
+      backToProjects: "返回项目列表",
+      factVideos: "个视频",
+      factRaw: "行原始弹幕",
+      factUnique: "条唯一弹幕",
+      factUsers: "名去重用户",
+      questionEyebrow: "研究问题",
+      questionTitle: "从弹幕里读出什么",
+      questionIntro: "作业要求围绕四个层次展开：认知水平、内容满意度、社会议题态度与传播效果因素。",
+      q1Title: "对复杂社会学科的了解程度",
+      q1Body: "观众是真正在讨论理论，还是停留在情绪表达与玩梗？",
+      q2Title: "对内容的情感满意度",
+      q2Body: "弹幕情感极性可以近似看作即时的内容反馈。",
+      q3Title: "对社会经济议题的看法",
+      q3Body: "由学科内容延伸出的社会态度与价值判断。",
+      q4Title: "传播效果的关键因素",
+      q4Body: "播放、点赞、投币、收藏、分享与弹幕之间，谁在驱动传播？",
+      pipelineEyebrow: "数据管线",
+      pipelineTitle: "从爬取到建模的四个阶段",
+      pipelineIntro: "四个 Jupyter Notebook 分工完成采集、清洗、分词、分析与可视化。",
+      step1Title: "采集",
+      step1Body: "Selenium 无头浏览器抓搜索结果页取 BV 号，REST API 取元数据，旧版 XML 接口逐视频下载弹幕。",
+      step2Title: "清洗",
+      step2Body: "按视频 CID 分文件落盘，合并为 10 列总表，与视频元数据表按 BV 关联。",
+      step3Title: "分词",
+      step3Body: "jieba 分词 + nltk 中文停用词过滤，输出分词列供词云与情感打分使用。",
+      step4Title: "分析与建模",
+      step4Body: "词典法情感打分、词云、相关矩阵、线性回归与 NMF 主题提取。",
+      sentimentEyebrow: "情感分析",
+      sentimentTitle: "基于词典的加性打分",
+      sentimentOne: "主词典 BosonNLP，含 114,766 条带分值的词条",
+      sentimentTwo: "否定词表 71 条，命中时翻转情感极性",
+      sentimentThree: "程度副词加权（非常 2.0 / 特别 1.5 / 较 1.2 / 略 0.7）",
+      sentimentFour: "分数求和后按正负零三分类，均值 0.47，总体倾向正面",
+      distEyebrow: "情感分布",
+      distTitle: "正面过半，负面四成",
+      distAria: "情感分布柱状图：正面 54.55%，负面 40.97%，中性 4.48%",
+      distPos: "正面",
+      distNeg: "负面",
+      distNeu: "中性",
+      distNote: "按 99,590 行统计；去除重复采集后比例几乎不变（54.42 / 41.08 / 4.50）。",
+      indexEyebrow: "自创指标",
+      indexTitle: "传播效果指数",
+      indexIntro: "把 7 个互动维度按权重取对数压缩，得到一个可横向比较的传播力分数。",
+      corrMetric: "互动指标",
+      corrR: "与传播效果指数的相关系数 r",
+      corrPlays: "播放量",
+      corrLikes: "点赞",
+      corrFavs: "收藏",
+      corrReplies: "评论",
+      corrCoins: "投币",
+      corrDanmaku: "弹幕数",
+      corrShares: "分享",
+      corrNote: "基于清洗后 41 个视频的有效样本计算。",
+      findingEyebrow: "关键发现",
+      findingTitle: "互动高度耦合，粉丝量解释力有限",
+      findingOne: "弹幕数与分享 r=0.932、投币 r=0.926，说明「愿意付费表达」的观众同时在评论与转发",
+      findingTwo: "点赞数对 UP 主粉丝数做线性回归，R²=0.376 —— 粉丝量只解释了约三分之一的点赞差异",
+      findingThree: "41 个有效样本平均播放 593,760，最高 2,475,678，平均时长 2,506 秒",
+      findingFour: "44 个视频累计播放 26,108,495，弹幕 99,856 条，评论 83,689 条",
+      wordsEyebrow: "高频词",
+      wordsTitle: "讨论集中在宏大议题",
+      wordOne: "社会 1,164 · 人类 1,311 · 世界 1,216 —— 抽象概念出现频率最高",
+      wordTwo: "美国 1,289 · 中国 936 · 国家 814 · 经济 705 · 资本 684",
+      wordThree: "理论 661 · 精英 610 · 异化 459 · 工人 455 —— 学科术语确实进入了讨论",
+      wordFour: "同时「一个 2,148」「哈哈哈 1,367」「确实 1,006」显示大量口语化回应",
+      qualityEyebrow: "数据质量与反思",
+      qualityTitle: "发现并修正了自己的坑",
+      qualityIntro:
+        "复盘时重新核对数据，发现原始统计中被重复与脏数据抬高了约 18%，这些结论比报告本身更有价值。",
+      issue1Title: "去重未生效，虚高 18%",
+      issue1Body:
+        "去掉重复后视频数从 52 降到 44：代码里写了去重但没有重新赋值，导致 8 个视频被采集两次，另有 8 行表头混进数据。真实唯一弹幕为 81,278 条。",
+      issue2Title: "主题建模名不副实",
+      issue2Body:
+        "实际用的是 NMF 对 TF-IDF 降维，而且作用对象是「视频标题」而非弹幕，中文标题未分词导致关键词就是整条标题——不足以称为主题发现，报告中已如实标注。",
+      issue3Title: "样本污染与幸存者偏差",
+      issue3Body:
+        "语料混入 1 条非目标 UP 主的视频（播放 152 万，传播指数排第 2），会抬高整体统计；弹幕本身也只代表愿意发言的观众，无法覆盖沉默的大多数。",
+      issue4Title: "词典体系未全部启用",
+      issue4Body:
+        "自建词典含正面词 10,189、负面词 13,710、程度副词 78 条，但代码只加载了 BosonNLP 与否定词表，程度副词是硬编码的 8 个——若全部接入，打分粒度会更好。",
+      engEyebrow: "工程拆解",
+      engTitle: "四个 Notebook，一条可复现的管线",
+      engBody: "采集、处理、分析、汇总各自独立，产物以 CSV 串联，任一环节可单独重跑。",
+      eng1Title: "采集与元数据",
+      eng1Body:
+        "Selenium 翻页取 BV，调用 view / card 接口补全播放、点赞、投币、收藏、分享、粉丝数与分区标签，并自建「传播效果指数」列。",
+      eng2Title: "解析与分词",
+      eng2Body:
+        "解析 XML 中 d 标签的 9 个属性（时间、模式、字号、颜色、用户 ID 等），合并成分层表，jieba + 停用词产出分词列。",
+      eng3Title: "统计与建模",
+      eng3Body:
+        "相关矩阵热力图、传播指数分布、linregress 回归、pairplot 分组对比，以及 TF-IDF + NMF 的主题提取。",
+      eng4Title: "情感打分与词云",
+      eng4Body: "加载 11 万条 BosonNLP 词典，结合否定翻转与程度加权逐条打分，输出情感分布图与词云。",
+      navPrev: "上一个项目：浙就来",
     },
     research: {
       title: "研究论文",
@@ -386,6 +520,9 @@ const translations = {
     pageTitle: "Actor.D | Personal Website",
     pageDescription:
       "Actor.D's personal website — ZJU graduate in Information Management & Information Systems and MSc Business Analytics student at CUHK.",
+    danmuPageTitle: "Danmaku Text Analytics · Actor.D | Personal Website",
+    danmuPageDescription:
+      "Actor.D's text-mining project: a danmaku study of a Sociology & Economics video series — 44 videos, 99,590 comments, lexicon-based sentiment scoring and a self-defined reach index.",
     researchPageTitle: "Research Paper · Actor.D | Personal Website",
     researchPageDescription:
       "Actor.D's undergraduate thesis — Fair-DQN, fairness-aware coupon allocation via deep reinforcement learning: abstract, key findings, model, and experiments.",
@@ -408,7 +545,7 @@ const translations = {
       lightboxClose: "Close figure preview",
       github: "Open Actor-D's GitHub profile in a new tab",
     },
-    nav: { about: "About", projects: "Project", research: "Research", journey: "Journey", contact: "Contact" },
+    nav: { about: "About", projects: "Project", analysis: "Analytics", research: "Research", journey: "Journey", contact: "Contact" },
     common: {
       backHome: "Back to home",
       nextProject: "Continue: the project case",
@@ -451,15 +588,15 @@ const translations = {
       type: "FULL-STACK WEB APPLICATION",
       subtitle: "A campus delivery service platform designed for Zhejiang University",
       summary:
-        "A Vue 3 SPA with a Flask REST service for campus delivery: 18 front-end routes (16 protected), 17 endpoints, and 3 database tables covering sign-up, four-step ordering, an address book, dual cash/points payment, and order tracking.",
+        "A Vue 3 SPA with a Flask REST service for campus delivery (final version): 23 routes (21 guarded), 31 endpoints and 7 database tables, covering sign-up, two ordering modes, dual-currency payment and order tracking, plus a scikit-learn pricing model and a DeepSeek assistant.",
       previewSummary:
-        "A full loop from student sign-up to order fulfilment: JWT sessions with route guards, a four-step ordering flow, a per-user address book, dual cash/points pricing, and type-allow-listed image uploads — all driven by real endpoints.",
+        "A full loop from student sign-up to order fulfilment: JWT sessions with route guards, separate food-pickup and item-delivery flows, a per-user address book, dual cash/points payment, an ML pricing model and an LLM chat assistant.",
       viewFull: "View the full case study",
       viewSource: "View source",
       viewReadme: "Run guide",
-      highlightOne: "18 routes with router.beforeEach guards and 24-hour JWT sessions",
-      highlightTwo: "Four-step ordering with dual pricing: ¥5 / 50 points, or ¥7 / 70 priority",
-      highlightThree: "3 tables and 17 endpoints, with addresses and orders scoped by user_id",
+      highlightOne: "23 routes behind auth guards with 24-hour JWT sessions",
+      highlightTwo: "Two ordering modes — food pickup and item delivery — with separate tables",
+      highlightThree: "31 endpoints and 7 tables, with an ML pricing model and a DeepSeek assistant",
       challengeEyebrow: "THE PROBLEM",
       challengeTitle: "Campus delivery information is fragmented, with no unified fulfilment workflow",
       challengeBody:
@@ -510,7 +647,8 @@ const translations = {
       factWorkflow: "step order workflow",
       factModels: "database tables",
       factApi: "REST endpoints",
-      factRoutes: "protected routes",
+      factRoutes: "routes · 21 guarded",
+      factTraining: "training rows",
       flowEyebrow: "CORE WORKFLOW",
       flowTitle: "From request to fulfilment",
       flowOneTitle: "Submit request",
@@ -531,6 +669,12 @@ const translations = {
       dataAddressDesc: "Per-user address book with default flag",
       dataOrderName: "Orders & pricing",
       dataOrderDesc: "Full state from draft to paid",
+      dataGoodName: "Item delivery orders",
+      dataGoodDesc: "The second ordering chain, symmetric to food",
+      dataChatName: "Assistant conversation store",
+      dataChatDesc: "Keeps assistant chats traceable and resumable",
+      dataFeedbackName: "Feedback centre",
+      dataFeedbackDesc: "Categorised feedback with contact info",
       rulesEyebrow: "BUSINESS RULES",
       rulesTitle: "Rules live in code, not in a document",
       rulesIntro: "From pricing to authorization, every business constraint has a matching server-side check.",
@@ -585,6 +729,26 @@ const translations = {
       apiOrderList: "List orders, newest first",
       apiOrderDetail: "Retrieve user-scoped order details",
       apiUpload: "Upload an order proof image",
+      apiPay: "Pick a payment method and deduct points atomically",
+      apiGood: "Create an item-delivery order",
+      apiGoodList: "List item-delivery orders",
+      apiChatSend: "Send a message to the AI assistant",
+      apiChatHistory: "Read conversation history",
+      apiFeedback: "Submit categorised feedback",
+      apiPredict: "Public model debugging endpoint",
+      apiClear: "Clear the current user's data",
+      aiEyebrow: "INTELLIGENCE",
+      aiTitle: "Machine learning and an LLM wired into the real flow",
+      aiIntro:
+        "Pricing runs through a model and support runs through an LLM — both are live calls inside the order and help flows, not demo screens.",
+      aiMlTitle: "scikit-learn delivery-fee model",
+      aiMlBody:
+        "A model.pkl trained on 100,000 rows takes size / distance / urgency and returns the points fee; create_order loads it with joblib and infers live instead of using a hard-coded price table.",
+      aiLlmTitle: "DeepSeek assistant",
+      aiLlmBody:
+        "DeepSeek is reached over the OpenAI-compatible protocol with a ~700-character Chinese system prompt; sessions and messages persist so users can switch and revisit conversations.",
+      aiCaveat:
+        "Known defect: distance is still 0 when the order is created and is only written back in the next step, so live predictions effectively use just size and urgency — an issue I found and documented while reviewing the project.",
     },
     moreProjects: {
       title: "More projects",
@@ -596,14 +760,124 @@ const translations = {
       petTitle: "Cross-style Cat & Dog Recognition",
       petBody:
         "Collected and cleaned 27,000 cross-style images, built a CNN classifier reaching 94.32% test accuracy; CAM visualization verified that anime data raised texture sensitivity by 3.2%.",
-      biliType: "NLP · Text mining",
-      biliTitle: "Danmaku Sentiment & Topic Mining",
+      biliType: "Crawling · NLP · Sentiment",
+      biliTitle: "Bilibili Danmaku Sentiment & Reach",
       biliBody:
-        "Scraped Bilibili social-science danmaku, applied Jieba + SnowNLP sentiment analysis and LDA topic modeling; 38.7% domain-term density, built a term-density × sentiment-polarity evaluation model.",
+        "Built a crawler that collected 99,590 danmaku across 44 videos (81,278 unique, 38,502 users), scored sentiment with a BosonNLP lexicon plus negation and degree words (54.4% positive / 41.1% negative), and defined a reach index correlating with views at r=0.92.",
       bikeType: "Machine learning · Demand forecasting",
       bikeTitle: "Bike-share Demand Forecasting",
       bikeBody:
         "Across 20,000+ rental records, benchmarked six models (MLP, XGBoost) to reach RMSLE 0.29 (+15% vs baseline), revealing non-linear peak-time and weather effects.",
+      viewAnalysis: "Read the full analysis",
+    },
+    danmu: {
+      title: "Danmaku Text Analytics",
+      pageKicker: "COURSE FINAL PROJECT · TEXT MINING",
+      subtitle: "Public understanding and reach of a Sociology & Economics video series",
+      summary:
+        "I built a crawler for one knowledge-channel creator's 44 videos, scored sentiment with a lexicon approach, defined a reach index for distribution effectiveness, and ran correlation and regression analysis on engagement metrics to see how audiences discuss complex social science.",
+      viewArtifacts: "Browse notebooks & report",
+      backToProjects: "Back to project list",
+      factVideos: "videos",
+      factRaw: "raw danmaku rows",
+      factUnique: "unique comments",
+      factUsers: "unique users",
+      questionEyebrow: "RESEARCH QUESTIONS",
+      questionTitle: "What the danmaku can tell us",
+      questionIntro:
+        "The brief asked for four layers: cognition, content satisfaction, attitudes on social issues, and the drivers of reach.",
+      q1Title: "Understanding of complex disciplines",
+      q1Body: "Are viewers genuinely discussing theory, or reacting with emotion and memes?",
+      q2Title: "Satisfaction with the content",
+      q2Body: "Sentiment polarity works as a proxy for immediate audience feedback.",
+      q3Title: "Views on socio-economic issues",
+      q3Body: "Attitudes and value judgements that extend beyond the lecture itself.",
+      q4Title: "What drives reach",
+      q4Body: "Among views, likes, coins, favourites, shares and danmaku, which drive reach?",
+      pipelineEyebrow: "DATA PIPELINE",
+      pipelineTitle: "Four stages from crawling to modelling",
+      pipelineIntro:
+        "Four Jupyter notebooks split collection, cleaning, segmentation, analysis and visualisation.",
+      step1Title: "Collect",
+      step1Body:
+        "Selenium headless browser harvests BV ids from search pages, REST APIs pull metadata, and the legacy XML endpoint downloads danmaku per video.",
+      step2Title: "Clean",
+      step2Body: "Per-CID files are written to disk, merged into a 10-column table and joined with metadata by BV id.",
+      step3Title: "Segment",
+      step3Body: "jieba segmentation with nltk Chinese stop-words produces the token column used by word cloud and sentiment scoring.",
+      step4Title: "Analyse",
+      step4Body: "Lexicon sentiment scoring, word cloud, correlation matrix, linear regression and NMF topic extraction.",
+      sentimentEyebrow: "SENTIMENT",
+      sentimentTitle: "Lexicon-based additive scoring",
+      sentimentOne: "Primary lexicon: BosonNLP with 114,766 scored entries",
+      sentimentTwo: "71 negation words that flip polarity when matched",
+      sentimentThree: "Degree-adverb weighting (very 2.0 / especially 1.5 / fairly 1.2 / slightly 0.7)",
+      sentimentFour: "Summed scores split into positive/negative/neutral; mean 0.47, overall positive",
+      distEyebrow: "DISTRIBUTION",
+      distTitle: "Just over half positive, four in ten negative",
+      distAria: "Sentiment distribution: 54.55% positive, 40.97% negative, 4.48% neutral",
+      distPos: "Positive",
+      distNeg: "Negative",
+      distNeu: "Neutral",
+      distNote: "Computed over 99,590 rows; de-duplicated figures are nearly identical (54.42 / 41.08 / 4.50).",
+      indexEyebrow: "ORIGINAL METRIC",
+      indexTitle: "The reach index",
+      indexIntro:
+        "Seven engagement dimensions are weighted, summed and log-compressed into one comparable reach score.",
+      corrMetric: "Engagement metric",
+      corrR: "Correlation r with the reach index",
+      corrPlays: "Views",
+      corrLikes: "Likes",
+      corrFavs: "Favourites",
+      corrReplies: "Replies",
+      corrCoins: "Coins",
+      corrDanmaku: "Danmaku",
+      corrShares: "Shares",
+      corrNote: "Computed on the 41 videos that survived cleaning.",
+      findingEyebrow: "KEY FINDINGS",
+      findingTitle: "Engagement is tightly coupled; follower count explains little",
+      findingOne: "Danmaku correlates with shares at r=0.932 and coins at r=0.926 — paid-expression viewers also reply and repost",
+      findingTwo: "Regressing likes on the creator's follower count gives R²=0.376 — followers explain only about a third of the variation",
+      findingThree: "The 41 valid videos average 593,760 views (max 2,475,678) and 2,506 seconds long",
+      findingFour: "Across all 44 videos: 26,108,495 views, 99,856 danmaku and 83,689 replies",
+      wordsEyebrow: "TOP TERMS",
+      wordsTitle: "Discussion gravitates to grand themes",
+      wordOne: "Society 1,164 · humanity 1,311 · world 1,216 — abstract concepts dominate",
+      wordTwo: "USA 1,289 · China 936 · nation 814 · economy 705 · capital 684",
+      wordThree: "Theory 661 · elite 610 · alienation 459 · workers 455 — disciplinary terms do enter the discussion",
+      wordFour: "But “one” 2,148, “hahaha” 1,367 and “indeed” 1,006 show plenty of casual reaction",
+      qualityEyebrow: "DATA QUALITY & REFLECTION",
+      qualityTitle: "Finding and fixing my own mistakes",
+      qualityIntro:
+        "Re-auditing the data revealed the original counts were inflated by roughly 18% through duplicates and dirty rows — a more valuable result than the report itself.",
+      issue1Title: "De-duplication never ran: 18% inflation",
+      issue1Body:
+        "Videos dropped from 52 to 44 because the code called drop_duplicates() without reassigning it, so eight videos were crawled twice and eight header rows leaked into the data. The true unique count is 81,278.",
+      issue2Title: "Topic modelling was mislabelled",
+      issue2Body:
+        "It was NMF over TF-IDF applied to video titles rather than danmaku; Chinese titles were never segmented, so each “topic keyword” was a whole title. Not topic discovery — the report now says so plainly.",
+      issue3Title: "Sample contamination and survivorship bias",
+      issue3Body:
+        "One video from an unrelated creator (1.52M views, second-highest reach) leaked in and inflates the statistics; danmaku also only represent viewers willing to speak, not the silent majority.",
+      issue4Title: "The lexicon set was only partly wired up",
+      issue4Body:
+        "The custom dictionaries hold 10,189 positive and 13,710 negative terms plus 78 degree adverbs, but only BosonNLP and the negation list are loaded, with eight adverbs hard-coded.",
+      engEyebrow: "ENGINEERING",
+      engTitle: "Four notebooks, one reproducible pipeline",
+      engBody: "Collection, processing, analysis and aggregation are separate, chained through CSV artifacts, so any stage can be re-run alone.",
+      eng1Title: "Crawling & metadata",
+      eng1Body:
+        "Selenium paginates to collect BV ids, then the view and card APIs fill in views, likes, coins, favourites, shares, follower counts and category tags, feeding a self-defined reach index column.",
+      eng2Title: "Parsing & segmentation",
+      eng2Body:
+        "Parses nine attributes from each XML d tag (time, mode, font size, colour, user id and more), merges layered tables, then jieba plus stop-words produce the token column.",
+      eng3Title: "Statistics & modelling",
+      eng3Body:
+        "Correlation heat-map, reach distribution, linregress models, grouped pairplots, and TF-IDF + NMF topic extraction.",
+      eng4Title: "Sentiment & word cloud",
+      eng4Body:
+        "Loads the 110k-entry BosonNLP lexicon and scores every comment with negation flipping and degree weighting, then renders distribution charts and a word cloud.",
+      navPrev: "Previous project: Zhejiulai",
     },
     research: {
       title: "Research Paper",
@@ -799,20 +1073,13 @@ function setLanguage(language) {
   currentLanguage = language;
   document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
   const pageKind = document.body.dataset.page;
-  document.title =
-    pageKind === "research"
-      ? translations[language].researchPageTitle
-      : pageKind === "project"
-        ? translations[language].projectPageTitle
-        : translations[language].pageTitle;
-  description.setAttribute(
-    "content",
-    pageKind === "research"
-      ? translations[language].researchPageDescription
-      : pageKind === "project"
-        ? translations[language].projectPageDescription
-        : translations[language].pageDescription,
-  );
+  const pageMeta = {
+    research: ["researchPageTitle", "researchPageDescription"],
+    project: ["projectPageTitle", "projectPageDescription"],
+    danmu: ["danmuPageTitle", "danmuPageDescription"],
+  }[pageKind] || ["pageTitle", "pageDescription"];
+  document.title = translations[language][pageMeta[0]];
+  description.setAttribute("content", translations[language][pageMeta[1]]);
 
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const value = getTranslation(language, element.dataset.i18n);

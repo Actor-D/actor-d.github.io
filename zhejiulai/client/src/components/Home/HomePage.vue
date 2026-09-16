@@ -25,7 +25,7 @@
         </div>
         <div class="service-title">代取快递</div>
         <div class="service-desc">快速代取服务，安全便捷</div>
-        <button class="btn-use">立即使用</button>
+        <button class="btn-use">立即使用(无功能）</button>
       </div>
 
       <div class="service-item">
@@ -36,7 +36,7 @@
         </div>
         <div class="service-title">代送物品</div>
         <div class="service-desc">校园内物品配送，随时随地</div>
-        <button class="btn-use">立即使用</button>
+        <router-link to="/Home/CreateOrder/Good" class="btn-use">立即使用</router-link>
       </div>
     </div>
 
@@ -99,7 +99,7 @@ const { ads, isLoading } = storeToRefs(adStore);
 const currentIndex = ref(0);
 const visibleCount = 3; // 每屏显示3个广告
 
-// 计算当前可见的广告（修改后的逻辑）
+// 计算当前可见的广告
 const visibleAds = computed(() => {
   if (!ads.value || ads.value.length === 0) return [];
 
@@ -111,11 +111,12 @@ const visibleAds = computed(() => {
   return result;
 });
 
-// 4. 自动轮播（修改后的逻辑）
+// 4. 自动轮播
+let interval;
 onMounted(() => {
   adStore.fetchAds();
 
-  const interval = setInterval(() => {
+  interval = setInterval(() => {
     if (ads.value.length > 0) {
       currentIndex.value = (currentIndex.value + 1) % ads.value.length;
 
@@ -127,10 +128,13 @@ onMounted(() => {
       }
     }
   }, 5000);
-
-  onUnmounted(() => clearInterval(interval));
 });
-// 5. 动画效果保持不变
+
+onUnmounted(() => {
+  if (interval) clearInterval(interval);
+});
+
+// 5. 动画效果
 const beforeEnter = (el) => {
   el.style.opacity = 0;
   el.style.transform = 'translateY(-20px)';
@@ -206,6 +210,7 @@ body {
   color: #666;
   margin-bottom: 10px;
 }
+
 .btn-use,
 :deep(.btn-use) {
   display: inline-block;
@@ -242,9 +247,15 @@ body {
 
 /* 脉冲动画效果 */
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.7); }
-  70% { box-shadow: 0 0 0 8px rgba(24, 144, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(24, 144, 255, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(24, 144, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
+  }
 }
 
 /* 禁用状态 */
@@ -291,6 +302,7 @@ body {
   color: inherit;
   text-decoration: none;
 }
+
 .service-title {
   font-size: 22px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);

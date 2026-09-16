@@ -33,46 +33,61 @@ const fetchOrderDetail = async () => {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
-    const data = response.data;
+    const data = response.data.order; // 注意这里获取order对象
 
-    // 设置订单状态和状态文本
+    // 修正1：统一使用data.status进行状态判断
     let status_deliver, statusText;
-    if (data.status_deliver === 'preparing') {
-      status_deliver = 'preparing';
-      statusText = '商家备餐中';
-    } else if (data.status === 'delivering') {
-      status_deliver = 'delivering';
-      statusText = '骑手派送中';
-    } else {
-      status_deliver = 'completed';
-      statusText = '订单已完成';
+    switch(data.status) {
+      case 'paid':
+        status_deliver = 'preparing';
+        statusText = '商家备餐中';
+        break;
+      case 'delivering':
+        status_deliver = 'delivering';
+        statusText = '骑手派送中';
+        break;
+      case 'completed':
+        status_deliver = 'completed';
+        statusText = '订单已完成';
+        break;
+      default:
+        status_deliver = data.status;
+        statusText = '订单已创建';
     }
+
+    // 修正2：使用正确的支付方式判断
+    const isPointsPayment = data.payment_method === 'points';
 
     order.value = {
       ...order.value,
+      id: data.id,
+      status: status_deliver, // 保持一致性
       status_deliver,
       statusText,
-      locker_info: data.locker_info,
+      deliveryAddress: data.delivery_address,
+      receiver_address: data.receiver_address,
       orderTime: new Date(data.created_at).toLocaleString(),
       items: [{
-        id: 1,
+        id: data.id,
         name: data.food_name,
-        price: 0,
+        price: 0, // 如果没有价格数据可以设为0
+        size: data.size // 添加商品规格
       }],
-      deliveryFee: data.payment_currency === 'points'
-        ? data.delivery_fee_points
-        : data.delivery_fee_cash,
-      total: data.payment_currency === 'points'
-        ? `${data.delivery_fee_points}积分`
-        : `¥${data.delivery_fee_cash}`,
-      paymentMethod: data.payment_method === 'points' ? '积分支付' : '现金支付'
+      // 修正3：统一使用payment_method判断
+      deliveryFee: isPointsPayment ? data.delivery_fee_points : data.delivery_fee_cash,
+      total: isPointsPayment
+          ? `${data.delivery_fee_points}积分`
+          : `¥${data.delivery_fee_cash.toFixed(2)}`,
+      paymentMethod: isPointsPayment ? '积分支付' : '现金支付'
     };
+
     await fetchOrderImages();
   } catch (error) {
     console.error('获取订单详情失败:', error);
   }
 };
 const orderImages = ref([]); // 存储图片路径数组
+const defaultImage = '../../../../../public/images/order-empty.jpg';
 
 // 获取订单图片
 const fetchOrderImages = async () => {
@@ -81,18 +96,21 @@ const fetchOrderImages = async () => {
   try {
     const token = sessionStorage.getItem('token');
     const response = await axios.get(
-      `http://127.0.0.1:5000/api/orders/${order.value.id}/images`,
-      {
-        headers: { 'Authorization': `Bearer ${token}` }
-      }
+        `http://127.0.0.1:5000/api/orders/${order.value.id}/images`,
+        {
+          headers: {'Authorization': `Bearer ${token}`}
+        }
     );
 
     // 处理返回的图片路径
     if (response.data.images && response.data.images.length > 0) {
       // 转换为完整URL（注意端口要与后端一致）
       orderImages.value = response.data.images.map(img =>
-        `http://127.0.0.1:5000${img}`
+          img ? `http://127.0.0.1:5000${img}` : defaultImage
       );
+    } else {
+      // 如果没有图片，使用默认图片
+      orderImages.value = [defaultImage];
     }
 
   } catch (error) {
@@ -143,16 +161,16 @@ onMounted(() => {
       <div class="status-card" :class="getStatusClass(order.status)">
         <div class="status-icon">
           <svg v-if="order.status === 'preparing'" xmlns="http://www.w3.org/2000/svg" width="40" height="40"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 2v4m0 12v4M5 12H2m20 0h-3m-2.5-6.5L19 5m-14 14 2.5-2.5"></path>
           </svg>
           <svg v-else-if="order.status === 'delivering'" xmlns="http://www.w3.org/2000/svg" width="40" height="40"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
             <path d="M12 6v6l4 2"></path>
           </svg>
           <svg v-else xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2">
+               stroke="currentColor" stroke-width="2">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
           </svg>
@@ -175,11 +193,11 @@ onMounted(() => {
             <h3>{{ order.deliveryPerson }} <span>正在配送</span></h3>
             <p>{{ order.deliveryPhone }}</p>
           </div>
-          <router-link to="/Home/MessagePageList" @click="contactDelivery" class="contact-btn">联系骑手</router-link>
+          <router-link to="/Home/MessagePageList" @click="contactDelivery" class="contact-btn">联系骑手（可以跳转，但无功能）</router-link>
         </div>
         <div class="delivery-address">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2">
+               stroke="currentColor" stroke-width="2">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
             <circle cx="12" cy="10" r="3"></circle>
           </svg>
@@ -200,8 +218,14 @@ onMounted(() => {
               </div>
             </div>
             <div class="item-info">
-              <h4>{{ item.name }}</h4>
-              <p class="price">{{ item.price }}</p>
+              <div class="info-row">
+                <!-- <span class="info-label">订单名称</span> -->
+                <span class="info-value">订单名称：{{ item.name }}</span>
+              </div>
+              <div class="info-row price-row">
+                <span>商品价格</span>
+                <span class="price-value">{{ order.total }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -251,14 +275,24 @@ onMounted(() => {
     </transition>
 
     <div class="button-content">
-      <button class="btn-home"><router-link to="/Home" class="nav-link">返回首页</router-link></button>
-      <button class="btn-reorder"><router-link to="/Home/CreateOrder/Info" class="nav-link">再来一单</router-link></button>
+      <button class="btn-home">
+        <router-link to="/Home" class="nav-link">返回首页</router-link>
+      </button>
+      <button class="btn-reorder">
+        <router-link to="/Home/CreateOrder/Info" class="nav-link">再来一单</router-link>
+      </button>
     </div>
   </div>
 </template>
 
 <style scoped>
 /* 基础动画效果 */
+.preview-image {
+  width: 200px; /* 设置图片宽度 */
+  height: auto; /* 高度自动调整以保持宽高比 */
+  object-fit: cover; /* 确保图片覆盖整个容器 */
+  border-radius: 4px; /* 可选：给图片添加圆角 */
+}
 
 /* 状态卡片动画 */
 .status-card {
@@ -508,6 +542,55 @@ onMounted(() => {
 .info-row span:first-child {
   color: #666;
 }
+
+
+.item-info {
+  flex: 1;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  line-height: 1.4;
+}
+
+.info-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 200; /* 减少标签和值之间的间距 */
+}
+
+.info-value {
+  font-size: 14px;
+  color: #333;
+  font-weight: 300;
+}
+
+.price-row {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.price-value {
+  font-size: 15px;
+  /* font-weight: 600; */
+  color: #ff5722;
+  background: #fff0ee;
+  padding: 2px 8px;
+  border-radius: 10px;
+  /* display: inline-block; */
+}
+
+/* 微调悬停效果 */
+.info-row:hover .info-value {
+  color: #2196F3;
+}
+
 
 /* 价格明细 */
 .price-card {

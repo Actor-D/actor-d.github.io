@@ -131,15 +131,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MessagePage',
-  data() {
-    return {
-      searchText: '' // 搜索框绑定数据
-    }
-  }
-}
+<script setup>
+import { ref } from 'vue';
+
+const searchText = ref('');
 </script>
 
 <style scoped>

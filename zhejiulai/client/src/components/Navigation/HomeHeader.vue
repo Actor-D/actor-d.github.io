@@ -20,8 +20,8 @@
             @mouseleave="helpHover = false"
             :style="helpStyle"
           >
-            <span class="nav-icon">📞</span>
-            <span class="nav-text">联系客服</span>
+            <span class="nav-icon">🤖</span>
+            <span class="nav-text">AI小助手</span>
           </router-link>
           <span
             class="nav-btn service-btn"
@@ -30,7 +30,7 @@
             :style="serviceStyle"
           >
             <span class="nav-icon">❓</span>
-            <span class="nav-text">帮助中心</span>
+            <span class="nav-text">帮助中心（无功能）</span>
           </span>
         </div>
         <div class="switch-container">
@@ -42,7 +42,7 @@
             :style="switchStyle"
           >
             <span class="nav-icon">🔄</span>
-            <span class="nav-text">一键切换</span>
+            <span class="nav-text">一键切换（可以点击，但不能切换）</span>
           </button>
           <transition
             name="custom-dropdown"

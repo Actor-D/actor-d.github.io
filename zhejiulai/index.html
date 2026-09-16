@@ -78,15 +78,19 @@
       <p class="eyebrow">FULL-STACK PROJECT · 源码与使用说明</p>
       <h1>浙就来</h1>
       <p class="lead">
-        面向浙江大学校园场景的配送服务平台，覆盖学号注册登录、四步下单、地址管理、现金与积分双币支付、订单查询的完整闭环。
+        面向浙江大学校园场景的配送服务平台（最终版）：学号注册登录、双模式下单（代取外卖 / 代送物品）、地址簿、
+        现金与积分双币支付、订单跟踪，以及基于大模型的 AI 助手问答。
       </p>
       <p class="lead">
-        前端 Vue 3 单页应用 + 后端 Flask REST 服务，数据落库 SQLite：<strong>18 条前端路由（16 条受保护）</strong>、<strong>17 个 REST 接口</strong>、<strong>3 张数据表</strong>。
+        前端 Vue 3 单页应用 + 后端 Flask REST 服务，SQLite 落库，并接入 scikit-learn 计价模型与 DeepSeek 对话助手：
+        <strong>23 条路由（21 条受保护）</strong>、<strong>31 个 REST 接口（27 个需令牌）</strong>、<strong>7 张数据表</strong>、
+        <strong>10 万行</strong>训练数据。
       </p>
       <div class="stack">
         <span>Vue 3.5</span><span>Vite 6</span><span>Vue Router 4</span><span>Pinia 3</span>
-        <span>Element Plus</span><span>axios</span><span>Flask 3</span><span>Flask-SQLAlchemy</span>
-        <span>PyJWT</span><span>SQLite</span>
+        <span>vue-i18n</span><span>Element Plus</span><span>axios</span>
+        <span>Flask 3</span><span>Flask-SQLAlchemy</span><span>PyJWT</span>
+        <span>scikit-learn</span><span>pandas</span><span>DeepSeek</span><span>SQLite</span>
       </div>
 
       <div class="card" id="run">
@@ -96,6 +100,11 @@
 python -m venv .venv
 source .venv/bin/activate    # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+
+# 密钥从环境变量读取（仓库中不含任何密钥）
+export SECRET_KEY="$(python -c 'import secrets;print(secrets.token_hex(32))')"
+export DEEPSEEK_API_KEY="sk-..."   # 可选：不配置则 AI 助手不可用
+
 python app.py</pre>
         <p>再启动前端（默认 5173 端口）：</p>
         <pre>cd client
@@ -108,9 +117,23 @@ npm run dev</pre>
       </div>
 
       <div class="card">
+        <h2>两个技术亮点</h2>
+        <p>
+          <strong>机器学习计价</strong>：<code>model.pkl</code> 由 scikit-learn 基于
+          <strong>10 万行</strong><code>delivery_data.csv</code> 训练，输入尺寸 / 距离 / 是否加急，输出积分配送费，
+          在创建外卖订单时实时调用。
+        </p>
+        <p>
+          <strong>AI 助手</strong>：通过 OpenAI 兼容协议接入 DeepSeek，配约 700 字中文 system prompt，
+          会话与消息持久化到 <code>chat_sessions</code> / <code>chat_messages</code> 两张表。
+        </p>
+      </div>
+
+      <div class="card">
         <h2>业务规则</h2>
         <p>
-          双向计价：普通 <code>¥5 / 50 积分</code>，加急 <code>¥7 / 70 积分</code>，固定 <code>1 元 = 10 积分</code>；
+          双向计价：普通 <code>¥5 / 50 积分</code>，加急 <code>¥7 / 70 积分</code>（外卖订单的积分价由模型预测，
+          物品代送固定 10 积分）；支付时在事务中原子扣减积分。
           密码以 PBKDF2-SHA256 加密，令牌为 HS256 且 24 小时过期；地址与订单查询强制携带 <code>user_id</code> 隔离；
           上传仅允许 png/jpg/jpeg/gif 且不超过 5MB。
         </p>

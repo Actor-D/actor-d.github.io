@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import About from "@/components/Home/HomeMyPage/HomeMyPageList/HomeMyPageListAbout.vue";
-export default {
-  components: {
-      About
-  }
-}
 </script>
 <template>
   <div id="app">

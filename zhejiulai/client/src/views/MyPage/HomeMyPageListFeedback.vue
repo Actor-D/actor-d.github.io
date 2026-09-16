@@ -1,10 +1,5 @@
-<script>
-import FeedBack from "@/components/Home/HomeMyPage/HomeMyPageList/HomeMyPageListFeedBack.vue";
-export default {
-  components: {
-      FeedBack
-  }
-}
+<script setup>
+import FeedBack from "@/components/Home/HomeMyPage/HomeMyPageList/HomeMyPageListFeedback.vue";
 </script>
 <template>
   <div id="app">

@@ -48,137 +48,132 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'ChatApp',
-    data() {
-        return {
-            newMessage: '',
-            contacts: [
-                {
-                    name: "张三",
-                    avatar: "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png",
-                    time: "15:39",
-                    message: "好的，我在这等您"
-                },
-                {
-                    name: "李四",
-                    avatar: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-                    time: "14:20",
-                    message: "包裹已送达"
-                },
-                {
-                    name: "王五",
-                    avatar: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-                    time: "13:45",
-                    message: "好的，收到"
-                }
-            ],
-            currentContact: {
-                name: "张三",
-                avatar: "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png",
-                time: "15:39",
-                message: "好的，我在这等您"
-            },
-            chatRecords: [
-                {
-                    message: "您好，我已经到达取件点了",
-                    time: "15:35",
-                    isMe: true
-                },
-                {
-                    message: "我现在在基图门口",
-                    time: "15:36",
-                    isMe: true
-                },
-                {
-                    message: "好的，我马上过来",
-                    time: "15:36",
-                    isMe: false
-                },
-                {
-                    message: "我穿蓝色外套，背着黑色背包",
-                    time: "15:37",
-                    isMe: true
-                },
-                {
-                    message: "看到您了，正在走过来",
-                    time: "15:38",
-                    isMe: false
-                },
-                {
-                    message: "订单号是20250509对吧？",
-                    time: "15:38",
-                    isMe: true
-                },
-                {
-                    message: "对的，就是这个订单",
-                    time: "15:39",
-                    isMe: false
-                },
-                {
-                    message: "我已经把包裹放在推车上了",
-                    time: "15:40",
-                    isMe: false
-                },
-                {
-                    message: "好的，我检查一下物品",
-                    time: "15:41",
-                    isMe: true
-                },
-                {
-                    message: "物品齐全，谢谢！",
-                    time: "15:42",
-                    isMe: true
-                },
-                {
-                    message: "不客气，有问题随时联系",
-                    time: "15:42",
-                    isMe: false
-                },
-                {
-                    message: "截图工具\n复制到剪贴板的屏幕截图\n自动保存已关闭。\n\n标记和共享",
-                    time: "15:43",
-                    isMe: true
-                },
-                {
-                    message: "这是刚才的取件凭证截图",
-                    time: "15:43",
-                    isMe: true
-                },
-                {
-                    message: "收到，已确认",
-                    time: "15:44",
-                    isMe: false
-                }
-            ]
-        }
-    },
-    methods: {
-        selectContact(contact) {
-            this.currentContact = contact;
-            // 这里通常会加载所选联系人的聊天记录
-            // 为了演示目的，我们对所有联系人使用相同的记录
-        },
-        sendMessage() {
-            if (this.newMessage.trim()) {
-                this.chatRecords.push({
-                    message: this.newMessage,
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    isMe: true
-                });
-                this.newMessage = '';
-                // 模拟回复
-                setTimeout(() => {
-                    this.chatRecords.push({
-                        message: "已收到您的消息",
-                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                        isMe: false
-                    });
-                }, 1000);
-            }
-        }
-    }
+<script setup>
+import { ref } from 'vue';
+
+const newMessage = ref('');
+const contacts = ref([
+  {
+    name: "张三",
+    avatar: "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png",
+    time: "15:39",
+    message: "好的，我在这等您"
+  },
+  {
+    name: "李四",
+    avatar: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+    time: "14:20",
+    message: "包裹已送达"
+  },
+  {
+    name: "王五",
+    avatar: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+    time: "13:45",
+    message: "好的，收到"
+  }
+]);
+
+const currentContact = ref({
+  name: "张三",
+  avatar: "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png",
+  time: "15:39",
+  message: "好的，我在这等您"
+});
+
+const chatRecords = ref([
+  {
+    message: "您好，我已经到达取件点了",
+    time: "15:35",
+    isMe: true
+  },
+  {
+    message: "我现在在基图门口",
+    time: "15:36",
+    isMe: true
+  },
+  {
+    message: "好的，我马上过来",
+    time: "15:36",
+    isMe: false
+  },
+  {
+    message: "我穿蓝色外套，背着黑色背包",
+    time: "15:37",
+    isMe: true
+  },
+  {
+    message: "看到您了，正在走过来",
+    time: "15:38",
+    isMe: false
+  },
+  {
+    message: "订单号是20250509对吧？",
+    time: "15:38",
+    isMe: true
+  },
+  {
+    message: "对的，就是这个订单",
+    time: "15:39",
+    isMe: false
+  },
+  {
+    message: "我已经把包裹放在推车上了",
+    time: "15:40",
+    isMe: false
+  },
+  {
+    message: "好的，我检查一下物品",
+    time: "15:41",
+    isMe: true
+  },
+  {
+    message: "物品齐全，谢谢！",
+    time: "15:42",
+    isMe: true
+  },
+  {
+    message: "不客气，有问题随时联系",
+    time: "15:42",
+    isMe: false
+  },
+  {
+    message: "截图工具\n复制到剪贴板的屏幕截图\n自动保存已关闭。\n\n标记和共享",
+    time: "15:43",
+    isMe: true
+  },
+  {
+    message: "这是刚才的取件凭证截图",
+    time: "15:43",
+    isMe: true
+  },
+  {
+    message: "收到，已确认",
+    time: "15:44",
+    isMe: false
+  }
+]);
+
+function selectContact(contact) {
+  currentContact.value = contact;
+}
+
+function sendMessage() {
+  if (newMessage.value.trim()) {
+    chatRecords.value.push({
+      message: newMessage.value,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isMe: true
+    });
+    newMessage.value = '';
+
+    setTimeout(() => {
+      chatRecords.value.push({
+        message: "已收到您的消息",
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isMe: false
+      });
+    }, 1000);
+  }
 }
 </script>
 

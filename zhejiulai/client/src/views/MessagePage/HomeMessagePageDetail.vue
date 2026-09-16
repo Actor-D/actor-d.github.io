@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import PageDetail from "@/components/Home/HomeMessagePage/HomeMessagePageDetail.vue";
-export default {
-  components: {
-    PageDetail
-  }
-}
 </script>
 <template>
   <div id="app">

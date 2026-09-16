@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import ViewOrderDetail from "@/components/Home/HomeViewOrder/HomeViewOrderList/HomeViewOrderListDetail.vue";
-export default {
-  components: {
-    ViewOrderDetail
-  }
-}
 </script>
 <template>
   <div id="app">

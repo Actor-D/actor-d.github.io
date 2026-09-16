@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import PageList from "@/components/Home/HomeMessagePage/HomeMessagePageList.vue";
-export default {
-  components: {
-    PageList
-  }
-}
 </script>
 <template>
   <div id="app">

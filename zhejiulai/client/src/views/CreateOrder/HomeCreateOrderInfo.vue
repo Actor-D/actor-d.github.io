@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import Info from "@/components/Home/HomeCreateOrder/HomeCreateOrderInfo.vue";
-export default {
-  components: {
-    Info
-  }
-}
 </script>
 <template>
   <div id="app">

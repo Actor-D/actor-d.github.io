@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import Register from "@/components/FrontPage/FrontPageContent/FrontPageContentRegister.vue";
-export default {
-  components: {
-    Register
-  }
-}
 </script>
 <template>
   <div id="app">

@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import Setting from "@/components/Home/HomeMyPage/HomeMyPageList/HomeMyPageListSetting.vue";
-export default {
-  components: {
-      Setting
-  }
-}
 </script>
 <template>
   <div id="app">

@@ -1,51 +1,92 @@
 <script setup>
 import { ref, computed } from 'vue'
+import axios from 'axios'
 
 const feedbackType = ref('bug')
 const feedbackContent = ref('')
 const contactInfo = ref('')
 const showSuccessModal = ref(false)
+const errorMessage = ref('')
+const isSubmitting = ref(false)
 
+// 字符计数
 const charCount = computed(() => {
-  return `${feedbackContent.value.length}/50`
+  return `${feedbackContent.value.length}/500`
 })
 
+// 提交按钮状态
 const canSubmit = computed(() => {
-  return feedbackContent.value.length >= 10 && feedbackContent.value.length <= 50
+  const validContent = feedbackContent.value.trim()
+  return validContent.length >= 10 &&
+      validContent.length <= 500 &&
+      !isSubmitting.value
 })
 
-const checkFeedbackForm = () => {
-  // 实时计算字符数
+// 最小长度警告
+const showMinLengthWarning = computed(() => {
+  const validContent = feedbackContent.value.trim()
+  return validContent.length > 0 && validContent.length < 10
+})
+
+// 提交反馈
+const submitFeedback = async () => {
+  if (!canSubmit.value) return
+
+  isSubmitting.value = true
+  errorMessage.value = ''
+
+  try {
+    const token = sessionStorage.getItem('token')
+    if (!token) {
+      throw new Error('用户未登录')
+    }
+
+    const response = await axios.post('http://127.0.0.1:5000/api/feedback', {
+      type: feedbackType.value,
+      content: feedbackContent.value.trim(),
+      contact_info: contactInfo.value.trim()
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    if (response.data.success) {
+      feedbackContent.value = ''
+      contactInfo.value = ''
+      showSuccessModal.value = true
+      setTimeout(() => {
+        showSuccessModal.value = false
+      }, 2000)
+    } else {
+      throw new Error(response.data.message || '提交失败')
+    }
+  } catch (err) {
+    handleSubmissionError(err)
+  } finally {
+    isSubmitting.value = false
+  }
 }
 
-const uploadImage = () => {
-  alert('打开相册选择图片')
-}
-
-const submitFeedback = () => {
-  console.log('提交反馈:', {
-    type: feedbackType.value,
-    content: feedbackContent.value,
-    contact: contactInfo.value
-  })
-
-  showSuccessModal.value = true
+// 错误处理
+const handleSubmissionError = (err) => {
+  if (err.response) {
+    errorMessage.value = err.response.data?.message ||
+        `服务器错误 (${err.response.status})`
+  } else if (err.request) {
+    errorMessage.value = '网络错误，请检查连接'
+  } else {
+    errorMessage.value = err.message || '请求发送失败'
+  }
 
   setTimeout(() => {
-    feedbackContent.value = ''
-    contactInfo.value = ''
-    showSuccessModal.value = false
-  }, 2000)
-}
-
-const closeModal = () => {
-  showSuccessModal.value = false
+    errorMessage.value = ''
+  }, 5000)
 }
 </script>
 
 <template>
   <div class="page-container">
-    <!-- 统一风格的顶部导航栏 -->
     <div class="header">
       <router-link to="/Home/MyPage" class="nav-back">
         <svg class="back-icon" viewBox="0 0 24 24" width="24" height="24">
@@ -54,21 +95,23 @@ const closeModal = () => {
       </router-link>
       <h1>意见反馈</h1>
       <button
-        class="submit-btn"
-        :disabled="!canSubmit"
-        @click="submitFeedback"
-        :class="{ disabled: !canSubmit }"
+          class="submit-btn"
+          :class="{ disabled: !canSubmit }"
+          :disabled="!canSubmit"
+          @click="submitFeedback"
       >
-        发送
+        {{ isSubmitting ? '提交中...' : '发送' }}
       </button>
     </div>
 
     <div class="content">
+      <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+
       <div class="card">
         <div class="section-title">反馈类型</div>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" v-model="feedbackType" value="bug" checked>
+            <input type="radio" v-model="feedbackType" value="bug">
             <span class="radio-text">🐛 功能问题</span>
           </label>
           <label class="radio-option">
@@ -77,7 +120,7 @@ const closeModal = () => {
           </label>
           <label class="radio-option">
             <input type="radio" v-model="feedbackType" value="complaint">
-            <span class="radio-text">😡 投诉</span>
+            <span class="radio-text">😡 用户投诉</span>
           </label>
         </div>
       </div>
@@ -85,46 +128,42 @@ const closeModal = () => {
       <div class="card">
         <div class="section-title">详细描述</div>
         <textarea
-          v-model="feedbackContent"
-          placeholder="请描述您遇到的问题或建议..."
-          @input="checkFeedbackForm"
+            v-model="feedbackContent"
+            placeholder="请描述具体问题和建议（10-500字）"
+            maxlength="500"
         ></textarea>
-        <div class="char-count">{{ charCount }}</div>
-      </div>
-
-      <div class="card">
-        <div class="section-title">添加截图（可选）</div>
-        <div class="image-upload">
-          <div class="upload-btn" @click="uploadImage">
-            <span class="upload-icon">+</span>
-            <span class="upload-text">添加图片</span>
-          </div>
+        <div class="char-count">
+          {{ charCount }}
+          <span v-if="showMinLengthWarning" class="length-warning">
+            （至少需要10个有效字符）
+          </span>
         </div>
       </div>
 
       <div class="card">
         <div class="section-title">联系方式（可选）</div>
         <input
-          type="text"
-          v-model="contactInfo"
-          placeholder="手机/邮箱"
+            type="text"
+            v-model="contactInfo"
+            placeholder="请输入手机/邮箱"
+            maxlength="50"
         >
       </div>
     </div>
 
-    <!-- 反馈成功弹窗 -->
     <div v-if="showSuccessModal" class="modal">
       <div class="modal-content">
         <div class="modal-icon">✅</div>
-        <div class="modal-title">感谢您的反馈！</div>
-        <div class="modal-message">我们会在3个工作日内处理</div>
-        <button class="modal-btn" @click="closeModal">确定</button>
+        <div class="modal-title">反馈提交成功！</div>
+        <div class="modal-message">我们将尽快处理您的反馈</div>
+        <button class="modal-btn" @click="showSuccessModal = false">确定</button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+/* 保持原有样式不变 */
 * {
   margin: 0;
   padding: 0;
@@ -139,7 +178,6 @@ const closeModal = () => {
   background-color: #f5f5f5;
 }
 
-/* 统一顶部导航栏样式 */
 .header {
   background-color: #1890FF;
   color: white;
@@ -171,10 +209,6 @@ const closeModal = () => {
   transition: transform 0.2s;
 }
 
-.nav-back:active .back-icon {
-  transform: scale(0.9);
-}
-
 .submit-btn {
   background: none;
   border: none;
@@ -189,7 +223,6 @@ const closeModal = () => {
   cursor: not-allowed;
 }
 
-/* 内容区域 */
 .content {
   flex: 1;
   overflow-y: auto;
@@ -201,7 +234,7 @@ const closeModal = () => {
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .section-title {
@@ -211,7 +244,6 @@ const closeModal = () => {
   color: #333;
 }
 
-/* 单选按钮组 */
 .radio-group {
   display: flex;
   flex-direction: column;
@@ -229,7 +261,6 @@ const closeModal = () => {
   font-size: 15px;
 }
 
-/* 文本输入区域 */
 textarea {
   width: 100%;
   height: 120px;
@@ -246,36 +277,6 @@ textarea:focus {
   outline: none;
 }
 
-/* 图片上传区域 */
-.image-upload {
-  display: flex;
-  gap: 8px;
-}
-
-.upload-btn {
-  width: 100%;
-  height: 80px;
-  border: 1px dashed #ddd;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.upload-icon {
-  font-size: 24px;
-  color: #999;
-  margin-bottom: 4px;
-}
-
-.upload-text {
-  font-size: 14px;
-  color: #666;
-}
-
-/* 联系方式输入框 */
 input[type="text"] {
   width: 100%;
   padding: 12px;
@@ -284,26 +285,28 @@ input[type="text"] {
   font-size: 14px;
 }
 
-input[type="text"]:focus {
-  border-color: #1890FF;
-  outline: none;
-}
-
-/* 字符计数 */
 .char-count {
   text-align: right;
   color: #999;
   font-size: 12px;
 }
 
-/* 反馈成功弹窗 */
+.error-message {
+  color: #ff4d4f;
+  padding: 8px 16px;
+  background: #fff2f0;
+  border-radius: 4px;
+  margin: 12px;
+  font-size: 14px;
+}
+
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -345,5 +348,11 @@ input[type="text"]:focus {
   width: 100%;
   font-size: 16px;
   cursor: pointer;
+}
+
+.length-warning {
+  color: #ff4d4f;
+  margin-left: 8px;
+  font-size: 12px;
 }
 </style>

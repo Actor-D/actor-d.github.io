@@ -67,6 +67,7 @@
         <nav id="site-nav" class="site-nav" data-i18n-aria-label="accessibility.navigation">
           <a href="#about" data-i18n="nav.about">关于我</a>
           <a href="#projects" data-i18n="nav.projects">项目案例</a>
+          <a href="danmu.html" data-i18n="nav.analysis">数据分析</a>
           <a href="#research" data-i18n="nav.research">研究论文</a>
           <a href="#journey" data-i18n="nav.journey">学习经历</a>
           <a href="#contact" data-i18n="nav.contact">联系我</a>
@@ -213,22 +214,23 @@
             <p class="project-kicker" data-i18n="projects.type">全栈 Web 应用</p>
             <h3 class="preview-title">浙就来</h3>
             <p class="preview-subtitle" data-i18n="projects.subtitle">面向浙江大学校园场景的配送服务平台</p>
-            <p class="preview-summary" data-i18n="projects.previewSummary">从学号注册到订单履约的完整闭环：JWT 会话与路由守卫、四步下单流程、用户级地址簿、现金与积分双币计价，以及带类型白名单的图片上传——全部由真实接口驱动。</p>
+            <p class="preview-summary" data-i18n="projects.previewSummary">从学号注册到订单履约的完整闭环：JWT 会话与路由守卫、外卖代取与物品代送两条下单流程、用户级地址簿、现金与积分双币支付，并集成机器学习计价模型与大模型问答助手。</p>
             <div class="tech-stack" data-i18n-aria-label="accessibility.techStack">
               <span>Vue 3.5</span>
               <span>Vite 6</span>
               <span>Vue Router 4</span>
               <span>Pinia 3</span>
+              <span>vue-i18n</span>
               <span>Element Plus</span>
               <span>Flask 3</span>
-              <span>SQLAlchemy</span>
+              <span>scikit-learn</span>
+              <span>DeepSeek</span>
               <span>SQLite</span>
-              <span>PyJWT</span>
             </div>
             <ul class="preview-highlights">
-              <li data-i18n="projects.highlightOne">18 条路由 + router.beforeEach 守卫，JWT 会话 24 小时过期</li>
-              <li data-i18n="projects.highlightTwo">四步下单与双向计价：普通 ¥5 / 50 积分，加急 ¥7 / 70 积分</li>
-              <li data-i18n="projects.highlightThree">3 张表 + 17 个接口，地址与订单按 user_id 强制隔离</li>
+              <li data-i18n="projects.highlightOne">23 条路由 + 登录守卫，JWT 会话 24 小时过期</li>
+              <li data-i18n="projects.highlightTwo">双模式下单：外卖代取与物品代送，各自独立流程与数据表</li>
+              <li data-i18n="projects.highlightThree">31 个接口 + 7 张表，集成 ML 计价模型与 DeepSeek AI 助手</li>
             </ul>
             <div class="preview-actions">
               <a class="button button-primary preview-cta" href="project.html">
@@ -281,12 +283,16 @@
           </article>
 
           <article class="bento-card tile-card span-3 reveal">
-            <div class="tile-art art-three" aria-hidden="true"><span>NLP<br />TEXT</span></div>
-            <p class="project-type" data-i18n="moreProjects.biliType">NLP · 文本挖掘</p>
-            <h3 data-i18n="moreProjects.biliTitle">弹幕情感与主题挖掘</h3>
+            <div class="tile-art art-three" aria-hidden="true"><span>DANMAKU<br />NLP</span></div>
+            <p class="project-type" data-i18n="moreProjects.biliType">爬虫 · NLP · 情感分析</p>
+            <h3 data-i18n="moreProjects.biliTitle">B 站弹幕情感与传播分析</h3>
             <p data-i18n="moreProjects.biliBody">
-              爬取 B 站社科视频弹幕，用 Jieba + SnowNLP 做情感分析、LDA 做主题建模；专业术语占比 38.7%，构建「术语密度-情感极性」评估模型。
+              自建爬虫采集 44 个视频的 9.95 万条弹幕（去重后 8.13 万条、3.85 万名用户），基于 BosonNLP 与否定词/程度副词词典做情感打分（正面 54.4% / 负面 41.1%），自创「传播效果指数」并验证其与播放量相关性 r=0.92。
             </p>
+            <a class="tile-link" href="danmu.html">
+              <span data-i18n="moreProjects.viewAnalysis">查看完整分析</span>
+              <span aria-hidden="true">↗</span>
+            </a>
           </article>
 
           <article class="bento-card tile-card span-3 reveal">

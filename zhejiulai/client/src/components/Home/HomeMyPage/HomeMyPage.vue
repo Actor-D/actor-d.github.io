@@ -10,7 +10,7 @@
             <router-link to="/Home/MyPage/Personalinfo" class="edit-icon">✏</router-link>
           </div>
           <div class="badge">🎓 学生认证</div>
-          <div class="points">✨ ：积分350（可兑换礼品）</div>
+          <div class="points">✨ ：积分{{ userInfo.points }}（可兑换礼品）</div>
           <div class="progress-bar">
             <div class="progress" :style="{ width: userInfo.progress + '%' }"></div>
           </div>
@@ -34,28 +34,6 @@
         <span>{{ userInfo.phone }}</span>
       </div>
       <router-link to="/Home/MyPage/Personalinfo" class="edit-link">修改资料</router-link>
-    </div>
-
-    <!-- 积分与权益 -->
-    <div class="card points-card">
-      <div class="section-title">积分与权益</div>
-      <div class="points-container">
-        <div class="points-item">
-          <div class="points-title">积分进度</div>
-          <div>再消费¥30升级Lv2</div>
-          <div class="progress-bar" style="margin-top: 12px;">
-            <div class="progress" :style="{ width: userInfo.progress + '%' }"></div>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top: 16px;">
-        <div class="section-title">今日任务</div>
-        <div class="task-item" v-for="task in userInfo.tasks" :key="task.name">
-          <span :class="{ 'task-incomplete': !task.completed }">{{ task.name }}</span>
-          <span class="task-points" :class="{ 'task-incomplete': !task.completed }">+{{ task.points }}分</span>
-        </div>
-      </div>
     </div>
 
     <!-- 常用地址管理 -->
@@ -120,10 +98,7 @@ const userInfo = ref({
   student_id: '',
   phone: '',
   progress: 0,
-  tasks: [
-    { name: '签到', completed: false, points: 5 },
-    { name: '评价订单', completed: true, points: 10}
-  ]
+  points: 0 // 积分字段
 });
 
 const addresses = ref([]);

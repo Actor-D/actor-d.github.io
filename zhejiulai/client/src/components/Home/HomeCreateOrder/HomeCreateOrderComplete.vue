@@ -5,34 +5,46 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const showInsufficientPoints = ref(false);
-
-// 用户信息
+const showPaymentError = ref(false);
 const userInfo = ref({
   name: '',
   student_id: '',
   phone: '',
   points: 0
 });
-
-// 订单信息
 const orderInfo = ref({
   food_name: '',
   locker_info: '',
   delivery_fee_cash: 5.0,
-  delivery_fee_points: 50
+  delivery_fee_points: 0,
+  size: '',
+  distance: 0,
+  urgent: false
 });
-
-// 支付方式
 const paymentMethods = ref([
   { id: 1, name: '微信支付', checked: false, type: 'money' },
   { id: 2, name: '支付宝支付', checked: false, type: 'money' },
   { id: 3, name: '积分支付', checked: false, type: 'points' }
 ]);
-
 const hoverPayment = ref(null);
-const orderId = sessionStorage.getItem('current_order_id');
+const errorMessage = ref('');
+const orderId = ref(sessionStorage.getItem('current_order_id'));
 
-// 获取用户信息
+const selectedPayment = computed(() =>
+  paymentMethods.value.find(method => method.checked)
+);
+
+const totalDisplay = computed(() => {
+  if (!selectedPayment.value) return '¥0.00';
+  return selectedPayment.value.type === 'points'
+    ? `${orderInfo.value.delivery_fee_points}积分`
+    : `¥${orderInfo.value.delivery_fee_cash.toFixed(2)}`;
+});
+
+const canUsePoints = computed(() =>
+  userInfo.value.points >= orderInfo.value.delivery_fee_points
+);
+
 const fetchUserProfile = async () => {
   try {
     const token = sessionStorage.getItem('token');
@@ -47,97 +59,89 @@ const fetchUserProfile = async () => {
   }
 };
 
-// 获取订单信息
 const fetchOrder = async () => {
   try {
+    if (!orderId.value) {
+      errorMessage.value = '订单ID不存在，请返回重试';
+      return;
+    }
+
     const token = sessionStorage.getItem('token');
-    const response = await axios.get(`http://127.0.0.1:5000/api/order/${orderId}`, {
+    if (!token) {
+      errorMessage.value = '用户未登录，请登录后重试';
+      return;
+    }
+
+    const response = await axios.get(`http://127.0.0.1:5000/api/order/${orderId.value}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
-    orderInfo.value = {
-      ...orderInfo.value,
-      food_name: response.data.food_name || '未知',
-      locker_info: response.data.locker_info || '未提供',
-      delivery_fee_cash: response.data.delivery_fee_cash || 5.0,
-      delivery_fee_points: response.data.delivery_fee_points || 50
-    };
+    if (response.data.success) {
+      const orderData = response.data.order;
+      orderInfo.value = {
+        orderId: orderData.order_id,
+        food_name: orderData.food_name || '未知',
+        locker_info: orderData.locker_info || '未提供',
+        delivery_fee_cash: orderData.delivery_fee_cash || 5.0,
+        delivery_fee_points: orderData.delivery_fee_points || 0,
+        size: orderData.size || '',
+        distance: orderData.distance || 0,
+        urgent: orderData.urgent || false,
+        receiver_address: orderData.receiver_address || '未填写',
+        delivery_address: orderData.delivery_address || '未填写'
+      };
+    } else {
+      errorMessage.value = '获取订单信息失败，请返回重试';
+    }
   } catch (error) {
-    console.error('获取订单失败:', error);
-    alert('获取订单信息失败，请返回重试');
+    errorMessage.value = `获取订单信息失败: ${error.response?.data?.message || '服务器错误'}`;
   }
 };
 
-
-// 计算当前选中的支付方式
-const selectedPayment = computed(() => {
-  return paymentMethods.value.find(method => method.checked);
-});
-
-// 计算总金额显示
-const totalDisplay = computed(() => {
-  if (!selectedPayment.value) return '¥0.00';
-  return selectedPayment.value.type === 'points'
-    ? `${orderInfo.value.delivery_fee_points}积分`
-    : `¥${orderInfo.value.delivery_fee_cash.toFixed(2)}`;
-});
-
-// 检查积分是否足够
-const canUsePoints = computed(() => {
-  return userInfo.value.points >= orderInfo.value.delivery_fee_points;
-});
-
-// 选择支付方式
 const selectPayment = (selectedId) => {
-  // 如果是积分支付且积分不足，不切换
   if (selectedId === 3 && !canUsePoints.value) {
     showInsufficientPoints.value = true;
     setTimeout(() => showInsufficientPoints.value = false, 3000);
     return;
   }
-
   paymentMethods.value.forEach(method => {
     method.checked = method.id === selectedId;
   });
 };
 
-// 提交支付
-// const submitPayment = async () => {
-//   if (!selectedPayment.value) {
-//     alert('请选择支付方式');
-//     return;
-//   }
+const submitPayment = async () => {
+  if (!selectedPayment.value) {
+    showPaymentError.value = true;
+    setTimeout(() => showPaymentError.value = false, 3000);
+    return;
+  }
 
-//   // 积分不足检查
-//   if (selectedPayment.value.type === 'points' && !canUsePoints.value) {
-//     showInsufficientPoints.value = true;
-//     setTimeout(() => showInsufficientPoints.value = false, 3000);
-//     return;
-//   }
+  if (selectedPayment.value.type === 'points' && !canUsePoints.value) {
+    showInsufficientPoints.value = true;
+    setTimeout(() => showInsufficientPoints.value = false, 3000);
+    return;
+  }
 
-//   try {
-//     const token = sessionStorage.getItem('token');
-//     const response = await axios.put(
-//       `http://127.0.0.1:5000/api/order/${orderId}/payment`,
-//       {
-//         payment_method: selectedPayment.value.type === 'points' ? 'points' : 'cash'
-//       },
-//       {
-//         headers: {
-//           'Authorization': `Bearer ${token}`,
-//           'Content-Type': 'application/json'
-//         }
-//       }
-//     );
+  try {
+    const token = sessionStorage.getItem('token');
+    const response = await axios.put(
+      `http://127.0.0.1:5000/api/order/${orderId.value}/payment`,
+      { payment_method: selectedPayment.value.type === 'points' ? 'points' : 'cash' },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
 
-//     if (response.data.success) {
-//       router.push('/Home/CreateOrder/Pay');
-//     }
-//   } catch (error) {
-//     console.error('支付失败:', error);
-//     alert(`支付失败: ${error.response?.data?.message || '服务器错误'}`);
-//   }
-// };
+    if (response.data.success) {
+      router.push('/Home/CreateOrder/Pay');
+    }
+  } catch (error) {
+    errorMessage.value = `支付失败: ${error.response?.data?.message || '服务器错误'}`;
+  }
+};
 
 onMounted(() => {
   fetchUserProfile();
@@ -148,41 +152,35 @@ onMounted(() => {
 <template>
   <!-- 步骤指示器 -->
   <div class="step-container">
-  <div class="step">
-    <div class="step-icon">🛒</div>
-    <div class="step-text">填写信息</div>
-  </div>
-  <div class="step">
-    <div class="step-icon done">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-        <circle cx="12" cy="10" r="3"></circle>
-      </svg>
+    <div class="step">
+      <div class="step-icon">🛒</div>
+      <div class="step-text">填写信息</div>
     </div>
-    <div class="step-text">选择地址</div>
-  </div>
-  <div class="step">
-    <div class="step-icon active">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-        <circle cx="12" cy="10" r="3"></circle>
-      </svg>
+    <div class="step">
+      <div class="step-icon done">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+      </div>
+      <div class="step-text">选择地址</div>
     </div>
-    <div class="step-text done">确认订单</div>
+    <div class="step">
+      <div class="step-icon active">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+      </div>
+      <div class="step-text done">确认订单</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">✓</div>
+      <div class="step-text">支付完成</div>
+    </div>
   </div>
-  <div class="step">
-    <div class="step-icon">✓</div>
-    <div class="step-text">支付完成</div>
-  </div>
-</div>
 
-  <!-- 积分不足提示 -->
-  <div v-if="showInsufficientPoints" class="insufficient-points-alert">
-    <div class="alert-content">
-      <span class="alert-icon">⚠️</span>
-      积分不足，无法使用积分支付
-    </div>
-  </div>
+
 
   <div class="order-container">
     <!-- 订单信息部分 -->
@@ -195,7 +193,7 @@ onMounted(() => {
           </svg>
         </span>
         <div class="input-group">
-          <div class="order-label">{{ orderInfo.locker_info || '未提供' }}</div>
+          <div class="order-label">{{ orderInfo.receiver_address || '未提供' }}</div>
           <div class="order-label">{{ userInfo.name }} <span class="number">{{ userInfo.phone }}</span></div>
         </div>
       </div>
@@ -247,11 +245,9 @@ onMounted(() => {
     <div class="order-content height4">
       <div class="information1">
         <h2 class="pay">总计：<span class="pay-label">{{ totalDisplay }}</span></h2>
-        <button class="button-content">
-          <router-link to="/Home/CreateOrder/Pay" class="nav-link" @click="submitPayment">
-            确认支付
-            <span class="button-icon">→</span>
-          </router-link>
+        <button class="button-content" @click="submitPayment">
+          确认支付
+          <span class="button-icon">→</span>
         </button>
       </div>
     </div>
@@ -265,7 +261,7 @@ onMounted(() => {
 
 <style scoped>
 /* 积分不足提示样式 */
-.insufficient-points-alert {
+.insufficient-points-alert, .payment-error-alert {
   position: fixed;
   top: 20px;
   left: 50%;
@@ -305,6 +301,7 @@ onMounted(() => {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
 /* 基础样式保持不变 */
 .pay {
   margin-top: 25px;

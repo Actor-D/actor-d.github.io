@@ -1,27 +1,18 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router'; // 添加这行
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+
 const router = useRouter();
-import axios from 'axios'
-
-
-// 模拟订单数据（实际应从路由参数或API获取）
-// const orderInfo = ref({
-//   orderId: '20230728123456',
-//   paymentMethod: '微信支付',
-//   amount: '¥5.00',
-//   paymentTime: new Date().toLocaleString(),
-// });
-
-// 添加动画状态
-const animated = ref(false);
-
 const orderInfo = ref({
-  food_name: '' ,
+  orderId: '',
+  food_name: '',
   locker_info: '',
-  deliveryFees:'',
-  paymentMethod:'',
-})
+  deliveryFees: '',
+  paymentMethod: '',
+  paymentTime: ''
+});
+
 const fetchOrder = async () => {
   try {
     const orderId = sessionStorage.getItem('current_order_id');
@@ -30,15 +21,18 @@ const fetchOrder = async () => {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
+    const orderData = response.data.order || response.data;
+    const isPointsPayment = orderData.payment_method === 'points';
+
     orderInfo.value = {
-      orderId: response.data.order_id,
-      food_name: response.data.food_name,
-      locker_info: response.data.locker_info,
-      paymentMethod: response.data.payment_method === 'points' ? '积分支付' : '现金支付',
-      deliveryFees: response.data.payment_currency === 'points'
-        ? `${response.data.delivery_fee_points}积分`
-        : `¥${response.data.delivery_fee_cash}`,
-      paymentTime: new Date(response.data.created_at).toLocaleString()
+      orderId: orderData.id,
+      food_name: orderData.food_name || '未知',
+      locker_info: orderData.locker_info || '未提供',
+      paymentMethod: isPointsPayment ? '积分支付' : '现金支付',
+      deliveryFees: isPointsPayment
+        ? `${orderData.delivery_fee_points || 0}积分`
+        : `¥${(orderData.delivery_fee_cash || 0).toFixed(2)}`,
+      paymentTime: new Date(orderData.created_at).toLocaleString()
     };
   } catch (error) {
     console.error('获取订单失败:', error);
@@ -48,18 +42,11 @@ const fetchOrder = async () => {
 const viewOrder = () => {
   router.push({
     path: '/Home/ViewOrder/ListDetail',
-    query: { orderId: orderInfo.value.orderId } // 传递orderId作为查询参数
+    query: { orderId: orderInfo.value.orderId }
   });
 };
 
-
-onMounted(() => {
-  setTimeout(() => {
-    animated.value = true;
-  }, 300);
-});
-
-onMounted(fetchOrder)
+onMounted(fetchOrder);
 </script>
 
 <template>
@@ -90,60 +77,47 @@ onMounted(fetchOrder)
 
   <div class="payment-complete-container">
     <!-- 支付成功图标 -->
-    <transition name="scale">
-      <div v-if="animated" class="success-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-      </div>
-    </transition>
+    <div class="success-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+    </div>
 
     <!-- 支付成功标题 -->
-    <transition name="fade" appear>
-      <h1 class="success-title">支付成功</h1>
-    </transition>
-
-    <transition name="fade" appear>
-      <p class="success-subtitle">感谢您的购买</p>
-    </transition>
+    <h1 class="success-title">支付成功</h1>
+    <p class="success-subtitle">感谢您的购买</p>
 
     <!-- 订单信息卡片 -->
-    <transition name="slide-up" appear>
-      <div class="order-card">
-        <div class="order-info-item">
-          <span>订单编号：</span>
-          <strong>{{ orderInfo.orderId }}</strong>
-        </div>
-        <div class="order-info-item">
-          <span>支付方式：</span>
-          <strong>{{ orderInfo.paymentMethod }}</strong>
-        </div>
-        <div class="order-info-item">
-          <span>支付金额：</span>
-          <strong class="amount">{{ orderInfo.deliveryFees }}</strong>
-        </div>
-        <div class="order-info-item">
-          <span>支付时间：</span>
-          <strong>{{ orderInfo.paymentTime }}</strong>
-        </div>
+    <div class="order-card">
+      <div class="order-info-item">
+        <span>订单编号：</span>
+        <strong>{{ orderInfo.orderId }}</strong>
       </div>
-    </transition>
+      <div class="order-info-item">
+        <span>支付方式：</span>
+        <strong>{{ orderInfo.paymentMethod }}</strong>
+      </div>
+      <div class="order-info-item">
+        <span>支付金额：</span>
+        <strong class="amount">{{ orderInfo.deliveryFees }}</strong>
+      </div>
+      <div class="order-info-item">
+        <span>支付时间：</span>
+        <strong>{{ orderInfo.paymentTime }}</strong>
+      </div>
+    </div>
 
     <!-- 操作按钮 -->
-    <transition-group name="fade" tag="div" appear>
-      <div key="buttons" class="action-buttons">
-        <button class="home-button pulse"><router-link to="/Home" class="nav-link">返回首页</router-link></button>
-        <button class="home-button pulse"><router-link to="/Home/ViewOrder/ListDetail" class="nav-link" @click="viewOrder">查看订单</router-link></button>
-      </div>
-    </transition-group>
+    <div class="action-buttons">
+      <button class="home-button pulse"><router-link to="/Home" class="nav-link">返回首页</router-link></button>
+      <button class="home-button pulse" @click="viewOrder">查看订单</button>
+    </div>
 
     <!-- 额外提示 -->
-    <transition name="fade" appear>
-      <p class="extra-tips">
-        如有任何问题，请联系客服：400-123-4567
-      </p>
-    </transition>
+    <p class="extra-tips">
+      如有任何问题，请联系客服：400-123-4567
+    </p>
   </div>
 </template>
 

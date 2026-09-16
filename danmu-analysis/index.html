@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>B 站弹幕文本分析 · 数据与代码</title>
+    <meta
+      name="description"
+      content="B 站《社会学与经济学》弹幕文本挖掘作业：44 个视频、99,590 条弹幕，词典法情感分析与自创传播效果指数。含 Notebook、报告与词典。"
+    />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <style>
+      :root {
+        --ink: #1d1d1f;
+        --muted: #6e6e73;
+        --line: rgba(0, 0, 0, 0.08);
+        --accent: #0071e3;
+        --bg: #f5f5f7;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 56px 24px 80px;
+        background:
+          radial-gradient(620px circle at 80% 4%, rgba(41, 151, 255, 0.1), transparent 60%),
+          var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC",
+          "Helvetica Neue", "Noto Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      main { max-width: 820px; margin: 0 auto; }
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+      }
+      h1 { margin: 0 0 16px; font-size: clamp(32px, 5.6vw, 50px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.1; }
+      .lead { margin: 0 0 12px; color: var(--muted); font-size: 17px; line-height: 1.8; }
+      .stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 0; }
+      .stats span {
+        padding: 8px 15px; border: 1px solid var(--line); border-radius: 99px;
+        background: #fff; color: #48484a; font-size: 12.5px;
+      }
+      .stats b { color: var(--accent); }
+      .card {
+        margin-top: 22px; padding: 26px 28px; border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 24px; background: rgba(255, 255, 255, 0.64);
+        box-shadow: 0 20px 55px rgba(15, 23, 42, 0.07); backdrop-filter: blur(18px) saturate(160%);
+      }
+      .card h2 { margin: 0 0 14px; font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+      .card p { margin: 0 0 10px; color: var(--muted); font-size: 14.5px; line-height: 1.8; }
+      .card p:last-child { margin-bottom: 0; }
+      ul.files { margin: 0; padding: 0; list-style: none; }
+      ul.files li {
+        display: flex; gap: 14px; align-items: baseline; justify-content: space-between;
+        padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 14px;
+      }
+      ul.files li:last-child { border-bottom: 0; }
+      ul.files a { color: var(--accent); text-decoration: none; }
+      ul.files a:hover { text-decoration: underline; }
+      ul.files em { color: var(--muted); font-size: 12px; font-style: normal; white-space: nowrap; }
+      .note {
+        margin-top: 18px; padding: 14px 18px; border-left: 3px solid var(--accent);
+        border-radius: 0 12px 12px 0; background: rgba(0, 113, 227, 0.05);
+        color: var(--muted); font-size: 13px; line-height: 1.75;
+      }
+      pre {
+        margin: 0 0 10px; padding: 15px 18px; overflow-x: auto; border: 1px solid var(--line);
+        border-radius: 14px; background: #fff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12.5px; line-height: 1.7;
+      }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--accent); font-size: 0.94em; }
+      .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+      .links a {
+        display: inline-flex; gap: 8px; align-items: center; padding: 12px 22px;
+        border-radius: 99px; background: var(--ink); color: #fff;
+        font-size: 14px; font-weight: 500; text-decoration: none;
+        transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+      }
+      .links a:hover { background: var(--accent); transform: translateY(-2px); }
+      .links a.ghost { border: 1px solid var(--line); background: rgba(255, 255, 255, 0.65); color: var(--ink); }
+      .links a.ghost:hover { background: #fff; color: var(--accent); }
+      footer { margin-top: 40px; color: var(--muted); font-size: 13px; }
+      footer a { color: var(--accent); text-decoration: none; }
+      @media (prefers-reduced-motion: reduce) { .links a { transition: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">TEXT MINING · 数据与代码</p>
+      <h1>B 站弹幕文本分析</h1>
+      <p class="lead">
+        以 B 站《社会学与经济学》系列视频为对象，自建爬虫采集弹幕，用词典法做情感打分，自创「传播效果指数」衡量传播力，
+        并对互动指标做相关性与回归分析。
+      </p>
+      <div class="stats">
+        <span><b>44</b> 个视频</span>
+        <span><b>99,590</b> 行原始弹幕</span>
+        <span><b>81,278</b> 条唯一弹幕</span>
+        <span><b>38,502</b> 名用户</span>
+        <span><b>r = 0.922</b> 传播指数 ↔ 播放量</span>
+      </div>
+
+      <div class="card">
+        <h2>结论摘要</h2>
+        <p>
+          情感分布：正面 <b>54.55%</b>、负面 <b>40.97%</b>、中性 <b>4.48%</b>（均值 0.47，总体偏正面）。
+          传播效果指数与播放量相关系数 <b>r = 0.922</b>，与点赞 0.799、收藏 0.749、评论 0.747。
+          点赞数对 UP 主粉丝数回归的 <b>R² = 0.376</b>，说明粉丝量只能解释约三分之一的点赞差异。
+        </p>
+        <div class="note">
+          <b>数据质量说明：</b>原始统计 99,590 行中含 8 个视频被重复采集（去重代码写了但未重新赋值）与 8 行表头混入，
+          去除后真实唯一弹幕为 <b>81,278</b> 条，约占原始的 82%。此外主题提取实际用的是「视频标题」上的 NMF，
+          并非弹幕的 LDA 主题发现，报告与作品集页面均已如实标注。
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>文件清单</h2>
+        <ul class="files">
+          <li><a href="./报告.docx">报告.docx</a><em>完整作业报告（含 19 张图）</em></li>
+          <li><a href="./notebooks/Crawler-blili.ipynb">Crawler-blili.ipynb</a><em>爬虫 + 元数据 + 传播效果指数</em></li>
+          <li><a href="./notebooks/词云＋处理结果.ipynb">词云＋处理结果.ipynb</a><em>分词、停用词、词云</em></li>
+          <li><a href="./notebooks/情感得分汇总.ipynb">情感得分汇总.ipynb</a><em>词典法情感打分</em></li>
+          <li><a href="./notebooks/分析.ipynb">分析.ipynb</a><em>相关性、回归、NMF</em></li>
+          <li><a href="./data/video.csv">data/video.csv</a><em>44 个视频的元数据与互动指标</em></li>
+          <li><a href="./data/processed_danmu_sample.csv">data/processed_danmu_sample.csv</a><em>分词结果样本（前 500 行）</em></li>
+          <li><a href="./dict/词典来源.txt">dict/</a><em>情感词典体系：BosonNLP 114,766 条 + 否定词 + 程度副词</em></li>
+        </ul>
+        <p class="note">
+          原始弹幕数据（<code>merged_output.csv</code> 约 12MB、<code>processed_danmu.csv</code> 约 15MB、
+          <code>sentiment_analysis_results.csv</code> 约 6MB）未随仓库发布，需要的话可按爬虫脚本重新采集。
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>如何复现</h2>
+        <p>四个 Notebook 通过 CSV 产物串联，任一环节可单独重跑：</p>
+        <pre>Crawler-blili.ipynb        → bvnumber.csv / video.csv / b站弹幕集合/*.csv
+词云＋处理结果.ipynb        → processed_danmu.csv（分词列）
+情感得分汇总.ipynb          → sentiment_analysis_results.csv
+分析.ipynb                 → 相关性 / 回归 / NMF 结果</pre>
+        <p>依赖：<code>pandas</code>、<code>numpy</code>、<code>jieba</code>、<code>nltk</code>、<code>wordcloud</code>、<code>scikit-learn</code>、<code>scipy</code>、<code>seaborn</code>、<code>selenium</code>、<code>beautifulsoup4</code>。</p>
+      </div>
+
+      <div class="links">
+        <a href="../danmu.html">查看作品集案例页 <span aria-hidden="true">↗</span></a>
+        <a class="ghost" href="./报告.docx">下载报告</a>
+        <a class="ghost" href="../index.html#projects">返回项目列表</a>
+      </div>
+
+      <footer>
+        作者：董炎源（Actor.D） ·
+        <a href="https://github.com/Actor-D" target="_blank" rel="noopener">GitHub 主页</a> ·
+        课程作业，仅供学习交流
+      </footer>
+    </main>
+  </body>
+</html>

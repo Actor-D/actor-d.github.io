@@ -1,14 +1,7 @@
-<script>
+<script setup>
 import HomeHeader from "@/components/Navigation/HomeHeader.vue";
 import HomePage from "@/components/Home/HomePage.vue";
 import HomeFooter from "@/components/Navigation/HomeFooter.vue";
-export default {
-  components: {
-    HomeHeader,
-    HomeFooter,
-    HomePage
-  }
-}
 </script>
 <template>
   <div id="app">
