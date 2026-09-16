@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>浙就来 · 校园配送服务平台（源码与使用说明）</title>
+    <link rel="icon" href="./favicon.ico" />
     <meta
       name="description"
       content="浙就来——面向浙江大学校园场景的配送服务平台。Vue 3 + Flask 全栈项目的源码结构、运行方式与接口说明。"
@@ -66,6 +67,7 @@
       .links a:hover { background: var(--accent); transform: translateY(-2px); }
       .links a.ghost { background: rgba(255, 255, 255, 0.6); color: var(--ink); border: 1px solid var(--line); }
       .links a.ghost:hover { background: #fff; color: var(--accent); }
+      .hint { margin: 16px 0 0; color: var(--muted); font-size: 12.5px; }
       footer { margin-top: 40px; color: var(--muted); font-size: 13px; }
       footer a { color: var(--accent); text-decoration: none; }
       @media (prefers-reduced-motion: reduce) { .links a { transition: none; } }
@@ -87,7 +89,7 @@
         <span>PyJWT</span><span>SQLite</span>
       </div>
 
-      <div class="card">
+      <div class="card" id="run">
         <h2>如何运行</h2>
         <p>需要 Node.js 18+ 与 Python 3.10+。先启动后端（默认 5000 端口）：</p>
         <pre>cd server
@@ -115,10 +117,19 @@ npm run dev</pre>
       </div>
 
       <div class="links">
-        <a href="./README.md">阅读完整 README <span aria-hidden="true">↗</span></a>
-        <a class="ghost" href="./server/app.py">后端源码 app.py</a>
-        <a class="ghost" href="./client/src/router/index.js">前端路由</a>
+        <a href="https://github.com/Actor-D/actor-d.github.io/tree/main/zhejiulai/client" target="_blank" rel="noopener">
+          前端源码 client/ <span aria-hidden="true">↗</span>
+        </a>
+        <a class="ghost" href="https://github.com/Actor-D/actor-d.github.io/tree/main/zhejiulai/server" target="_blank" rel="noopener">
+          后端源码 server/
+        </a>
+        <a class="ghost" href="https://github.com/Actor-D/actor-d.github.io/blob/main/zhejiulai/README.md" target="_blank" rel="noopener">
+          完整 README
+        </a>
       </div>
+      <p class="hint">
+        目录结构较大，源码浏览推荐在 GitHub 上进行（带语法高亮与文件树）。
+      </p>
 
       <footer>
         作者：董炎源（Actor.D） ·

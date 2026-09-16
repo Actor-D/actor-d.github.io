@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>页面不存在 · Actor.D</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root {
+        --ink: #1d1d1f;
+        --muted: #6e6e73;
+        --line: rgba(0, 0, 0, 0.08);
+        --accent: #0071e3;
+        --bg: #f5f5f7;
+      }
+      * { box-sizing: border-box; }
+      body {
+        display: grid;
+        min-height: 100vh;
+        margin: 0;
+        padding: 40px 24px;
+        place-items: center;
+        background:
+          radial-gradient(560px circle at 78% 6%, rgba(41, 151, 255, 0.1), transparent 60%),
+          var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC",
+          "Helvetica Neue", "Noto Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      main { max-width: 620px; text-align: center; }
+      .code {
+        margin: 0 0 10px;
+        background: linear-gradient(98deg, var(--accent) 8%, #00b8f0 92%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        font-size: clamp(72px, 16vw, 132px);
+        font-weight: 600;
+        letter-spacing: -0.06em;
+        line-height: 1;
+      }
+      h1 { margin: 0 0 14px; font-size: clamp(22px, 3.4vw, 30px); font-weight: 600; letter-spacing: -0.03em; }
+      p { margin: 0 0 8px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+      .path {
+        display: inline-block;
+        max-width: 100%;
+        margin-top: 14px;
+        padding: 8px 16px;
+        overflow-wrap: anywhere;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.7);
+        color: var(--ink);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12.5px;
+      }
+      .links { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 30px; }
+      .links a {
+        display: inline-flex; align-items: center; padding: 12px 22px;
+        border-radius: 99px; background: var(--ink); color: #fff;
+        font-size: 14px; font-weight: 500; text-decoration: none;
+        transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+      }
+      .links a:hover { background: var(--accent); transform: translateY(-2px); }
+      .links a.ghost {
+        border: 1px solid var(--line); background: rgba(255, 255, 255, 0.65); color: var(--ink);
+      }
+      .links a.ghost:hover { background: #fff; color: var(--accent); }
+      @media (prefers-reduced-motion: reduce) { .links a { transition: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="code">404</p>
+      <h1>这个页面不存在</h1>
+      <p>地址可能拼写有误，或者内容已经移动。</p>
+      <p class="path" id="requested" hidden></p>
+      <div class="links">
+        <a href="/">回到首页</a>
+        <a class="ghost" href="/project.html">项目案例</a>
+        <a class="ghost" href="/research.html">研究论文</a>
+        <a class="ghost" href="/zhejiulai/">项目源码</a>
+      </div>
+    </main>
+    <script>
+      // Show the path that was requested, when the browser exposes it.
+      try {
+        var el = document.getElementById("requested");
+        if (location.pathname && location.pathname !== "/") {
+          el.textContent = location.pathname;
+          el.hidden = false;
+        }
+      } catch (e) {}
+    </script>
+  </body>
+</html>
