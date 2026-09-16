@@ -60,6 +60,19 @@ const translations = {
       factCurrent: "当前项目",
       factInterest: "关注领域",
     },
+    ai: {
+      title: "把机器学习与 LLM 用进真实项目",
+      intro: "不是演示页面：模型负责计价、大模型负责客服问答、NLP 负责把弹幕变成可量化的结论。",
+      mlTitle: "机器学习计价模型",
+      mlBody:
+        "用 10 万行配送数据训练 scikit-learn 模型，输入尺寸 / 距离 / 加急三个特征，输出积分配送费，在创建订单时实时推理，取代写死的计价表。",
+      llmTitle: "大模型对话助手",
+      llmBody:
+        "通过 OpenAI 兼容协议接入 DeepSeek，以约 700 字中文 system prompt 约束回答范围；会话与消息落库，支持多会话切换与历史回看。",
+      nlpTitle: "弹幕文本挖掘",
+      nlpBody:
+        "自建爬虫采集 44 个视频的 9.95 万条弹幕，用 BosonNLP 词典法做情感打分，并对互动指标做相关性与回归建模，检验传播驱动因素。",
+    },
     focus: {
       informationManagement: "信息管理",
       informationSystems: "信息系统",
@@ -576,6 +589,20 @@ const translations = {
       factFoundation: "FOUNDATION",
       factCurrent: "CURRENT PROGRAMME",
       factInterest: "INTERESTS",
+    },
+    ai: {
+      title: "Machine learning and LLMs inside real projects",
+      intro:
+        "Not demo screens: a model prices deliveries, an LLM handles support questions, and NLP turns danmaku into measurable conclusions.",
+      mlTitle: "Machine-learning pricing model",
+      mlBody:
+        "A scikit-learn model trained on 100,000 delivery records takes size, distance and urgency as features and returns the points fee, inferring live when an order is created instead of relying on a hard-coded table.",
+      llmTitle: "LLM chat assistant",
+      llmBody:
+        "DeepSeek is reached over the OpenAI-compatible protocol with a ~700-character Chinese system prompt; sessions and messages persist so conversations can be switched and revisited.",
+      nlpTitle: "Danmaku text mining",
+      nlpBody:
+        "A custom crawler collected 99,590 danmaku across 44 videos, scored sentiment with the BosonNLP lexicon, then modelled engagement with correlation and regression to test what drives reach.",
     },
     focus: {
       informationManagement: "Information Management",
@@ -1194,6 +1221,12 @@ const sectionObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
+      // Sections without a matching nav link (e.g. the AI band) keep the
+      // previous highlight instead of clearing it.
+      const matches = [...navigationLinks].some(
+        (link) => link.getAttribute("href") === `#${entry.target.id}`,
+      );
+      if (!matches) return;
       navigationLinks.forEach((link) => {
         link.classList.toggle("is-current", link.getAttribute("href") === `#${entry.target.id}`);
       });

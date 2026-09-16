@@ -2152,3 +2152,30 @@ section.reveal:target {
     transition: none;
   }
 }
+
+/* ==========================================================================
+   Homepage AI capability band
+   ========================================================================== */
+
+.section-lead {
+  max-width: 620px;
+  margin: 20px auto 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.ai-bento .rule-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-bento .rule-card .tile-link {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 0;
+}
+
+.ai-bento .rule-facts {
+  margin-bottom: 22px;
+}

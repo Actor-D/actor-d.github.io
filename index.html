@@ -203,6 +203,57 @@
         </div>
       </section>
 
+      <section id="ai" class="featured section-shell">
+        <div class="section-heading reveal">
+          <p class="eyebrow">AI &amp; DATA</p>
+          <h2 data-i18n="ai.title">把机器学习与 LLM 用进真实项目</h2>
+          <p class="section-lead" data-i18n="ai.intro">
+            不是演示页面：模型负责计价、大模型负责客服问答、NLP 负责把弹幕变成可量化的结论。
+          </p>
+        </div>
+
+        <div class="bento ai-bento">
+          <article class="bento-card span-2 rule-card reveal">
+            <span class="rule-code">ML · PRICING</span>
+            <h4 data-i18n="ai.mlTitle">机器学习计价模型</h4>
+            <p data-i18n="ai.mlBody">
+              用 10 万行配送数据训练 scikit-learn 模型，输入尺寸 / 距离 / 加急三个特征，输出积分配送费，在创建订单时实时推理，取代写死的计价表。
+            </p>
+            <div class="rule-facts"><span>scikit-learn</span><span>100,000 rows</span><span>joblib</span></div>
+            <a class="tile-link" href="project.html">
+              <span data-i18n="projects.viewFull">查看完整案例</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+
+          <article class="bento-card span-2 rule-card reveal">
+            <span class="rule-code">LLM · ASSISTANT</span>
+            <h4 data-i18n="ai.llmTitle">大模型对话助手</h4>
+            <p data-i18n="ai.llmBody">
+              通过 OpenAI 兼容协议接入 DeepSeek，以约 700 字中文 system prompt 约束回答范围；会话与消息落库，支持多会话切换与历史回看。
+            </p>
+            <div class="rule-facts"><span>DeepSeek</span><span>4 endpoints</span><span>chat_sessions</span></div>
+            <a class="tile-link" href="project.html">
+              <span data-i18n="projects.viewFull">查看完整案例</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+
+          <article class="bento-card span-2 rule-card reveal">
+            <span class="rule-code">NLP · TEXT</span>
+            <h4 data-i18n="ai.nlpTitle">弹幕文本挖掘</h4>
+            <p data-i18n="ai.nlpBody">
+              自建爬虫采集 44 个视频的 9.95 万条弹幕，用 BosonNLP 词典法做情感打分，并对互动指标做相关性与回归建模，检验传播驱动因素。
+            </p>
+            <div class="rule-facts"><span>jieba</span><span>99,590 danmaku</span><span>r = 0.922</span></div>
+            <a class="tile-link" href="danmu.html">
+              <span data-i18n="moreProjects.viewAnalysis">查看完整分析</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+        </div>
+      </section>
+
       <section id="projects" class="featured section-shell">
         <div class="section-heading reveal">
           <p class="eyebrow">02 / FEATURED PROJECT</p>
