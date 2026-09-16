@@ -806,6 +806,15 @@ showcaseTabs.forEach((tab, index) => {
   });
 });
 
+/* Stagger sibling reveals inside each section for an orchestrated entrance. */
+const revealGroups = new Map();
+document.querySelectorAll(".reveal").forEach((element) => {
+  const group = element.closest("main > section") || element.parentElement || document.body;
+  const index = revealGroups.get(group) || 0;
+  revealGroups.set(group, index + 1);
+  element.style.setProperty("--reveal-delay", `${Math.min(index * 90, 450)}ms`);
+});
+
 const revealObserver = new IntersectionObserver(
   (entries, observer) => {
     entries.forEach((entry) => {
@@ -871,3 +880,81 @@ window.addEventListener("hashchange", revealAndJumpToHash);
 requestAnimationFrame(revealAndJumpToHash);
 
 setLanguage(currentLanguage);
+
+/* ---------- Polished chrome & page transitions ---------- */
+
+const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const rootElement = document.documentElement;
+
+/* Page-enter: release the pre-paint veil after the first hidden frame,
+   so the fade/rise transition actually plays. */
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => rootElement.classList.remove("page-pre"));
+});
+
+/* Header condenses once the page is scrolled. */
+const siteHeader = document.querySelector(".site-header");
+if (siteHeader) {
+  const updateHeaderState = () => {
+    siteHeader.classList.toggle("is-scrolled", window.scrollY > 14);
+  };
+  window.addEventListener("scroll", updateHeaderState, { passive: true });
+  updateHeaderState();
+}
+
+/* Page-leave: fade out before following an internal page link. */
+if (!motionQuery.matches) {
+  document.addEventListener("click", (event) => {
+    if (event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    const link = event.target.closest("a[href]");
+    if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+
+    const href = link.getAttribute("href");
+    if (!href || href.startsWith("#")) return;
+    if (/^(mailto|tel|javascript):/i.test(href)) return;
+
+    let url;
+    try {
+      url = new URL(href, window.location.href);
+    } catch {
+      return;
+    }
+    if (url.origin !== window.location.origin) return;
+    if (url.pathname === window.location.pathname && url.hash) return;
+
+    event.preventDefault();
+    rootElement.classList.add("page-leave");
+    window.setTimeout(() => {
+      window.location.href = url.href;
+    }, 300);
+  });
+
+  /* Back/forward cache restores must not keep the leave veil. */
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) rootElement.classList.remove("page-leave");
+  });
+} else {
+  rootElement.classList.remove("page-leave");
+}
+
+/* ---------- Hero 3D scene: pointer parallax tilt ---------- */
+
+const heroScene = document.querySelector(".scene");
+if (heroScene && window.matchMedia("(pointer: fine)").matches && !motionQuery.matches) {
+  const sceneInner = heroScene.querySelector(".scene-inner");
+  heroScene.addEventListener(
+    "pointermove",
+    (event) => {
+      const rect = heroScene.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / rect.width - 0.5;
+      const py = (event.clientY - rect.top) / rect.height - 0.5;
+      sceneInner.style.transform = `rotateY(${(px * 12).toFixed(2)}deg) rotateX(${(-py * 10).toFixed(2)}deg)`;
+    },
+    { passive: true },
+  );
+  heroScene.addEventListener("pointerleave", () => {
+    sceneInner.style.transform = "";
+  });
+}

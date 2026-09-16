@@ -16,7 +16,7 @@
     let ripples = [];
     let lastSpawn = 0;
     let running = true;
-    const MAX_DROPLETS = 34;
+    const MAX_DROPLETS = 16;
 
     function resize() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -31,11 +31,11 @@
     window.addEventListener("resize", resize, { passive: true });
 
     const palette = [
-      [157, 185, 208],
-      [157, 185, 208],
-      [255, 98, 66],
-      [169, 199, 160],
-      [239, 207, 98],
+      [41, 151, 255],
+      [41, 151, 255],
+      [0, 113, 227],
+      [100, 210, 255],
+      [176, 196, 222],
     ];
 
     function spawnDroplet() {
@@ -50,7 +50,7 @@
         wobbleSpeed: 0.004 + Math.random() * 0.01,
         wobbleAmp: 0.25 + Math.random() * 0.5,
         color,
-        alpha: 0.5 + Math.random() * 0.4,
+        alpha: 0.3 + Math.random() * 0.28,
         trail: [],
       });
     }
@@ -110,7 +110,7 @@
     function frame(now) {
       if (!running) return;
       ctx.clearRect(0, 0, width, height);
-      if (now - lastSpawn > 320) {
+      if (now - lastSpawn > 620) {
         spawnDroplet();
         lastSpawn = now;
       }
@@ -131,7 +131,7 @@
         r.alpha *= 0.94;
         ctx.beginPath();
         ctx.ellipse(r.x, r.y, r.r * 1.7, r.r * 0.55, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(157,185,208,${r.alpha})`;
+        ctx.strokeStyle = `rgba(41,151,255,${r.alpha})`;
         ctx.lineWidth = 1.2;
         ctx.stroke();
       }

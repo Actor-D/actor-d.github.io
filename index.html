@@ -7,11 +7,14 @@
       name="description"
       content="Actor.D 的个人主页——浙江大学信息管理与信息系统专业毕业，现就读于香港中文大学商业分析理学硕士。"
     />
-    <meta name="theme-color" content="#f6f2ea" />
+    <meta name="theme-color" content="#f5f5f7" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <title>Actor.D｜个人主页</title>
+    <script>
+      document.documentElement.classList.add("page-pre");
+    </script>
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="theme-editorial.css" />
+    <link rel="stylesheet" href="theme-tech.css" />
     <link rel="stylesheet" href="research.css" />
     <script src="script.js" defer></script>
     <script src="research.js" defer></script>
@@ -22,6 +25,7 @@
       <span class="atmosphere-grid"></span>
       <span class="atmosphere-glow glow-one"></span>
       <span class="atmosphere-glow glow-two"></span>
+      <span class="atmosphere-glow glow-three"></span>
       <span class="atmosphere-noise"></span>
       <canvas id="droplet-canvas" class="atmosphere-droplets" aria-hidden="true"></canvas>
     </div>
@@ -73,7 +77,7 @@
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="#projects" data-i18n="hero.primaryAction">查看我的项目</a>
-            <a class="text-link" href="#research">
+            <a class="button button-glass" href="#research">
               <span data-i18n="hero.researchAction">查看我的论文</span>
               <span aria-hidden="true">↗</span>
             </a>
@@ -90,27 +94,42 @@
         </div>
 
         <div class="hero-visual reveal" data-i18n-aria-label="accessibility.portrait">
-          <div class="tech-profile-card">
-            <div class="tech-card-header">
-              <span>JOURNEY / 01</span>
-              <span class="system-online"><i></i> ACTOR.D</span>
-            </div>
-            <div class="data-orbit" aria-hidden="true">
-              <span class="orbit orbit-one"></span>
-              <span class="orbit orbit-two"></span>
-              <span class="orbit orbit-three"></span>
-              <span class="orbit-node node-zju">ZJU</span>
-              <span class="orbit-node node-cuhk">CUHK</span>
-              <span class="orbit-node node-ba">BA</span>
-              <span class="orbit-node node-is">IS</span>
-              <span class="data-particle particle-one"></span>
-              <span class="data-particle particle-two"></span>
-              <span class="data-particle particle-three"></span>
-              <div class="orbit-core"><small>ACTOR</small><strong>.D</strong></div>
-            </div>
-            <div class="tech-card-footer">
-              <div><small data-i18n="hero.visualStatus">当前状态</small><strong>CUHK · MSc BA</strong></div>
-              <div><small data-i18n="hero.visualMode">探索模式</small><strong>DATA / TECH / BIZ</strong></div>
+          <div class="scene">
+            <div class="scene-inner">
+              <div class="scene-card-wrap">
+                <div class="tech-profile-card">
+                  <div class="tech-card-header">
+                    <span>JOURNEY / 01</span>
+                    <span class="system-online"><i></i> ACTOR.D</span>
+                  </div>
+                  <div class="data-orbit" aria-hidden="true">
+                    <span class="orbit orbit-one"></span>
+                    <span class="orbit orbit-two"></span>
+                    <span class="orbit orbit-three"></span>
+                    <span class="orbit-node node-zju">ZJU</span>
+                    <span class="orbit-node node-cuhk">CUHK</span>
+                    <span class="orbit-node node-ba">BA</span>
+                    <span class="orbit-node node-is">IS</span>
+                    <span class="data-particle particle-one"></span>
+                    <span class="data-particle particle-two"></span>
+                    <span class="data-particle particle-three"></span>
+                    <div class="orbit-core"><small>ACTOR</small><strong>.D</strong></div>
+                  </div>
+                  <div class="tech-card-footer">
+                    <div><small data-i18n="hero.visualStatus">当前状态</small><strong>CUHK · MSc BA</strong></div>
+                    <div><small data-i18n="hero.visualMode">探索模式</small><strong>DATA / TECH / BIZ</strong></div>
+                  </div>
+                </div>
+              </div>
+              <span class="scene-chip chip-one" aria-hidden="true">ZJU · IM&amp;IS</span>
+              <span class="scene-chip chip-two" aria-hidden="true">CUHK · MSc BA</span>
+              <span class="scene-chip chip-three" aria-hidden="true">DATA × BIZ</span>
+              <div class="scene-mini-card" aria-hidden="true">
+                <div class="mini-bars">
+                  <i style="--h: 42%"></i><i style="--h: 66%"></i><i style="--h: 50%"></i><i style="--h: 88%"></i>
+                </div>
+                <div class="mini-caption"><strong>+10.7%</strong><span>E[R] GAIN</span></div>
+              </div>
             </div>
           </div>
         </div>
@@ -120,27 +139,39 @@
         </p>
       </section>
 
+      <div class="marquee-strip" aria-hidden="true">
+        <div class="marquee-track">
+          <span>Python</span><i></i><span>SQL / MySQL</span><i></i><span>Tableau</span><i></i><span>Vue 3</span><i></i><span>Flask</span><i></i><span>PyTorch</span><i></i><span>scikit-learn</span><i></i>
+          <span>Python</span><i></i><span>SQL / MySQL</span><i></i><span>Tableau</span><i></i><span>Vue 3</span><i></i><span>Flask</span><i></i><span>PyTorch</span><i></i><span>scikit-learn</span><i></i>
+        </div>
+      </div>
+
       <section id="about" class="about section-shell">
         <div class="section-heading reveal">
           <p class="eyebrow">01 / ABOUT</p>
           <h2 data-i18n="about.title">关于我</h2>
         </div>
 
-        <div class="about-grid">
-          <p class="about-lead reveal" data-i18n="about.lead">
-            以数据理解问题，用分析支持更好的商业决策。
-          </p>
-          <div class="about-body reveal">
-            <p data-i18n="about.body">
+        <div class="bento about-bento">
+          <div class="bento-card bento-lead span-4 reveal">
+            <p class="about-lead" data-i18n="about.lead">
+              以数据理解问题，用分析支持更好的商业决策。
+            </p>
+            <p class="about-bodytext" data-i18n="about.body">
               我是董炎源（Actor.D），毕业于浙江大学信息管理与信息系统专业，目前就读于香港中文大学商业分析理学硕士项目。这段跨越信息系统与商业分析的学习经历，让我持续关注如何连接数据、技术与真实的商业问题。
             </p>
+          </div>
+          <div class="bento-card span-2 reveal">
+            <p class="bento-label" data-i18n="about.factInterest">关注领域</p>
             <div class="skill-list" data-i18n-aria-label="accessibility.focusList">
               <span data-i18n="focus.informationManagement">信息管理</span>
               <span data-i18n="focus.informationSystems">信息系统</span>
               <span data-i18n="focus.businessAnalytics">商业分析</span>
               <span data-i18n="focus.dataDriven">数据驱动决策</span>
             </div>
-            <p class="skill-caption" data-i18n="about.techLabel">技术栈</p>
+          </div>
+          <div class="bento-card span-2 reveal">
+            <p class="bento-label" data-i18n="about.techLabel">技术栈</p>
             <div class="tech-stack" data-i18n-aria-label="accessibility.techStack">
               <span>Python</span>
               <span>SQL / MySQL</span>
@@ -150,6 +181,8 @@
               <span>PyTorch</span>
               <span>scikit-learn</span>
             </div>
+          </div>
+          <div class="bento-card bento-facts span-4 reveal">
             <div class="profile-facts">
               <div><small data-i18n="about.factFoundation">本科基础</small><strong>ZJU · IM&amp;IS</strong></div>
               <div><small data-i18n="about.factCurrent">当前项目</small><strong>CUHK · MSc BA</strong></div>
@@ -210,53 +243,41 @@
         </article>
 
         <h3 class="more-projects-heading reveal" data-i18n="moreProjects.title">更多项目</h3>
-        <div class="project-list more-projects">
-          <article class="project-card reveal">
-            <div class="project-number">01</div>
-            <div class="project-content">
-              <p class="project-type" data-i18n="moreProjects.hackathonType">数据竞赛 · 联合国大数据黑客松</p>
-              <h3 data-i18n="moreProjects.hackathonTitle">骑手配送系统研究</h3>
-              <p data-i18n="moreProjects.hackathonBody">
-                基于 75 份问卷与实地调研，发现平台算法将平均配送时间压缩 9.4%，致骑手违规率上升 23%；提出改进贪心智能调度算法，模拟验证配送效率提升 15%。
-              </p>
-            </div>
-            <div class="project-art art-one" aria-hidden="true"><span>DELIVERY<br />ALGO</span></div>
+        <div class="bento tiles-bento">
+          <article class="bento-card tile-card span-3 reveal">
+            <div class="tile-art art-one" aria-hidden="true"><span>DELIVERY<br />ALGO</span></div>
+            <p class="project-type" data-i18n="moreProjects.hackathonType">数据竞赛 · 联合国大数据黑客松</p>
+            <h3 data-i18n="moreProjects.hackathonTitle">骑手配送系统研究</h3>
+            <p data-i18n="moreProjects.hackathonBody">
+              基于 75 份问卷与实地调研，发现平台算法将平均配送时间压缩 9.4%，致骑手违规率上升 23%；提出改进贪心智能调度算法，模拟验证配送效率提升 15%。
+            </p>
           </article>
 
-          <article class="project-card reveal">
-            <div class="project-number">02</div>
-            <div class="project-content">
-              <p class="project-type" data-i18n="moreProjects.petType">深度学习 · 计算机视觉</p>
-              <h3 data-i18n="moreProjects.petTitle">跨风格猫狗图像识别</h3>
-              <p data-i18n="moreProjects.petBody">
-                采集清洗 27,000 张跨风格图像，构建 CNN 分类模型，测试集准确率 94.32%；用 CAM 可视化验证动漫数据使纹理敏感度提升 3.2%。
-              </p>
-            </div>
-            <div class="project-art art-two" aria-hidden="true"><span>CNN<br />VISION</span></div>
+          <article class="bento-card tile-card span-3 reveal">
+            <div class="tile-art art-two" aria-hidden="true"><span>CNN<br />VISION</span></div>
+            <p class="project-type" data-i18n="moreProjects.petType">深度学习 · 计算机视觉</p>
+            <h3 data-i18n="moreProjects.petTitle">跨风格猫狗图像识别</h3>
+            <p data-i18n="moreProjects.petBody">
+              采集清洗 27,000 张跨风格图像，构建 CNN 分类模型，测试集准确率 94.32%；用 CAM 可视化验证动漫数据使纹理敏感度提升 3.2%。
+            </p>
           </article>
 
-          <article class="project-card reveal">
-            <div class="project-number">03</div>
-            <div class="project-content">
-              <p class="project-type" data-i18n="moreProjects.biliType">NLP · 文本挖掘</p>
-              <h3 data-i18n="moreProjects.biliTitle">弹幕情感与主题挖掘</h3>
-              <p data-i18n="moreProjects.biliBody">
-                爬取 B 站社科视频弹幕，用 Jieba + SnowNLP 做情感分析、LDA 做主题建模；专业术语占比 38.7%，构建「术语密度-情感极性」评估模型。
-              </p>
-            </div>
-            <div class="project-art art-three" aria-hidden="true"><span>NLP<br />TEXT</span></div>
+          <article class="bento-card tile-card span-3 reveal">
+            <div class="tile-art art-three" aria-hidden="true"><span>NLP<br />TEXT</span></div>
+            <p class="project-type" data-i18n="moreProjects.biliType">NLP · 文本挖掘</p>
+            <h3 data-i18n="moreProjects.biliTitle">弹幕情感与主题挖掘</h3>
+            <p data-i18n="moreProjects.biliBody">
+              爬取 B 站社科视频弹幕，用 Jieba + SnowNLP 做情感分析、LDA 做主题建模；专业术语占比 38.7%，构建「术语密度-情感极性」评估模型。
+            </p>
           </article>
 
-          <article class="project-card reveal">
-            <div class="project-number">04</div>
-            <div class="project-content">
-              <p class="project-type" data-i18n="moreProjects.bikeType">机器学习 · 需求预测</p>
-              <h3 data-i18n="moreProjects.bikeTitle">共享单车需求预测</h3>
-              <p data-i18n="moreProjects.bikeBody">
-                20,000+ 条租赁记录，对比 MLP 与 XGBoost 等 6 种模型，RMSLE 0.29（较基线提升 15%），识别高峰与天气对需求的非线性影响。
-              </p>
-            </div>
-            <div class="project-art art-four" aria-hidden="true"><span>ML<br />FORECAST</span></div>
+          <article class="bento-card tile-card span-3 reveal">
+            <div class="tile-art art-four" aria-hidden="true"><span>ML<br />FORECAST</span></div>
+            <p class="project-type" data-i18n="moreProjects.bikeType">机器学习 · 需求预测</p>
+            <h3 data-i18n="moreProjects.bikeTitle">共享单车需求预测</h3>
+            <p data-i18n="moreProjects.bikeBody">
+              20,000+ 条租赁记录，对比 MLP 与 XGBoost 等 6 种模型，RMSLE 0.29（较基线提升 15%），识别高峰与天气对需求的非线性影响。
+            </p>
           </article>
         </div>
       </section>
@@ -299,46 +320,37 @@
           <h2 data-i18n="journey.title">学习与方向</h2>
         </div>
 
-        <div class="project-list">
-          <article class="project-card project-card-featured reveal">
-            <div class="project-number">01</div>
-            <div class="project-content">
+        <div class="timeline">
+          <article class="timeline-item reveal">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <div class="timeline-card">
               <p class="project-type" data-i18n="journey.zjuType">本科 · ZJU</p>
               <h3 data-i18n="journey.zjuTitle">浙江大学</h3>
               <p data-i18n="journey.zjuBody">
                 信息管理与信息系统专业毕业（均分 85），建立了信息技术、数据与管理相结合的知识基础；获 2022-2023 学年浙江大学学业优秀标兵。
               </p>
             </div>
-            <div class="project-art art-one" aria-hidden="true">
-              <span>ZJU<br />IM&amp;IS</span>
-            </div>
           </article>
 
-          <article class="project-card reveal">
-            <div class="project-number">02</div>
-            <div class="project-content">
+          <article class="timeline-item reveal">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <div class="timeline-card">
               <p class="project-type" data-i18n="journey.cuhkType">硕士 · CUHK</p>
               <h3 data-i18n="journey.cuhkTitle">香港中文大学</h3>
               <p data-i18n="journey.cuhkBody">
                 现就读于商业分析理学硕士项目，进一步探索数据分析在商业场景中的应用。
               </p>
             </div>
-            <div class="project-art art-two" aria-hidden="true">
-              <span>CUHK<br />BA</span>
-            </div>
           </article>
 
-          <article class="project-card reveal">
-            <div class="project-number">03</div>
-            <div class="project-content">
+          <article class="timeline-item reveal">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <div class="timeline-card">
               <p class="project-type" data-i18n="journey.focusType">专业方向</p>
               <h3 data-i18n="journey.focusTitle">跨学科视角</h3>
               <p data-i18n="journey.focusBody">
                 将信息系统背景与商业分析方法相连接，从数据中提炼洞察，为复杂问题寻找清晰、可执行的答案。
               </p>
-            </div>
-            <div class="project-art art-three" aria-hidden="true">
-              <span>DATA<br />BUSINESS</span>
             </div>
           </article>
         </div>
