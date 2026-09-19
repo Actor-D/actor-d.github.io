@@ -366,14 +366,17 @@
             </p>
           </a>
 
-          <article class="bento-card tile-card span-3 reveal">
-            <div class="tile-art art-four" aria-hidden="true"><span>ML<br />FORECAST</span></div>
-            <p class="project-type" data-i18n="moreProjects.bikeType">机器学习 · 需求预测</p>
+          <a class="bento-card tile-card tile-card-link span-3 reveal" href="bike.html">
+            <div class="tile-art art-four" aria-hidden="true">
+              <span>ML<br />FORECAST</span>
+              <i class="tile-go">↗</i>
+            </div>
+            <p class="project-type" data-i18n="moreProjects.bikeType">机器学习 · 回归预测</p>
             <h3 data-i18n="moreProjects.bikeTitle">共享单车需求预测</h3>
             <p data-i18n="moreProjects.bikeBody">
-              20,000+ 条租赁记录，对比 MLP 与 XGBoost 等 6 种模型，RMSLE 0.29（较基线提升 15%），识别高峰与天气对需求的非线性影响。
+              Kaggle Bike Sharing Demand：10,886 行逐小时数据，在同一份 70/30 随机划分上对照 SKLearn MLP 与 Keras 两个神经网络，最优 RMSLE 0.29（MLP 的 RMSE 43.48 优于 Keras）。
             </p>
-          </article>
+          </a>
         </div>
       </section>
 

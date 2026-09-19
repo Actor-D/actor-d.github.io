@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Actor.D 的数据挖掘课程作业——共享单车租借量预测：Kaggle Bike Sharing Demand，10,886 行训练数据，SKLearn MLP 与 Keras 两个神经网络模型的对照。"
+    />
+    <meta name="theme-color" content="#f5f5f7" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <title>共享单车需求预测 · Actor.D</title>
+    <script>
+      document.documentElement.classList.add("page-pre");
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="theme-tech.css" />
+    <link rel="stylesheet" href="research.css" />
+    <script src="script.js" defer></script>
+    <script src="research.js" defer></script>
+  </head>
+  <body data-page="bike">
+    <div class="scroll-progress" aria-hidden="true"><i></i></div>
+    <div class="page-atmosphere" aria-hidden="true">
+      <span class="atmosphere-grid"></span>
+      <span class="atmosphere-glow glow-one"></span>
+      <span class="atmosphere-glow glow-two"></span>
+      <span class="atmosphere-glow glow-three"></span>
+      <span class="atmosphere-noise"></span>
+      <canvas id="droplet-canvas" class="atmosphere-droplets" aria-hidden="true"></canvas>
+    </div>
+    <a class="skip-link" href="#main" data-i18n="accessibility.skip">跳到主要内容</a>
+
+    <header class="site-header">
+      <a class="brand" href="index.html#home" data-i18n-aria-label="accessibility.home">
+        <span class="brand-mark">A</span>
+        <span>Actor.D</span>
+      </a>
+
+      <div class="header-tools">
+        <a
+          class="header-github"
+          href="https://github.com/Actor-D"
+          target="_blank"
+          rel="noopener"
+          data-i18n-aria-label="accessibility.github"
+        >
+          <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+
+        <div class="language-switcher" role="group" data-i18n-aria-label="accessibility.language">
+          <button type="button" data-lang="zh" aria-pressed="true">中</button>
+          <span aria-hidden="true">/</span>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+
+        <button
+          class="menu-button"
+          type="button"
+          data-i18n-aria-label="accessibility.menuOpen"
+          aria-expanded="false"
+          aria-controls="site-nav"
+        >
+          <span></span><span></span>
+        </button>
+
+        <nav id="site-nav" class="site-nav" data-i18n-aria-label="accessibility.navigation">
+          <a href="index.html#about" data-i18n="nav.about">关于我</a>
+          <a href="project.html" data-i18n="nav.projects">项目案例</a>
+          <a href="danmu.html" data-i18n="nav.analysis">数据分析</a>
+          <a href="vision.html" data-i18n="nav.vision">图像识别</a>
+          <a href="rider.html" data-i18n="nav.rider">骑手研究</a>
+          <a href="research.html" data-i18n="nav.research">研究论文</a>
+          <a href="index.html#contact" data-i18n="nav.contact">联系我</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="bike" class="case-study section-shell">
+        <div class="section-heading reveal">
+          <p class="eyebrow">MACHINE LEARNING · REGRESSION</p>
+          <h2 data-i18n="bike.title">共享单车需求预测</h2>
+          <p class="section-lead" data-i18n="bike.lead">
+            用两个神经网络在同一条基线上做回归——SKLearn 的 MLP 与 Keras，并解释高峰与天气如何影响租借量。
+          </p>
+        </div>
+
+        <div class="case-study-overview">
+          <div class="case-study-title reveal">
+            <p class="project-kicker" data-i18n="bike.pageKicker">数据挖掘与机器学习 · 第 14 组课程作业</p>
+            <h3 data-i18n="bike.name">Bike Sharing Demand</h3>
+            <p data-i18n="bike.subtitle">以小时为粒度的租借量回归：10,886 行训练数据、2 个神经网络模型</p>
+          </div>
+          <div class="case-study-summary reveal">
+            <p data-i18n="bike.summary">
+              题目来自 Kaggle Bike Sharing Demand：根据两年间逐小时记录的天气与时间信息，预测共享单车的租借数量。我们把时间字段拆成年月日与小时，对分类特征做独热编码、数值特征做标准化、对跨度大的数据取对数，然后在同一份 70/30 随机划分上分别训练 SKLearn 的 MLPRegressor 与 Keras 的 Sequential 模型，比较两者的拟合表现。
+            </p>
+            <div class="tech-stack" data-i18n-aria-label="accessibility.techStack">
+              <span>Python</span>
+              <span>scikit-learn</span>
+              <span>Keras / TensorFlow</span>
+              <span>pandas</span>
+              <span>NumPy</span>
+              <span>Matplotlib</span>
+              <span>joblib</span>
+            </div>
+            <div class="case-study-actions">
+              <a class="button button-primary" href="bike/" target="_blank" rel="noopener">
+                <span data-i18n="bike.viewArtifacts">查看报告与代码</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a class="button button-glass" href="index.html#projects" target="_blank" rel="noopener">
+                <span data-i18n="danmu.backToProjects">返回项目列表</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-facts reveal">
+          <div><strong>10,886</strong><span data-i18n="bike.factTrain">行训练数据</span></div>
+          <div><strong>12</strong><span data-i18n="bike.factFeatures">个原始字段</span></div>
+          <div><strong>0.29</strong><span data-i18n="bike.factRmsle">最优 RMSLE</span></div>
+          <div><strong>2</strong><span data-i18n="bike.factModels">个神经网络模型</span></div>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="bike.compareEyebrow">两模型对照</p>
+            <h3 data-i18n="bike.compareTitle">同一条基线上的两次训练</h3>
+            <p class="flow-note" data-i18n="bike.compareIntro">
+              预处理、特征工程与数据划分完全一致，唯一变量是模型实现方式。
+            </p>
+          </div>
+          <div class="table-scroll reveal">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th data-i18n="bike.tblMetric">指标</th>
+                  <th data-i18n="bike.tblMlp">SKLearn MLPRegressor</th>
+                  <th data-i18n="bike.tblKeras">Keras Sequential</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th data-i18n="bike.rowArch">网络结构</th><td>1 个隐藏层 · 100 神经元 · ReLU</td><td>1 个隐藏层 · 100 神经元 · ReLU</td></tr>
+                <tr><th data-i18n="bike.rowSetting">关键设置</th><td>max_iter = 100 · random_state = 5</td><td data-i18n="bike.rowSettingKeras">早停法（EarlyStopping）抑制过拟合</td></tr>
+                <tr class="is-winner"><th data-i18n="bike.rowRmse">RMSE</th><td><strong>43.48</strong></td><td>48.23 – 49.22</td></tr>
+                <tr class="is-winner"><th data-i18n="bike.rowRmsle">RMSLE</th><td><strong>0.29</strong></td><td>0.29 – 0.31</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note" data-i18n="bike.compareNote">
+            结论：SKLearn 的 MLP 在两个指标上都略优于 Keras。需要说明的是，Keras 的数值在不同次运行中不一致——演示文稿记录为 RMSE 48.23 / RMSLE 0.29，而 notebook 的输出是 49.22 / 0.31，报告中「两者 RMSLE 都为 0.29」的表述与 notebook 不符，此处按 notebook 与 PPT 的区间如实呈现。
+          </p>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="bike.dataEyebrow">数据与预处理</p>
+            <h3 data-i18n="bike.dataTitle">没有缺失值，但需要处理两件事</h3>
+            <p class="flow-note" data-i18n="bike.dataIntro">
+              数据集本身很干净，真正的难点是量纲差异过大的计数，以及形如 2011/1/1 1:00 的时间字段。
+            </p>
+          </div>
+          <div class="bento">
+            <article class="bento-card span-2 rule-card reveal">
+              <span class="rule-code">DATASET</span>
+              <h4 data-i18n="bike.d1Title">数据概况</h4>
+              <p data-i18n="bike.d1Body">
+                训练集 10,886 行 × 12 列：日期时间、季节、是否假日、是否工作日、天气等级、气温、体感温度、湿度、风速，以及 casual / registered / count 三个计数列。
+              </p>
+              <div class="rule-facts"><span>10,886 × 12</span><span>no missing values</span></div>
+            </article>
+            <article class="bento-card span-2 rule-card reveal">
+              <span class="rule-code">FEATURES</span>
+              <h4 data-i18n="bike.d2Title">时间拆解</h4>
+              <p data-i18n="bike.d2Body">
+                把 datetime 拆成 年 / 月 / 日 / 星期 / 小时 五个字段，让模型能直接学到通勤高峰与季节规律。
+              </p>
+              <div class="rule-facts"><span>year</span><span>month</span><span>day</span><span>weekday</span><span>hour</span></div>
+            </article>
+            <article class="bento-card span-2 rule-card reveal">
+              <span class="rule-code">SCALING</span>
+              <h4 data-i18n="bike.d3Title">编码与标度</h4>
+              <p data-i18n="bike.d3Body">
+                季节、天气、年、月、星期等分类特征做独热编码；气温、体感温度、湿度、风速做标准化；对差距过大的计数取对数。
+              </p>
+              <div class="rule-facts"><span>OneHotEncoder</span><span>StandardScaler</span><span>log transform</span></div>
+            </article>
+          </div>
+          <p class="table-note" data-i18n="bike.splitNote">
+            数据划分：按 0.7 的比例随机切分（train 7,619 / validation 3,265），并刻意打乱顺序，避免时间顺序本身泄漏信息。
+          </p>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="bike.findEyebrow">解释性分析</p>
+            <h3 data-i18n="bike.findTitle">租借量被什么驱动</h3>
+            <p class="flow-note" data-i18n="bike.findIntro">
+              报告与演示文稿给出的是定性判断，尚未做特征重要性或偏依赖的定量拆解。
+            </p>
+          </div>
+          <div class="bento">
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">TIME</span>
+              <h4 data-i18n="bike.f1Title">通勤高峰</h4>
+              <p data-i18n="bike.f1Body">上下班时段租借量明显更高——这也解释了为什么把小时拆出来对模型帮助很大。</p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">WEATHER</span>
+              <h4 data-i18n="bike.f2Title">天气越好，两类用户都更多</h4>
+              <p data-i18n="bike.f2Body">天气良好时，非注册用户与注册用户的租借量都显著上升，说明天气是需求的首要外部变量之一。</p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">CALENDAR</span>
+              <h4 data-i18n="bike.f3Title">假日与非假日，租车理由不同</h4>
+              <p data-i18n="bike.f3Body">假日更可能来自游客等休闲需求，工作日则以上班族通勤为主——同一列 count 背后是两类不同的行为。</p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">OTHERS</span>
+              <h4 data-i18n="bike.f4Title">其余变量未继续深挖</h4>
+              <p data-i18n="bike.f4Body">气温、体感温度、湿度、风速都有影响，但团队判断分析过于复杂且缺少部分数据，没有进一步量化。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="delivery-flow reveal">
+          <div class="flow-heading">
+            <p class="eyebrow" data-i18n="bike.reflectEyebrow">局限与自评</p>
+            <h3 data-i18n="bike.reflectTitle">团队自己写下的不足</h3>
+            <p class="flow-note" data-i18n="bike.reflectIntro">
+              这部分直接来自报告与 PPT 的自评章节。
+            </p>
+          </div>
+          <div class="bento">
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">PERIOD</span>
+              <h4 data-i18n="bike.i1Title">数据只覆盖 2011–2012 年</h4>
+              <p data-i18n="bike.i1Body">换到其他年份需要重新训练，模型本身没有跨时间的泛化保证。</p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">EXTREMES</span>
+              <h4 data-i18n="bike.i2Title">未针对极端情况训练</h4>
+              <p data-i18n="bike.i2Body">模型没有专门训练极端天气或极端需求的样本，团队自评「泛化能力较低」。</p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">NO BASELINE</span>
+              <h4 data-i18n="bike.i3Title">缺少基线对照</h4>
+              <p data-i18n="bike.i3Body">
+                两个神经网络之间做了比较，但没有与线性回归或「用均值预测」这类朴素基线对照，因此 0.29 这个 RMSLE 究竟好到什么程度缺少参照。
+              </p>
+            </article>
+            <article class="bento-card span-3 rule-card reveal">
+              <span class="rule-code">REPRODUCIBILITY</span>
+              <h4 data-i18n="bike.i4Title">超参未做搜索</h4>
+              <p data-i18n="bike.i4Body">
+                隐藏层大小、学习率、批大小等都采用了一组设定而未做调参或交叉验证，模型性能仍有提升空间。
+              </p>
+            </article>
+          </div>
+        </div>
+
+        <div class="engineering-section">
+          <div class="engineering-heading reveal">
+            <p class="eyebrow" data-i18n="bike.engEyebrow">工程拆解</p>
+            <h3 data-i18n="bike.engTitle">从原始表到可复用的预测程序</h3>
+            <p data-i18n="bike.engBody">
+              两个 notebook 各自独立完成一条完整链路，并把训练好的模型与预处理器一起保存，供交互式预测脚本调用。
+            </p>
+          </div>
+          <div class="engineering-grid">
+            <article class="engineering-card reveal">
+              <span class="engineering-code">01 / EDA</span>
+              <div class="engineering-icon">▦</div>
+              <h4 data-i18n="bike.e1Title">数据理解与可视化</h4>
+              <p data-i18n="bike.e1Body">先绘制 count 列随时间的变化，确认高峰形态与量纲分布，再决定取对数与拆解时间字段。</p>
+              <div class="engineering-tags"><span>pandas</span><span>Matplotlib</span></div>
+            </article>
+            <article class="engineering-card reveal">
+              <span class="engineering-code">02 / PIPELINE</span>
+              <div class="engineering-icon">⇄</div>
+              <h4 data-i18n="bike.e2Title">列级预处理管线</h4>
+              <p data-i18n="bike.e2Body">用 ColumnTransformer 把独热编码与标准化按列并行处理，管线对象一并持久化为 joblib 文件。</p>
+              <div class="engineering-tags"><span>ColumnTransformer</span><span>joblib</span></div>
+            </article>
+            <article class="engineering-card reveal">
+              <span class="engineering-code">03 / MLP</span>
+              <div class="engineering-icon">◈</div>
+              <h4 data-i18n="bike.e3Title">SKLearn 回归</h4>
+              <p data-i18n="bike.e3Body">MLPRegressor 单隐藏层 100 神经元，训练后用 RMSE 与 RMSLE 双指标评估，并可视化残差分布。</p>
+              <div class="engineering-tags"><span>MLPRegressor</span><span>residual plot</span></div>
+            </article>
+            <article class="engineering-card reveal">
+              <span class="engineering-code">04 / KERAS</span>
+              <div class="engineering-icon">≋</div>
+              <h4 data-i18n="bike.e4Title">Keras 回归 + 早停</h4>
+              <p data-i18n="bike.e4Body">Sequential 构建同规模网络，用早停法在验证损失不再下降时停止训练，抑制过拟合。</p>
+              <div class="engineering-tags"><span>Keras</span><span>EarlyStopping</span></div>
+            </article>
+          </div>
+        </div>
+
+        <nav class="page-nav" data-i18n-aria-label="accessibility.navigation">
+          <a href="rider.html"><span aria-hidden="true">←</span> <span data-i18n="bike.navPrev">上一个项目：骑手数字劳动研究</span></a>
+          <a class="nav-next" href="research.html"><span data-i18n="common.nextResearch">继续阅读：研究论文</span> <span aria-hidden="true">→</span></a>
+        </nav>
+      </section>
+    </main>
+
+    <footer class="site-footer section-shell">
+      <p>© <span id="current-year">2026</span> Actor.D</p>
+      <p class="education-signature">ZJU · CUHK</p>
+      <div class="footer-links">
+        <a
+          href="https://github.com/Actor-D"
+          target="_blank"
+          rel="noopener"
+          data-i18n-aria-label="accessibility.github"
+          data-i18n="footer.github"
+        >GitHub</a>
+        <a href="#main" data-i18n="footer.backToTop">回到顶部 ↑</a>
+      </div>
+    </footer>
+  </body>
+</html>

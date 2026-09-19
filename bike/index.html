@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>共享单车需求预测 · 报告与代码</title>
+    <meta
+      name="description"
+      content="数据挖掘课程第 14 组作业：Kaggle Bike Sharing Demand 共享单车租借量预测。含作业报告、汇报 PPT、两个 notebook、训练数据、模型文件与预测结果。"
+    />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <style>
+      :root {
+        --ink: #1d1d1f;
+        --muted: #6e6e73;
+        --line: rgba(0, 0, 0, 0.08);
+        --accent: #0071e3;
+        --bg: #f5f5f7;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 56px 24px 80px;
+        background:
+          radial-gradient(620px circle at 78% 4%, rgba(41, 151, 255, 0.1), transparent 60%),
+          var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC",
+          "Helvetica Neue", "Noto Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      main { max-width: 840px; margin: 0 auto; }
+      .eyebrow { margin: 0 0 14px; color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.16em; }
+      h1 { margin: 0 0 16px; font-size: clamp(30px, 5.2vw, 46px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.15; }
+      .lead { margin: 0 0 12px; color: var(--muted); font-size: 16.5px; line-height: 1.8; }
+      .stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 0; }
+      .stats span {
+        padding: 8px 15px; border: 1px solid var(--line); border-radius: 99px;
+        background: #fff; color: #48484a; font-size: 12.5px;
+      }
+      .stats b { color: var(--accent); }
+      .card {
+        margin-top: 22px; padding: 26px 28px; border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 24px; background: rgba(255, 255, 255, 0.64);
+        box-shadow: 0 20px 55px rgba(15, 23, 42, 0.07); backdrop-filter: blur(18px) saturate(160%);
+      }
+      .card h2 { margin: 0 0 14px; font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+      .card p { margin: 0 0 10px; color: var(--muted); font-size: 14.5px; line-height: 1.8; }
+      .card p:last-child { margin-bottom: 0; }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; }
+      thead th { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+      tbody th { font-weight: 500; }
+      td strong { color: var(--accent); }
+      ul.files { margin: 0; padding: 0; list-style: none; }
+      ul.files li {
+        display: flex; gap: 14px; align-items: baseline; justify-content: space-between;
+        padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 14px;
+      }
+      ul.files li:last-child { border-bottom: 0; }
+      ul.files a { color: var(--accent); text-decoration: none; }
+      ul.files a:hover { text-decoration: underline; }
+      ul.files em { color: var(--muted); font-size: 12px; font-style: normal; text-align: right; }
+      .note {
+        margin-top: 18px; padding: 14px 18px; border-left: 3px solid var(--accent);
+        border-radius: 0 12px 12px 0; background: rgba(0, 113, 227, 0.05);
+        color: var(--muted); font-size: 13px; line-height: 1.75;
+      }
+      pre {
+        margin: 0 0 10px; padding: 15px 18px; overflow-x: auto; border: 1px solid var(--line);
+        border-radius: 14px; background: #fff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12.5px; line-height: 1.7;
+      }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--accent); font-size: 0.94em; }
+      .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+      .links a {
+        display: inline-flex; gap: 8px; align-items: center; padding: 12px 22px;
+        border-radius: 99px; background: var(--ink); color: #fff;
+        font-size: 14px; font-weight: 500; text-decoration: none;
+        transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+      }
+      .links a:hover { background: var(--accent); transform: translateY(-2px); }
+      .links a.ghost { border: 1px solid var(--line); background: rgba(255, 255, 255, 0.65); color: var(--ink); }
+      .links a.ghost:hover { background: #fff; color: var(--accent); }
+      footer { margin-top: 40px; color: var(--muted); font-size: 13px; }
+      footer a { color: var(--accent); text-decoration: none; }
+      @media (prefers-reduced-motion: reduce) { .links a { transition: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">DATA MINING &amp; ML · 报告与代码</p>
+      <h1>共享单车租借量预测</h1>
+      <p class="lead">
+        Kaggle <em>Bike Sharing Demand</em> 赛题：根据两年间逐小时记录的天气与时间信息预测租借数量。
+        在同一份 70/30 随机划分上，分别用 SKLearn 的 MLPRegressor 与 Keras 的 Sequential 模型完成回归。
+      </p>
+      <div class="stats">
+        <span><b>10,886</b> 行训练数据</span>
+        <span><b>12</b> 列原始字段</span>
+        <span><b>2</b> 个神经网络模型</span>
+        <span>最优 RMSLE <b>0.29</b></span>
+      </div>
+
+      <div class="card">
+        <h2>两个模型的对照结果</h2>
+        <table>
+          <thead>
+            <tr><th>指标</th><th>SKLearn MLPRegressor</th><th>Keras Sequential</th></tr>
+          </thead>
+          <tbody>
+            <tr><th>网络结构</th><td>1 隐藏层 · 100 神经元 · ReLU</td><td>1 隐藏层 · 100 神经元 · ReLU</td></tr>
+            <tr><th>关键设置</th><td>max_iter = 100 · random_state = 5</td><td>早停法抑制过拟合</td></tr>
+            <tr><th>RMSE</th><td><strong>43.48</strong></td><td>48.23 – 49.22</td></tr>
+            <tr><th>RMSLE</th><td><strong>0.29</strong></td><td>0.29 – 0.31</td></tr>
+          </tbody>
+        </table>
+        <div class="note">
+          <b>数值差异说明：</b>Keras 的结果在不同次运行中并不一致——演示文稿记录为 RMSE 48.23 / RMSLE 0.29，
+          而 notebook 的输出是 49.22 / 0.31；报告中「两者 RMSLE 都为 0.29」的写法与 notebook 不符。
+          上表按两处材料的实际记录给出区间。SKLearn 的 MLP 在两个指标上都略优，这一点三份材料一致。
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>报告要点</h2>
+        <p>
+          <strong>数据：</strong>训练集 10,886 行 × 12 列，无缺失值。字段包括时间戳、季节、是否假日、是否工作日、
+          天气等级、气温、体感温度、湿度、风速，以及 casual / registered / count 三个计数列。
+        </p>
+        <p>
+          <strong>预处理：</strong>把时间戳拆成 年 / 月 / 日 / 星期 / 小时；分类特征独热编码，数值特征标准化；
+          对量纲差异过大的计数取对数。按 0.7 比例随机切分（7,619 / 3,265），并打乱顺序避免时间泄漏。
+        </p>
+        <p>
+          <strong>解释性结论：</strong>上下班高峰期租借量明显更高；天气良好时非注册与注册用户都显著增加；
+          假日与非假日的租车理由不同（游客 vs 上班族）；气温、湿度、风速也有影响，但未进一步量化。
+        </p>
+        <p>
+          <strong>团队自评的不足：</strong>数据仅覆盖 2011–2012 年，换年份需重新训练；未针对极端情况训练，
+          泛化能力有限。
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>文件清单</h2>
+        <ul class="files">
+          <li><a href="./原始材料/14组-作业报告(2).docx">14组-作业报告(2).docx</a><em>完整作业报告</em></li>
+          <li><a href="./原始材料/14组-汇报PPT(2).pptx">14组-汇报PPT(2).pptx</a><em>课堂汇报演示文稿（22 页）</em></li>
+          <li><a href="./代码/14组-程序(2).ipynb">14组-程序(2).ipynb</a><em>主程序：两种模型的完整实现</em></li>
+          <li><a href="./代码/共享单车.ipynb">共享单车.ipynb</a><em>另一份实现 notebook</em></li>
+          <li><a href="./数据/train.csv">数据/train.csv</a><em>训练集 10,886 行</em></li>
+          <li><a href="./数据/test.csv">数据/test.csv</a><em>测试集 6,493 行</em></li>
+          <li><a href="./数据/My_New_Insight_Predicted_Count.csv">数据/预测结果.csv</a><em>提交格式的预测输出</em></li>
+          <li><a href="./模型/">模型/</a><em>mlp_regressor.joblib · keras_model.h5 · column_transformer.joblib</em></li>
+        </ul>
+        <p class="note">
+          未发布的中间文件：<code>bike_train.csv</code>、<code>bike_validation.csv</code>、<code>bike_all.csv</code>
+          等派生划分文件，可由原始数据与 notebook 重新生成。
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>关键配置速查</h2>
+        <pre>数据集        Kaggle Bike Sharing Demand（2011–2012，逐小时）
+训练集        10,886 行 × 12 列，无缺失值
+特征工程      datetime → year / month / day / weekday / hour
+编码与标度    OneHotEncoder（季节·天气·年·月·星期）+ 标准化（温度·体感·湿度·风速）+ 对数变换
+数据划分      随机 70 / 30 → 7,619 训练 / 3,265 验证
+模型一        sklearn MLPRegressor(hidden_layer_sizes=[100], activation='relu', max_iter=100)
+模型二        Keras Sequential：Dense(100, relu) + 输出层，配合 EarlyStopping
+评估          RMSE + RMSLE（同时对预测值与实际值做可视化与残差直方图）</pre>
+      </div>
+
+      <div class="links">
+        <a href="../bike.html">查看作品集案例页 <span aria-hidden="true">↗</span></a>
+        <a class="ghost" href="./原始材料/14组-作业报告(2).docx">下载作业报告</a>
+        <a class="ghost" href="../index.html#projects">返回项目列表</a>
+      </div>
+
+      <footer>
+        第 14 组：董炎源、黄治宇、贺登威、穆拉迪力·买买提 · 课程：数据挖掘与机器学习（2024-2025 秋冬）·
+        仅供学习交流
+      </footer>
+    </main>
+  </body>
+</html>
