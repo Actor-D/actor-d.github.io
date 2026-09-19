@@ -559,8 +559,6 @@ const translations = {
       issue2Body: "问卷只覆盖消费者，骑手侧全是质性材料。若要验证「时间压缩」是否普遍，需要拿到同一路线在不同时段的规定时限做前后对照。",
       issue3Title: "模型是理论推演而非实测",
       issue3Body: "系数（−20%/−25%/−15% 等）来自常识设定而非实测标定；模拟的订单与交通都是随机生成，没有真实订单流与路网，因此结果只能用于展示机制。",
-      issue4Title: "报告只完成了前两章",
-      issue4Body: "标题中的「对策分析」部分未在现有文档中展开——已发布的主报告只包含摘要与背景（理论框架），对策部分仍待补充。",
       navPrev: "上一个项目：猫狗图像分类",
     },
     bike: {
@@ -1365,8 +1363,6 @@ const translations = {
       issue2Body: "The survey only covers consumers while rider evidence is entirely qualitative. Testing whether the time squeeze is systematic would require the allotted windows for the same route over time.",
       issue3Title: "Models are theoretical, not calibrated",
       issue3Body: "Coefficients (−20%/−25%/−15% and so on) come from common-sense assumptions rather than measurement, and orders and traffic are randomly generated without real order flows or road networks.",
-      issue4Title: "Only the first chapters of the report exist",
-      issue4Body: "The countermeasures promised by the title are not written up in the available documents — the published report contains the abstract and background only.",
       navPrev: "Previous project: cat & dog classification",
     },
     bike: {
