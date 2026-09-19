@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>骑手数字劳动研究 · 原始材料</title>
+    <meta
+      name="description"
+      content="大数据黑客松项目原始材料：75 份消费者问卷及原始数据、2 位骑手深度访谈记录、配送时间预估与贪心调度两个 C++ 模型及说明文档。"
+    />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <style>
+      :root {
+        --ink: #1d1d1f;
+        --muted: #6e6e73;
+        --line: rgba(0, 0, 0, 0.08);
+        --accent: #0071e3;
+        --bg: #f5f5f7;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 56px 24px 80px;
+        background:
+          radial-gradient(620px circle at 76% 4%, rgba(41, 151, 255, 0.1), transparent 60%),
+          var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC",
+          "Helvetica Neue", "Noto Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      main { max-width: 840px; margin: 0 auto; }
+      .eyebrow { margin: 0 0 14px; color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.16em; }
+      h1 { margin: 0 0 16px; font-size: clamp(30px, 5.2vw, 46px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.15; }
+      .lead { margin: 0 0 12px; color: var(--muted); font-size: 16.5px; line-height: 1.8; }
+      .stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 0; }
+      .stats span {
+        padding: 8px 15px; border: 1px solid var(--line); border-radius: 99px;
+        background: #fff; color: #48484a; font-size: 12.5px;
+      }
+      .stats b { color: var(--accent); }
+      .card {
+        margin-top: 22px; padding: 26px 28px; border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 24px; background: rgba(255, 255, 255, 0.64);
+        box-shadow: 0 20px 55px rgba(15, 23, 42, 0.07); backdrop-filter: blur(18px) saturate(160%);
+      }
+      .card h2 { margin: 0 0 14px; font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+      .card p { margin: 0 0 10px; color: var(--muted); font-size: 14.5px; line-height: 1.8; }
+      .card p:last-child { margin-bottom: 0; }
+      ul.files { margin: 0; padding: 0; list-style: none; }
+      ul.files li {
+        display: flex; gap: 14px; align-items: baseline; justify-content: space-between;
+        padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 14px;
+      }
+      ul.files li:last-child { border-bottom: 0; }
+      ul.files a { color: var(--accent); text-decoration: none; }
+      ul.files a:hover { text-decoration: underline; }
+      ul.files em { color: var(--muted); font-size: 12px; font-style: normal; text-align: right; }
+      .note {
+        margin-top: 18px; padding: 14px 18px; border-left: 3px solid var(--accent);
+        border-radius: 0 12px 12px 0; background: rgba(0, 113, 227, 0.05);
+        color: var(--muted); font-size: 13px; line-height: 1.75;
+      }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--accent); font-size: 0.94em; }
+      .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+      .links a {
+        display: inline-flex; gap: 8px; align-items: center; padding: 12px 22px;
+        border-radius: 99px; background: var(--ink); color: #fff;
+        font-size: 14px; font-weight: 500; text-decoration: none;
+        transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+      }
+      .links a:hover { background: var(--accent); transform: translateY(-2px); }
+      .links a.ghost { border: 1px solid var(--line); background: rgba(255, 255, 255, 0.65); color: var(--ink); }
+      .links a.ghost:hover { background: #fff; color: var(--accent); }
+      footer { margin-top: 40px; color: var(--muted); font-size: 13px; }
+      footer a { color: var(--accent); text-decoration: none; }
+      @media (prefers-reduced-motion: reduce) { .links a { transition: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">BIG DATA HACKATHON · 原始材料</p>
+      <h1>“外卖骑手仍被困在系统里”<br />平台逻辑下数字劳动异化现象的研究及对策分析</h1>
+      <p class="lead">
+        以外卖骑手为例，从消费者、劳动者与系统三个方向收集证据：一份 19 题的消费者问卷、两位骑手的深度访谈，
+        以及两个用 C++ 写成的配送时间预估与贪心调度模型。
+      </p>
+      <div class="stats">
+        <span><b>75</b> 份有效问卷</span>
+        <span><b>19</b> 道题</span>
+        <span><b>2</b> 位骑手深访</span>
+        <span><b>2</b> 个 C++ 模型</span>
+      </div>
+
+      <div class="card">
+        <h2>这个项目说了什么</h2>
+        <p>
+          平台用算法接管了骑手的工作路径、时间与收益，而骑手对规则缺乏透明度与话语权。消费者问卷显示：
+          大家在意「餐品完整」的程度（64.3%）几乎是「配送时间」（35.7%）的两倍，超时容忍度平均 51.98%，
+          倾倒容忍度只有 23.37%；责任归因里非人为因素占 40.75%。
+        </p>
+        <p>
+          骑手访谈里最关键的证据是：一条 2km 订单的规定时限，从最初 <strong>32 分钟</strong> 被下调到
+          <strong>29 分钟</strong>——骑手用抄近路、闯红灯、逆行省下来的时间，被算法当成了新的基准。
+        </p>
+        <div class="note">
+          <strong>需要说明的三点：</strong>
+          ① 9.4% 这个降幅是我们根据访谈口述自行计算的（32→29 分钟），原始材料中并没有这句结论；
+          ② 两个 C++ 程序是<strong>理论模型</strong>，未接入真实路网或平台接口，因此没有「效率提升」之类的实测结论；
+          ③ 现有主报告只写到了摘要与背景（理论框架），标题中的「对策分析」部分尚未展开。
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>原始材料</h2>
+        <ul class="files">
+          <li><a href="./原始材料/黑客松.docx">黑客松.docx</a><em>主报告：摘要、关键词与背景（异化理论框架）</em></li>
+          <li><a href="./原始材料/问卷.docx">问卷.docx</a><em>19 题问卷题目设计</em></li>
+          <li><a href="./原始材料/原始数据－默认报告.docx">原始数据－默认报告.docx</a><em>75 份问卷的逐题统计（含样本数）</em></li>
+          <li><a href="./原始材料/问卷分析报告.docx">问卷分析报告.docx</a><em>问卷结果的分析与解读</em></li>
+          <li><a href="./原始材料/采访整理.docx">采访整理.docx</a><em>两位骑手的完整访谈记录（各 10 问）</em></li>
+          <li><a href="./原始材料/门不当户不队.xlsx">门不当户不队.xlsx</a><em>团队信息（4 人，队长：董炎源）</em></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>建模代码</h2>
+        <ul class="files">
+          <li><a href="./代码/预估时间代码.cpp">预估时间代码.cpp</a><em>多因子速度衰减 + 红绿灯等待 → 90%–110% 时间区间</em></li>
+          <li><a href="./代码/模拟配送代码.cpp">模拟配送代码.cpp</a><em>Order/Rider/Traffic 三结构体 + 贪心最近路径 + 100 时间单位模拟</em></li>
+          <li><a href="./原始材料/预估时间代码说明.docx">预估时间代码说明.docx</a><em>模型一的实现说明</em></li>
+          <li><a href="./原始材料/模拟配送代码说明.docx">模拟配送代码说明.docx</a><em>模型二的实现说明</em></li>
+        </ul>
+        <p class="note">
+          两个 <code>.cpp</code> 文件原为 GBK 编码，为便于在浏览器与 GitHub 上查看，已转换为 UTF-8；代码内容未作修改。
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>模型参数速查</h2>
+        <p>
+          速度修正系数 —— 交通：畅通 <code>×1.0</code> / 中等 <code>×0.8</code> / 拥堵 <code>×0.6</code>；
+          天气：晴 <code>×1.0</code> / 雨 <code>×0.75</code> / 雪 <code>×0.5</code>；
+          路况：良好 <code>×1.0</code> / 一般 <code>×0.85</code> / 糟糕 <code>×0.7</code>。
+          这些系数由我们按常识设定，未做实测标定。
+        </p>
+      </div>
+
+      <div class="links">
+        <a href="../rider.html">查看作品集案例页 <span aria-hidden="true">↗</span></a>
+        <a class="ghost" href="../index.html#projects">返回项目列表</a>
+        <a class="ghost" href="https://github.com/Actor-D" target="_blank" rel="noopener">GitHub 主页</a>
+      </div>
+
+      <footer>
+        团队：门不当户不队（董炎源、李嘉宁、曾寻璐、郭奇然）· 大数据黑客松参赛作品 ·
+        仅供学习交流
+      </footer>
+    </main>
+  </body>
+</html>
